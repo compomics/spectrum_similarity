@@ -33,29 +33,37 @@ import start.CalculateMS1Err;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
+ * This class runs SEQUEST-like and Andromeda-like scoring for given spectra
+ * (within a selected folder) and in silico digested protein database The
+ * settings are at BookChapte.properties
  *
  * @author Sule
  */
 public class AnalyzeTheoreticalMSMSCalculation {
 
     /**
-     * @param args the command line arguments
-     */
+    * 
+    * @param args
+    * @throws IOException
+    * @throws FileNotFoundException
+    * @throws ClassNotFoundException
+    * @throws IOException
+    * @throws InterruptedException
+    * @throws MzMLUnmarshallerException 
+    */
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, IOException, InterruptedException, MzMLUnmarshallerException {
         Logger l = Logger.getLogger("AnalyzeTheoreticalMSMSCalculation");
-
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
-        String today = formatter.format(date);
-        l.info("Calculation starts at " + today);
+        String now = formatter.format(date);
+        l.info("Calculation starts at " + now);
         double precursorTolerance = ConfigHolder.getInstance().getDouble("precursor.tolerance"),
                 fragmentTolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance");
-
         String databaseName = ConfigHolder.getInstance().getString("database.name"),
                 spectraName = ConfigHolder.getInstance().getString("spectra.name"),
                 output = ConfigHolder.getInstance().getString("output");
         int correctionFactor = ConfigHolder.getInstance().getInt("correctionFactor");
-
+        boolean theoFromAllCharges = ConfigHolder.getInstance().getBoolean("hasAllPossCharge");
         BufferedWriter bw = new BufferedWriter(new FileWriter(output));
         bw.write("SpectrumTitle" + "\t"
                 + "PrecursorMZ" + "\t" + "PrecursorCharge" + "\t"
@@ -81,19 +89,10 @@ public class AnalyzeTheoreticalMSMSCalculation {
                 // here calculate all except this is an empty spectrum...
                 if (ms.getPeakList().size() > 2) {
                     // to check a spectrum with negative values..
-//                    if(ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.105.105.2")){
-//                    if (ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1261.1261.4")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1000.1000.2")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1001.1001.2\n")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1003.1003.2\n")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1004.1004.2\n")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1005.1005.3\n")
-//                            || ms.getSpectrumTitle().equals("Orbi2_study6a_W080314_6QC1_sigma48_ft8_pc.1007.1007.2")) {
-                    String text = result(ms, precursorTolerance, dbEntries, fragmentTolerance, correctionFactor);
+                    String text = result(ms, precursorTolerance, dbEntries, fragmentTolerance, correctionFactor, theoFromAllCharges);
                     if (!text.isEmpty()) {
                         bw.write(text);
                     }
-//                    }
                 }
                 if (num % 500 == 0) {
                     l.info("Running " + num + " spectra." + Calendar.getInstance().getTime());
@@ -105,9 +104,8 @@ public class AnalyzeTheoreticalMSMSCalculation {
         bw.close();
     }
 
-    private static String result(MSnSpectrum msms, double precursorTolerance, HashSet<DBEntry> peptideAndMass, double fragmentTolerance, int correctionFactor) throws IllegalArgumentException, IOException, MzMLUnmarshallerException {
-        String text = "",
-                res = "";
+    private static String result(MSnSpectrum msms, double precursorTolerance, HashSet<DBEntry> peptideAndMass, double fragmentTolerance, int correctionFactor, boolean hasAllPossCharge) throws IllegalArgumentException, IOException, MzMLUnmarshallerException {
+        String res = "";
         HashSet<String> texts = new HashSet<String>();
         HashMap<Peptide, Boolean> allSelectedPeps = getSelectedTheoPeps(msms, precursorTolerance, peptideAndMass); // select peptides within a given precursor tolerance
         int scoredPeps = allSelectedPeps.size();
@@ -115,8 +113,8 @@ public class AnalyzeTheoreticalMSMSCalculation {
                 andromedaResults = new ArrayList<Identify>();
         // for every peptide... calculate each score...
         for (Peptide selectedPep : allSelectedPeps.keySet()) {
-            Identify toCalculateSequest = new Identify(msms, selectedPep, fragmentTolerance, true, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor),
-                    toCalculateAndromeda = new Identify(msms, selectedPep, fragmentTolerance, false, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor);
+            Identify toCalculateSequest = new Identify(msms, selectedPep, fragmentTolerance, true, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor, hasAllPossCharge),
+                    toCalculateAndromeda = new Identify(msms, selectedPep, fragmentTolerance, false, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor, hasAllPossCharge);
             sequestResults.add(toCalculateSequest);
             andromedaResults.add(toCalculateAndromeda);
         }
@@ -155,8 +153,8 @@ public class AnalyzeTheoreticalMSMSCalculation {
     }
 
     private static HashMap<Peptide, Boolean> getSelectedTheoPeps(MSnSpectrum msms, double precursorTolerance, HashSet<DBEntry> dbEntries) throws IOException, IllegalArgumentException {
-        ArrayList<Peptide> selected_UPS = new ArrayList<Peptide>(),
-                selected_PFU = new ArrayList<Peptide>();
+//        ArrayList<Peptide> selected_UPS = new ArrayList<Peptide>(),
+//                selected_PFU = new ArrayList<Peptide>();
         // select peptides to be compared...
         HashMap<Peptide, Boolean> allTheoPeps = new HashMap< Peptide, Boolean>();
         for (DBEntry dbEntry : dbEntries) {
@@ -170,11 +168,11 @@ public class AnalyzeTheoreticalMSMSCalculation {
                 // correct hit
                 isCorrect = true;
                 allTheoPeps.put(p, isCorrect);
-                selected_UPS.add(p);
+//                selected_UPS.add(p);
             } else if (tmpMS1Tolerance <= precursorTolerance && !descrp.contains("contaminant")) {
                 isCorrect = false;
                 allTheoPeps.put(p, isCorrect);
-                selected_PFU.add(p);
+//                selected_PFU.add(p);
             }
         }
         return allTheoPeps;

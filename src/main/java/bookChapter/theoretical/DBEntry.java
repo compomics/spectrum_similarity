@@ -9,7 +9,8 @@ package bookChapter.theoretical;
 import com.compomics.util.experiment.biology.Peptide;
 
 /**
- *
+ * Entries from database
+ * 
  * @author Sule
  */
 public class DBEntry {

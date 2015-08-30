@@ -50,7 +50,23 @@ public class Identify {
     private boolean isSequestLikeScore,// false: Andromeda-like true:Sequest-like
             isCorrectMatch; // true:correct match if either target/UPS, false:incorrect match if either decoy/Pfu
 
-    public Identify(MSnSpectrum ms, Peptide peptide, double fragment_tolerance, boolean isSequestLikeScore, boolean isCorrectMatch, int totalScoredPeps, int correctionFactor) {
+    /**
+     *
+     * @param ms an MSnSpectrum object to compared
+     * @param peptide a selected peptide entry from db within given precursor
+     * tolerance
+     * @param fragment_tolerance
+     * @param isSequestLikeScore true:SEQUEST-like score, false:Andromeda-like
+     * score
+     * @param isCorrectMatch true:correct match if either target/UPS,
+     * false:incorrect match if either decoy/Pfu
+     * @param totalScoredPeps total number of peptides matched to a given ms
+     * @param correctionFactor correction factor value for SEQUEST-like scoring
+     * (to compute Xcorr)
+     * @param hasAllPossCharge true: ions with all possible charges, false: only
+     * up to doubly charged ions
+     */
+    public Identify(MSnSpectrum ms, Peptide peptide, double fragment_tolerance, boolean isSequestLikeScore, boolean isCorrectMatch, int totalScoredPeps, int correctionFactor, boolean hasAllPossCharge) {
         this.isSequestLikeScore = isSequestLikeScore;
         this.fragment_tolerance = fragment_tolerance;
         this.isCorrectMatch = isCorrectMatch;
@@ -62,16 +78,31 @@ public class Identify {
         theoretical_ions = product_ions_peptideA.get(PeptideFragmentIon.Y_ION);
         theoretical_ions.addAll(product_ions_peptideA.get(PeptideFragmentIon.B_ION));
         int prec = spectrum.getPrecursor().getPossibleCharges().get(0).value;
+        if (hasAllPossCharge) {
+            generate_theoretical_ions(prec);
+        } else if (!hasAllPossCharge && prec >= 2) {
+            generate_theoretical_ions(2);
+        } else {
+            generate_theoretical_ions(1);
+        }
+        this.totalScoredPeps = totalScoredPeps;
+        this.correctionFactor = correctionFactor;
+        score = match_and_score();
+    }
+
+    /**
+     * This method generates theroetical ions up to given maxCharge
+     *
+     * @param maxCharge
+     */
+    private void generate_theoretical_ions(int maxCharge) {
         for (Ion t : theoretical_ions) {
-            for (int i = prec; i > 0; i--) {
+            for (int i = maxCharge; i > 0; i--) {
                 String name = t.getName() + "_" + i;
                 TheoreticalPeak tp = new TheoreticalPeak(t.getTheoreticMz(i), 50, i, name);
                 theoretical_peaks.add(tp);
             }
         }
-        this.totalScoredPeps = totalScoredPeps;
-        this.correctionFactor = correctionFactor;
-        score = match_and_score();
     }
 
     public MSnSpectrum getSpectrum() {
@@ -179,7 +210,7 @@ public class Identify {
     private void calculateSequestLikeScore() {
         // first remove a mz-window around precursor ion, with a window size of 10       
         RemoveWindowAround p = new RemoveWindowAround(spectrum, fragment_tolerance);
-        p.removePrecursor();        
+        p.removePrecursor();
         // then keep the top200 intense peaks
         TopNFiltering t = new TopNFiltering(200);
         spectrum = t.noiseFilter(spectrum);
@@ -190,7 +221,7 @@ public class Identify {
         if (!spectrum.getPeakList().isEmpty()) {
             Filter filterA = new DivideAndNormalize(spectrum, interval, normalizeValue);
             ArrayList<Peak> fP_spectrumA = filterA.getFilteredPeaks();
-          // now convert to binExperimental spectrum
+            // now convert to binExperimental spectrum
             double min_value = spectrum.getMinMz() - correctionFactor,
                     max_value = spectrum.getMaxMz() + correctionFactor;
             int intensity_option = 0;

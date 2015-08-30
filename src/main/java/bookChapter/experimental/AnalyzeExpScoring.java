@@ -31,7 +31,8 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
- * This class is used to
+ * This class is used to compare each experimental spectrum against other experimental spectrum
+ * 
  *
  * @author Sule
  */
@@ -139,28 +140,6 @@ public class AnalyzeExpScoring {
     /**
      * This method calculates similarities bin-based between yeast_human spectra
      * on the first data set against all yeast spectra on the second data set
-     *
-     * @param min_mz
-     * @param max_mz
-     * @param topN
-     * @param percentage
-     * @param is_precursor_peak_removal
-     * @param fragment_tolerance
-     * @param noiseFiltering
-     * @param transformation
-     * @param spectraToCompare spectrum library
-     * @param bw
-     * @param charge
-     * @param charge_situation
-     * @throws IllegalArgumentException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws MzMLUnmarshallerException
-     * @throws NumberFormatException
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    /**
      *
      * @param spectraToCompare - spectrum library, which spectra are searched
      * against
