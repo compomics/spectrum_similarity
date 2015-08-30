@@ -1,14 +1,14 @@
-## Scoring functions 
+## The scoring functions 
 
-This project contains scoring functions on comparing an acquired MS/MS spectrum against
+This project contains the scoring functions to compare an acquired MS/MS spectrum against
 
-- a theoretical spectrum 
+- a theoretical spectrum via
 
      --  Andromeda-like scoring (probabilistic)
 
      -- Sequest-like scoring (non-probabilistic)
       
-- an acquired spectrum 
+- another acquired spectrum via
 
     -- Dot product
     
