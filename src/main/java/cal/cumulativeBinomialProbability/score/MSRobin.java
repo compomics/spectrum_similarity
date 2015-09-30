@@ -43,7 +43,7 @@ import java.util.logging.Logger;
 public class MSRobin extends CumulativeBinomialProbabilityBasedScoring implements Score_Interface {
 
     private double intensity_part;
-    private double option; // 0: Sqrt(IP) 1: IP
+    private double option; // 0: Sqrt(IP) 1: IP and some others
 
     /**
      * To construct an object to calculate MSRobin cumulativeBinomialProbability
@@ -90,7 +90,7 @@ public class MSRobin extends CumulativeBinomialProbabilityBasedScoring implement
      */
     @Override
     public void calculateScore() {
-        
+
         try {
             double probability_part = calculateCumulativeBinominalProbability();
             if (option == 0) {
@@ -105,13 +105,29 @@ public class MSRobin extends CumulativeBinomialProbabilityBasedScoring implement
                 score = probability_part * intensity_part;
             } else if (option == 3) {
                 // only probability
-                score = -10*(Math.log10(probability_part));
+                score = -10 * (Math.log10(probability_part));
+            } else if (option == 4) {
+                // only probability
+                score = (1 - probability_part) * intensity_part;
             }
-            score+=0; // just making sure the value would not be negative zero           
+            score += 0; // just making sure the value would not be negative zero           
             isCalculated = true;
         } catch (Exception ex) {
             Logger.getLogger(MSRobin.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public double getIntensity_part() {
+        return intensity_part;
+    }
+
+    public void setIntensity_part(double intensity_part) {
+        this.intensity_part = intensity_part;
+    }
+
+    public double getProbability_part() throws Exception {
+        double probability_part = calculateCumulativeBinominalProbability();
+        return probability_part;
     }
 
 }
