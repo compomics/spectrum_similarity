@@ -36,7 +36,9 @@ public class CompareAndScore {
     private int intensityOption; // 0-Summed Up 1-Multiply intensities
     private boolean isCalculated = false; // This makes sure that match and scoring only calculate once
     private double msRobinScore = 0,
-            massWindow = 100;
+            massWindow = 100,
+            intensity_part = 0,
+            probability_part = 0;
 
     /* Constructor */
     public CompareAndScore(Spectrum spectrumA, Spectrum spectrumB, double fragTol, int msRobinOption, int intensityOption) {
@@ -46,8 +48,8 @@ public class CompareAndScore {
         this.MSRobinOption = msRobinOption;
         this.intensityOption = intensityOption;
     }
-    
-     public CompareAndScore(Spectrum spectrumA, Spectrum spectrumB, double fragTol, int msRobinOption, int intensityOption, double massWindow) {
+
+    public CompareAndScore(Spectrum spectrumA, Spectrum spectrumB, double fragTol, int msRobinOption, int intensityOption, double massWindow) {
         this.spectrumA = spectrumA;
         this.spectrumB = spectrumB;
         this.fragTol = fragTol;
@@ -75,7 +77,7 @@ public class CompareAndScore {
      *
      * @return
      */
-    public double getMSRobinScore() throws IOException {
+    public double getMSRobinScore() throws IOException, Exception {
         if (!isCalculated) {
             msRobinScore = match_and_score();
         }
@@ -99,7 +101,7 @@ public class CompareAndScore {
      * @param expMS2_2
      * @return
      */
-    private double match_and_score() {
+    private double match_and_score() throws Exception {
         ArrayList<Double> scores = new ArrayList<Double>();
         for (int topN = 1; topN < 11; topN++) {
 //            System.out.print(spectrumA.getSpectrumTitle() + "\t" + spectrumB.getSpectrumTitle() + "\t");
@@ -117,15 +119,32 @@ public class CompareAndScore {
             }
             int totalN = (int) results[0],
                     n = (int) results[1];
-            double intensity_part = results[2];
+            double tmp_intensity_part = results[2];
 //            System.out.print(totalN + "\t");
-            MSRobin object = new MSRobin(probability, totalN, n, intensity_part, MSRobinOption);
+            MSRobin object = new MSRobin(probability, totalN, n, tmp_intensity_part, MSRobinOption);
             double score = object.getScore();
             scores.add(score);
-//            System.out.print(score + "\n");
+            intensity_part = object.getIntensity_part();
+            probability_part = object.getProbability_part();
         }
         double finalScore = Collections.max(scores);
         return finalScore;
+    }
+
+    public double getIntensity_part() {
+        return intensity_part;
+    }
+
+    public void setIntensity_part(double intensity_part) {
+        this.intensity_part = intensity_part;
+    }
+
+    public double getProbability_part() {
+        return probability_part;
+    }
+
+    public void setProbability_part(double probability_part) {
+        this.probability_part = probability_part;
     }
 
     private double[] prepareData(ArrayList<Peak> filteredExpMS2_1, ArrayList<Peak> filteredExpMS2_2) {
