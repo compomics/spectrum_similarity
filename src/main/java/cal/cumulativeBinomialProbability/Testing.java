@@ -23,7 +23,7 @@ public class Testing {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, FileNotFoundException, MzMLUnmarshallerException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, FileNotFoundException, MzMLUnmarshallerException, ClassNotFoundException, Exception {
 
         File first_mgf = new File("C:\\Users\\Sule\\Desktop\\sim/yeast_human_test.mgf"),
                 second_mgf = new File("C:\\Users\\Sule\\Desktop\\sim/yeast_test.mgf");

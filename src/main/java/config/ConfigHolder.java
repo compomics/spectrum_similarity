@@ -11,7 +11,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-    
 public class ConfigHolder extends PropertiesConfiguration {
 
     private static final Logger LOGGER = Logger.getLogger(ConfigHolder.class);
@@ -34,6 +33,12 @@ public class ConfigHolder extends PropertiesConfiguration {
      * @return the PropertiesConfigurationHolder instance
      */
     public static ConfigHolder getInstance() {
+        return ourInstance;
+    }
+
+    public static ConfigHolder getInstanceProteinDiversity() throws ConfigurationException, IOException {
+        Resource propertiesResource = ResourceUtils.getResourceByRelativePath("resources/ProteinDiversity.properties");
+        ourInstance = new ConfigHolder(propertiesResource);
         return ourInstance;
     }
 

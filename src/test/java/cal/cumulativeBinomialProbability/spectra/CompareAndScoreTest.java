@@ -37,7 +37,7 @@ public class CompareAndScoreTest extends TestCase {
     /**
      * Test of getMSRobinScore method, of class CompareAndScore.
      */
-    public void testGetMSRobinScore() throws IOException, MzMLUnmarshallerException, FileNotFoundException, ClassNotFoundException {
+    public void testGetMSRobinScore() throws IOException, MzMLUnmarshallerException, FileNotFoundException, ClassNotFoundException, Exception {
         System.out.println("getMSRobinScore");
         String expMGFFolder = "TestingData\\Scoring/";
         MSnSpectrum specA = null,

@@ -30,7 +30,9 @@
                     <archive>
                         <manifest>
                             <!-- <mainClass>gui.MainGUI</mainClass>-->
-                            <mainClass>simBookChapter.theoretical.AnalyzeTheoreticalMSMSCalculation</mainClass>
+                            <!--mainClass>simBookChapter.theoretical.AnalyzeTheoreticalMSMSCalculation</mainClass-->
+                            
+                            <mainClass>protein_spectrum_diversity.AnalyzeNISTSPecLib</mainClass>
                            
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
