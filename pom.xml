@@ -30,9 +30,8 @@
                     <archive>
                         <manifest>
                             <!-- <mainClass>gui.MainGUI</mainClass>-->
-                            <!--mainClass>simBookChapter.theoretical.AnalyzeTheoreticalMSMSCalculation</mainClass-->
-                            
-                            <mainClass>protein_spectrum_diversity.AnalyzeNISTSPecLib</mainClass>
+                            <mainClass>simBookChapter.theoretical.AnalyzeTheoreticalMSMSCalculation</mainClass>                            
+                            <!--mainClass>protein_spectrum_diversity.AnalyzeNISTSPecLib</mainClass-->
                            
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
@@ -128,7 +127,7 @@
             <groupId>com.compomics</groupId>
             <artifactId>dbtoolkit</artifactId>
             <version>4.2</version>
-        </dependency> 
+        </dependency>                
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>CrossLinkedPeptides</artifactId>

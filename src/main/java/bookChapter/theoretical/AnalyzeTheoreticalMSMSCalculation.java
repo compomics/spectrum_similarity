@@ -27,10 +27,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
-import start.CalculateMS1Err;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
+import util.CalculateMS1Err;
 
 /**
  * This class runs SEQUEST-like and Andromeda-like scoring for given spectra
@@ -42,15 +43,14 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 public class AnalyzeTheoreticalMSMSCalculation {
 
     /**
-    * 
-    * @param args
-    * @throws IOException
-    * @throws FileNotFoundException
-    * @throws ClassNotFoundException
-    * @throws IOException
-    * @throws InterruptedException
-    * @throws MzMLUnmarshallerException 
-    */
+     *
+     * @param args
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     * @throws MzMLUnmarshallerException
+     */
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, IOException, InterruptedException, MzMLUnmarshallerException {
         Logger l = Logger.getLogger("AnalyzeTheoreticalMSMSCalculation");
         Date date = Calendar.getInstance().getTime();
@@ -72,7 +72,7 @@ public class AnalyzeTheoreticalMSMSCalculation {
                 + "PeptideByAndromedaLikeScore" + "\t" + "PeptideBySequestLikeScore" + "\t"
                 + "LevenshteinDistance" + "\t" + "TotalScoredPeps" + "\t"
                 + "isCorrectMatchByAndromedaLike" + "\t" + "isCorrectMatchBySequestLikeScore" + "\n");
-
+        l.info("getting db entries");
         // first load all sequences into the memory 
         HashSet<DBEntry> dbEntries = getDBEntries(databaseName);
         // for every spectrum-calculate both score...
@@ -83,6 +83,7 @@ public class AnalyzeTheoreticalMSMSCalculation {
         File f = new File(spectraName);
         if (spectraName.endsWith(".mgf")) {
             fct.addSpectra(f, new WaitingHandlerCLIImpl());
+            l.info("scoring of spectra just started.");
             for (String title : fct.getSpectrumTitles(f.getName())) {
                 num++;
                 MSnSpectrum ms = (MSnSpectrum) fct.getSpectrum(f.getName(), title);
@@ -106,7 +107,6 @@ public class AnalyzeTheoreticalMSMSCalculation {
 
     private static String result(MSnSpectrum msms, double precursorTolerance, HashSet<DBEntry> peptideAndMass, double fragmentTolerance, int correctionFactor, boolean hasAllPossCharge) throws IllegalArgumentException, IOException, MzMLUnmarshallerException {
         String res = "";
-        HashSet<String> texts = new HashSet<String>();
         HashMap<Peptide, Boolean> allSelectedPeps = getSelectedTheoPeps(msms, precursorTolerance, peptideAndMass); // select peptides within a given precursor tolerance
         int scoredPeps = allSelectedPeps.size();
         ArrayList<Identify> sequestResults = new ArrayList<Identify>(),
@@ -115,16 +115,15 @@ public class AnalyzeTheoreticalMSMSCalculation {
         for (Peptide selectedPep : allSelectedPeps.keySet()) {
             Identify toCalculateSequest = new Identify(msms, selectedPep, fragmentTolerance, true, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor, hasAllPossCharge),
                     toCalculateAndromeda = new Identify(msms, selectedPep, fragmentTolerance, false, allSelectedPeps.get(selectedPep), scoredPeps, correctionFactor, hasAllPossCharge);
-            sequestResults.add(toCalculateSequest);
-            andromedaResults.add(toCalculateAndromeda);
+            if (toCalculateSequest.getScore() != Double.NEGATIVE_INFINITY) {
+                sequestResults.add(toCalculateSequest);
+                andromedaResults.add(toCalculateAndromeda);
+            }
         }
         if (!sequestResults.isEmpty()) {
             HashSet<Identify> theBestSEQUESTResults = getBestResult(sequestResults),
                     theBestAndromedaResults = getBestResult(andromedaResults);
-            texts = printInfo(theBestAndromedaResults, theBestSEQUESTResults);
-        }
-        for (String t : texts) {
-            res += t;
+            res = printInfo(theBestAndromedaResults, theBestSEQUESTResults);
         }
         return res;
     }
@@ -153,8 +152,6 @@ public class AnalyzeTheoreticalMSMSCalculation {
     }
 
     private static HashMap<Peptide, Boolean> getSelectedTheoPeps(MSnSpectrum msms, double precursorTolerance, HashSet<DBEntry> dbEntries) throws IOException, IllegalArgumentException {
-//        ArrayList<Peptide> selected_UPS = new ArrayList<Peptide>(),
-//                selected_PFU = new ArrayList<Peptide>();
         // select peptides to be compared...
         HashMap<Peptide, Boolean> allTheoPeps = new HashMap< Peptide, Boolean>();
         for (DBEntry dbEntry : dbEntries) {
@@ -164,15 +161,12 @@ public class AnalyzeTheoreticalMSMSCalculation {
                     descrp = dbEntry.getProteinDescription();
             double tmpMS1Tolerance = CalculateMS1Err.getMS1Err(true, peptideMass, msms.getPrecursor().getMass(msms.getPrecursor().getPossibleCharges().get(0).value));
             boolean isCorrect = false;
-            if (tmpMS1Tolerance <= precursorTolerance && !descrp.contains("contaminant") && acc.contains("ups")) {
-                // correct hit
+            if (Math.abs(tmpMS1Tolerance) <= precursorTolerance && !descrp.contains("contaminant") && acc.contains("ups")) {
                 isCorrect = true;
                 allTheoPeps.put(p, isCorrect);
-//                selected_UPS.add(p);
-            } else if (tmpMS1Tolerance <= precursorTolerance && !descrp.contains("contaminant")) {
+            } else if (Math.abs(tmpMS1Tolerance) <= precursorTolerance && !descrp.contains("contaminant")) {
                 isCorrect = false;
                 allTheoPeps.put(p, isCorrect);
-//                selected_PFU.add(p);
             }
         }
         return allTheoPeps;
@@ -197,10 +191,10 @@ public class AnalyzeTheoreticalMSMSCalculation {
         return selectedTops;
     }
 
-    private static HashSet<String> printInfo(HashSet<Identify> theBestAndromedaResults, HashSet<Identify> theBestSEQUESTResults) {
+    private static String printInfo(HashSet<Identify> theBestAndromedaResults, HashSet<Identify> theBestSEQUESTResults) {
         ///    bw.write("Score" + "\t" + "LevenshteinDistance" + "\t" + "Sequence" + "\t" + "Charge" + "\t" + "Correct" + "\t" + "Spec" + "\n");
         String result = "";
-        HashSet<String> results = new HashSet<String>();
+        HashMap<String, Integer> results_and_levDist = new HashMap<String, Integer>();
         for (Identify andromeda : theBestAndromedaResults) {
             for (Identify sequest : theBestSEQUESTResults) {
                 double observedMass = CalculateObservedMass.calculateMass(andromeda.getSpectrum());
@@ -212,10 +206,19 @@ public class AnalyzeTheoreticalMSMSCalculation {
                         + andromeda.getPeptide().getSequence() + "\t" + sequest.getPeptide().getSequence() + "\t"
                         + levenshteinDistance + "\t" + sequest.getTotalScoredPeps() + "\t"
                         + andromeda.isIsCorrectMatch() + "\t" + sequest.isIsCorrectMatch() + "\n";
-                results.add(result);
+                results_and_levDist.put(result, levenshteinDistance);
             }
         }
-        return results;
+        int maxDist = Integer.MAX_VALUE,
+                dist = 0;
+        for (String res : results_and_levDist.keySet()) {
+            dist = results_and_levDist.get(res);
+            if (dist < maxDist) {
+                result = res;
+                maxDist = dist;
+            }
+        }
+        return result;
     }
 
 }

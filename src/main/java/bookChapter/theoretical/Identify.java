@@ -48,7 +48,8 @@ public class Identify {
     private int totalScoredPeps = 0,
             correctionFactor = 0;
     private boolean isSequestLikeScore,// false: Andromeda-like true:Sequest-like
-            isCorrectMatch; // true:correct match if either target/UPS, false:incorrect match if either decoy/Pfu
+            isCorrectMatch, // true:correct match if either target/UPS, false:incorrect match if either decoy/Pfu
+            isUniquePeptide = false; // true:a peptide is only from one protein, false: it exists on multiple proteins
 
     /**
      *
@@ -242,7 +243,7 @@ public class Identify {
         hash = 53 * hash + (this.binnedSpectrum != null ? this.binnedSpectrum.hashCode() : 0);
         hash = 53 * hash + (this.binnedTheoreticalSpectrum != null ? this.binnedTheoreticalSpectrum.hashCode() : 0);
         hash = 53 * hash + (this.spectrum != null ? this.spectrum.hashCode() : 0);
-        hash = 53 * hash + (this.peptide != null ? this.peptide.hashCode() : 0);
+        hash = 53 * hash + (this.peptide.getSequence() != null ? this.peptide.getSequence().hashCode() : 0);
         hash = 53 * hash + (this.fragmentFactory != null ? this.fragmentFactory.hashCode() : 0);
         hash = 53 * hash + (this.theoretical_ions != null ? this.theoretical_ions.hashCode() : 0);
         hash = 53 * hash + (this.theoretical_peaks != null ? this.theoretical_peaks.hashCode() : 0);
@@ -318,4 +319,19 @@ public class Identify {
         }
     };
 
+    @Override
+    public String toString() {
+        return "Identify{" + "spectrum=" + spectrum.getSpectrumTitle() + ", peptide=" + peptide.getSequence() + ", score=" + score + ", deltaCn=" + deltaCn + ", totalScoredPeps=" + totalScoredPeps + ", isSequestLikeScore=" + isSequestLikeScore + '}';
+    }
+    
+    /**
+     * To sort CPeptideIon in a ascending mass order
+     */
+    public static final Comparator<Identify> ASC_score
+            = new Comparator<Identify>() {
+                @Override
+                public int compare(Identify o1, Identify o2) {
+                    return o1.getScore() < o2.getScore() ? -1 : o1.getScore() == o2.getScore() ? 0 : 1;
+                }
+            };
 }

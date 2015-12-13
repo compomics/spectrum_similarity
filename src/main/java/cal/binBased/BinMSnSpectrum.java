@@ -26,7 +26,7 @@ public class BinMSnSpectrum extends BinSpectrum {
     protected ArrayList<Peak> peakList = new ArrayList<Peak>();
     protected int intensities_sum_or_mean_or_median = 0, // 0= Sum. 1=searched against MeanRespectrum 2=searched against MedianRespectrum
             correctionFactor = 74,
-            bin_size=0;
+            bin_size = 0;
     private boolean isSlidingDotProductCalculated = false;
 
     /**
@@ -175,20 +175,17 @@ public class BinMSnSpectrum extends BinSpectrum {
     private ArrayList<double[]> prepareBinSpectra() {
         // first prepare bin-spectrum to be filled with zero
         int size = (2 * correctionFactor) + 1;
-        
+
         ArrayList<double[]> shiftedSpectra = new ArrayList<double[]>(size);
-        for(int i = 0; i<size; i++){
+        for (int i = 0; i < size; i++) {
             double[] shiftedSpectrum = new double[bin_size];
-            for (int j = 0; j<bin_size;j++){
-                shiftedSpectrum[j]=0;
-            }
             shiftedSpectra.add(shiftedSpectrum);
-        }        
+        }
         // now fill each bin spectrum with correct mz values.
         double binSize = (fragment_tolerance * 2),
                 upperLimit = max_value + 0.00001;
         int current_index = 0;
-        for (double lowerLimit = min_value+correctionFactor; lowerLimit < upperLimit-correctionFactor; lowerLimit = lowerLimit + binSize) {
+        for (double lowerLimit = min_value + correctionFactor; lowerLimit < upperLimit - correctionFactor; lowerLimit = lowerLimit + binSize) {
             double tmp_intensity_bin = 0;
             DescriptiveStatistics obj = new DescriptiveStatistics();
             for (Peak p : peakList) {
