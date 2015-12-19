@@ -354,13 +354,13 @@ public class Calculate_BinSpectrum_Similarity implements Calculate_BinSpectrum_S
     }
 
     /**
-     * This calculates sliding-dot product like Sequest based on given spectra
+     * This calculates sliding-dot product similar to Sequest based on given spectra
      *
      */
     private void calculateSlidingDotProduct() {
         boolean isNormalized = false;
         double[] xArray = bin_specA.getBin_spectrum(),
-                yArray = bin_specB.getBin_spectrum();
+                yArray = bin_specB.getBin_spectrum(); // at the moment, this is an acquired spectra but maybe theoretical one...
         // dot-product between two binned-spectrum without any shift..
         double dot_r_0 = calculateDotProductDerived(xArray, yArray, 1, 0, isNormalized),
                 dot_res = 0;
@@ -376,5 +376,4 @@ public class Calculate_BinSpectrum_Similarity implements Calculate_BinSpectrum_S
         score = dot_r_0 - mean_dot_res;
         isScoreCalculated = true;
     }
-
 }

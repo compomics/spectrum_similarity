@@ -28,8 +28,8 @@ import java.util.HashSet;
 import scoringFunction.Andromeda_derived;
 
 /**
- * This class score given spectrum against peptide sequence based on either
- * Sequest-like or Andromeda-like scoring
+ * This class scores a given spectrum against a peptide sequence according to either
+ * Sequest-like or Andromeda-like scoring functions
  *
  * @author Sule
  */
@@ -143,7 +143,7 @@ public class Identify {
     }
 
     /**
-     * This method does Andromeda-like scoring
+     * This method calculates Andromeda-like scoring
      *
      * @return
      */
@@ -222,18 +222,25 @@ public class Identify {
         if (!spectrum.getPeakList().isEmpty()) {
             Filter filterA = new DivideAndNormalize(spectrum, interval, normalizeValue);
             ArrayList<Peak> fP_spectrumA = filterA.getFilteredPeaks();
+            ArrayList<TheoreticalPeak> theoPeaks = new ArrayList<TheoreticalPeak>(theoretical_peaks);
+            Collections.sort(theoPeaks, TheoreticalPeak.ASC_mz_order);
             // now convert to binExperimental spectrum
-            double min_value = spectrum.getMinMz() - correctionFactor,
-                    max_value = spectrum.getMaxMz() + correctionFactor;
+            double min_value = spectrum.getMinMz(),
+                    max_value = spectrum.getMaxMz();
+            if (theoPeaks.get(0).getMz() < min_value) {
+                min_value = theoPeaks.get(0).getMz();
+            }
+            if (theoPeaks.get(theoPeaks.size() - 1).getMz() > max_value) {
+                max_value = theoPeaks.get(theoPeaks.size() - 1).getMz();
+            }
             int intensity_option = 0;
             //prepare binnedSpectrum 
-            BinMSnSpectrum binnedSpectrum = new BinMSnSpectrum(fP_spectrumA, min_value, max_value, fragment_tolerance, intensity_option, correctionFactor),
+            BinMSnSpectrum binnedSpectrum = new BinMSnSpectrum(fP_spectrumA, min_value, max_value, fragment_tolerance, intensity_option, correctionFactor), // experimental one is being shifted..
                     binnedTheoreticalSpectrum = new BinMSnSpectrum(new ArrayList<Peak>(theoretical_peaks), min_value, max_value, fragment_tolerance, intensity_option);
             // calculate sliding-dot-product
             Calculate_BinSpectrum_Similarity o = new Calculate_BinSpectrum_Similarity(binnedTheoreticalSpectrum, binnedSpectrum, SimilarityMethods.SLIDING_DOT_PRODUCT, fragment_tolerance);
             double sliding_dot_product = o.getScore();
             score = sliding_dot_product;
-//        return sliding_dot_product;
         }
     }
 
@@ -323,7 +330,7 @@ public class Identify {
     public String toString() {
         return "Identify{" + "spectrum=" + spectrum.getSpectrumTitle() + ", peptide=" + peptide.getSequence() + ", score=" + score + ", deltaCn=" + deltaCn + ", totalScoredPeps=" + totalScoredPeps + ", isSequestLikeScore=" + isSequestLikeScore + '}';
     }
-    
+
     /**
      * To sort CPeptideIon in a ascending mass order
      */
