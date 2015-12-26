@@ -5,14 +5,12 @@ The scoring functions to assess spectrum similarity play a crucial role in many 
 The most commonly used scoring functions in experimental versus theoretical spectrum matching could be divided into two groups:
 
 - non-probabilistic (cross correlations which was used for [SEQUEST](http://fields.scripps.edu/sequest/))
- 
 - probabilistic (cumulative binomial probability derived scoring functions in [Andromeda](http://141.61.102.17/maxquant_doku/doku.php?id=maxquant:andromeda) and [MS-Amanda](http://ms.imp.ac.at/?goto=msamanda))
  
  
 Scoring functions for the comparison of two experimental spectra:
 - Normalized dot product (most commonly used in spectrum library search algorithms such as [SpectraST](http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST), [BiblioSpec](https://skyline.gs.washington.edu/labkey/project/home/software/BiblioSpec/begin.view)
- 
- - Pearson’s and Spearman's correlation coefficients
+- Pearson’s and Spearman's correlation coefficients
 
 # Avaliable scoring functios
 This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions to compare an acquired MS/MS spectrum against:
@@ -24,17 +22,13 @@ This project contains the enlisted scoring functions in [Project description](##
 
 - another acquired spectrum via
  - Dot product
-
  - Normalized dot product
- 
+ - Normalized dot product with introducting weights from peak intensities 
  - Pearson's r
- 
  - Spearman's rho
- 
- - Mean Squared Error (MSE)
- 
+ - Mean Squared Error (MSE) (and also root MSE)
+ - Median Squared Error (MdSE) (and also root MdSE)
  - Probabilistic scoring functon (including peak intensities)
-
 
 The scoring functions listed here were used to evaluate their ability to assess spectrum similarity on a book chapter on CPTAC data set. The settings are on the bookChapter.properties.
 
