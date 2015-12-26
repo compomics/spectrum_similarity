@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>    
+    <modelVersion>4.0.0</modelVersion>   
+     
     <groupId>com.compomics</groupId>
     <artifactId>spectrum_similarity</artifactId>
     <version>0.1</version>
@@ -8,6 +9,12 @@
       
     <name>similarity</name>
     <url>http://maven.apache.org</url>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>  
     
     <build>       
         <resources>
@@ -144,14 +151,8 @@
             <name>Genesis maven2 repository</name>
             <url>http://genesis.UGent.be/maven2</url>
         </repository>
-        <repository>
-            <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
-            <url>file:${project.basedir}/lib</url>
-        </repository>
     </repositories>
-    
-
+   
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -163,13 +164,12 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-        </dependency>
-              
+        </dependency>              
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>dbtoolkit</artifactId>
             <version>4.2</version>
-        </dependency>                
+        </dependency>                          
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>CrossLinkedPeptides</artifactId>
@@ -184,9 +184,7 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>1.7</version>
-        </dependency>
-
-        
+        </dependency>        
         <dependency>
             <groupId>com.jhlabs</groupId>
             <artifactId>filters</artifactId>
@@ -203,17 +201,21 @@
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
             <version>3.45.24</version>
-            <type>jar</type>
-            
+            <type>jar</type>            
         </dependency>
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
-        </dependency>
-      
-    </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+        </dependency>      
+    </dependencies>    
+    
+    <!-- a remote repository for the deploy -->
+    <distributionManagement>        
+        <repository>
+            <id>genesis-maven2-repo</id>
+            <name>Genesis Maven Repository</name>
+            <url>scp://genesis.ugent.be/home/maven/public_html/maven2</url>
+        </repository>
+    </distributionManagement>
 </project>
