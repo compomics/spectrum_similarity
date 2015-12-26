@@ -4,7 +4,6 @@
  */
 package config;
 
-import com.compomics.pride_asa_pipeline.util.ResourceUtils;
 import java.io.IOException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -18,7 +17,7 @@ public class ConfigHolder extends PropertiesConfiguration {
 
     static {
         try {
-            Resource propertiesResource = ResourceUtils.getResourceByRelativePath("resources/BookChapter.properties");
+            Resource propertiesResource = ResourceUtils.getResourceByRelativePath("BookChapter.properties");
             ourInstance = new ConfigHolder(propertiesResource);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);

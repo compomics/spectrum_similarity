@@ -230,7 +230,7 @@ public class AnalyzeExpScoring {
                 isNFTR = ConfigHolder.getInstance().getBoolean("nf.tr"); // T-first noise filtering then transformation, F-first transformation then noise filtering
         double min_mz = ConfigHolder.getInstance().getDouble("min.mz"), // To start binning
                 max_mz = ConfigHolder.getInstance().getDouble("max.mz"), // To end binning
-                fragment_tolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance"), // A bin size if 2*0.5
+                fragment_tolerance = ConfigHolder.getInstance().getDouble("fragTol"), // A bin size if 2*0.5
                 precursor_mz_window = ConfigHolder.getInstance().getDouble("precursor.mz.window"); // 0-No PM tolerance otherwise the exact mass difference
         /// SETTINGS//////////////////////////////////////////
         // prepare arguments to run a Game
@@ -287,16 +287,16 @@ public class AnalyzeExpScoring {
         if (!is_charged_based) {
             ArrayList<BinMSnSpectrum> upsBinMSnSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(ups_file, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, precursorRemoval, 0, isNFTR),
                     yeastUPSBinMSnSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(yeastUPSfile, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, precursorRemoval, 0, isNFTR);
-            LOGGER.info("Size of upsBinMSnSpectra=" + upsBinMSnSpectra.size());
-            LOGGER.info("Size of yeastUPSBinMSnSpectra=" + yeastUPSBinMSnSpectra.size());
+            LOGGER.info("Charge state is ignored: Size of upsBinMSnSpectra=" + upsBinMSnSpectra.size());
+            LOGGER.info("Charge state is ignored: Size of yeastUPSBinMSnSpectra=" + yeastUPSBinMSnSpectra.size());
             calculate_BinBasedScores(upsBinMSnSpectra, yeastUPSBinMSnSpectra, bw, 0, precursor_mz_window, fragment_tolerance);
             // Run only the same charge state
         } else if (is_charged_based) {
             for (int charge : charges) {
                 ArrayList<BinMSnSpectrum> upsBinMSnSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(ups_file, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, precursorRemoval, charge, isNFTR),
                         yeastUPSBinMSnSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(yeastUPSfile, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, precursorRemoval, charge, isNFTR);
-                LOGGER.info("Size of upsBinMSnSpectra=" + upsBinMSnSpectra.size());
-                LOGGER.info("Size of yeastUPSBinMSnSpectra=" + yeastUPSBinMSnSpectra.size());
+                LOGGER.info("Charge state of "+charge+": Size of upsBinMSnSpectra=" + upsBinMSnSpectra.size());
+                LOGGER.info("Charge state of "+charge+": Size of yeastUPSBinMSnSpectra=" + yeastUPSBinMSnSpectra.size());
                 calculate_BinBasedScores(upsBinMSnSpectra, yeastUPSBinMSnSpectra, bw, charge, precursor_mz_window, fragment_tolerance);
             }
         }

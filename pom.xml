@@ -9,7 +9,7 @@
     <name>similarity</name>
     <url>http://maven.apache.org</url>
     
-    <build>
+    <build>       
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -72,9 +72,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!-- <mainClass>gui.MainGUI</mainClass>-->
-                            <mainClass>simBookChapter.theoretical.AnalyzeTheoreticalMSMSCalculation</mainClass>                            
-                            <!--mainClass>protein_spectrum_diversity.AnalyzeNISTSPecLib</mainClass-->                           
+                            <mainClass>bookChapter.CompareScoringFunctions</mainClass>                            
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
@@ -125,16 +123,18 @@
                             </outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/resources/resources</directory>                                  
+                                    <directory>src/main/resources</directory> 
+                                    <filtering>true</filtering> 
+                                    <excludes>
+                                        <exclude>ProteinDiversity.properties</exclude>
+                                    </excludes>                                      
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>                   
                 </executions>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>        
+            </plugin>           
+                   
         </plugins>
     </build>
     

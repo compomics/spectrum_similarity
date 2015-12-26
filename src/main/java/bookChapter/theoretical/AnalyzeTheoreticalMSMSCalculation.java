@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
@@ -56,7 +56,7 @@ public class AnalyzeTheoreticalMSMSCalculation {
         Date date = Calendar.getInstance().getTime();
         DateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
         String now = formatter.format(date);
-        l.info("Calculation starts at " + now);
+        l.log(Level.INFO, "Calculation starts at {0}", now);
         double precursorTolerance = ConfigHolder.getInstance().getDouble("precursor.tolerance"),
                 fragmentTolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance");
         String databaseName = ConfigHolder.getInstance().getString("database.name"),
@@ -72,7 +72,7 @@ public class AnalyzeTheoreticalMSMSCalculation {
                 + "PeptideByAndromedaLikeScore" + "\t" + "PeptideBySequestLikeScore" + "\t"
                 + "LevenshteinDistance" + "\t" + "TotalScoredPeps" + "\t"
                 + "isCorrectMatchByAndromedaLike" + "\t" + "isCorrectMatchBySequestLikeScore" + "\n");
-        l.info("getting db entries");
+        l.info("Getting database entries");
         // first load all sequences into the memory 
         HashSet<DBEntry> dbEntries = getDBEntries(databaseName);
         // for every spectrum-calculate both score...
@@ -83,7 +83,7 @@ public class AnalyzeTheoreticalMSMSCalculation {
         File f = new File(spectraName);
         if (spectraName.endsWith(".mgf")) {
             fct.addSpectra(f, new WaitingHandlerCLIImpl());
-            l.info("scoring of spectra just started.");
+            l.log(Level.INFO, "Spectra scoring starts at {0}", now);
             for (String title : fct.getSpectrumTitles(f.getName())) {
                 num++;
                 MSnSpectrum ms = (MSnSpectrum) fct.getSpectrum(f.getName(), title);
