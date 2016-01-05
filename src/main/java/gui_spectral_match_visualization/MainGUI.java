@@ -425,10 +425,16 @@ public final class MainGUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 scoreTableMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                scoreTableMouseReleased(evt);
+            }
         });
         scoreTable.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 scoreTableKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                scoreTableKeyReleased(evt);
             }
         });
         scoreTablejScrollPane.setViewportView(scoreTable);
@@ -923,6 +929,38 @@ public final class MainGUI extends javax.swing.JFrame {
             plotBubbleSpectra(original_spec_A, original_spec_B);
         }
     }//GEN-LAST:event_scoreTableKeyPressed
+
+    private void scoreTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scoreTableMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scoreTableMouseReleased
+
+    private void scoreTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scoreTableKeyReleased
+         slider_specA_jSlider.setValue(100);
+        slider_specB_jSlider.setValue(100);
+        remaining_peaks_specA_jTextField.setText(" ");
+        remaining_peaks_specB_jTextField.setText(" ");
+        for (Component c : filteringjTabbedPane.getComponents()) {
+            c.setEnabled(true);
+        }
+        int selectedRow = scoreTable.getSelectedRow();
+        String specAname = scoreTable.getValueAt(selectedRow, indSpecA).toString(),
+                specBname = scoreTable.getValueAt(selectedRow, indSpecB).toString();
+        try {
+            prepareSpectraForPlotting(specAname, specBname);
+        } catch (IOException ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MzMLUnmarshallerException ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // plot graphics
+        if (mirroredSpectrajRadioButton.isSelected()) {
+            plotMirroredSpectra(original_spec_A, original_spec_B);
+        } else {
+            plotBubbleSpectra(original_spec_A, original_spec_B);
+        }
+    }//GEN-LAST:event_scoreTableKeyReleased
 
     public void addDataseries(MSnSpectrum spec, int specIndex) {
         int tmp_size = spec.getPeakList().size();
