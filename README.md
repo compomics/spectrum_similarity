@@ -1,6 +1,6 @@
 # Project description
 
-The scoring functions to assess spectrum similarity play a crucial role in many computational mass spectrometry algorithms. These can be used to compare an acquired MS/MS spectrum against two different types of target spectra: either against a theoretical MS/MS spectrum derived from a peptide from a sequence database, or against another, previously acquired acquired MS/MS spectrum. The former is typically encountered in database searching, while the latter is used in spectrum clustering, spectral library searching, or the detection of unique spectra between different data sets in comparative proteomics studies. 
+The scoring functions to assess spectrum similarity play a crucial role in many computational mass spectrometry algorithms. These scoring functions can be used to compare an acquired MS/MS spectrum against two different types of target spectra: either against a theoretical MS/MS spectrum derived from a peptide from a sequence database, or against another, previously acquired acquired MS/MS spectrum. The former is typically encountered in database searching, while the latter is used in spectrum clustering, spectral library searching, or the detection of unique spectra between different data sets in comparative proteomics studies. 
 
 The most commonly used scoring functions in experimental versus theoretical spectrum matching could be divided into two groups:
 
@@ -13,10 +13,9 @@ Scoring functions for the comparison of two experimental spectra:
 - Pearson’s and Spearman's correlation coefficients
 
 # Avaliable scoring functios
-This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions to compare an acquired MS/MS spectrum against:
+This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions  are in order to compare an acquired MS/MS spectrum against:
 
 - a theoretical spectrum via
-
  - SEQUEST-like scoring function (non-probabilistic)
  - Andromeda-like scoring function (probabilistic)
 
@@ -30,7 +29,7 @@ This project contains the enlisted scoring functions in [Project description](##
  - Median Squared Error (MdSE) (and also root MdSE)
  - Probabilistic scoring functon (including peak intensities)
 
-The scoring functions listed here were used to evaluate their ability to assess spectrum similarity on a book chapter on CPTAC data set. The settings are on the bookChapter.properties.
+The scoring functions enlisted here were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets. The settings are on the bookChapter.properties.
 
 # Download
 ## Spectrum comparison 
@@ -38,6 +37,12 @@ The program to compare spectra with the avaliable scoring functions, against eit
 The settings to perform spectrum comparison are on the bookChapter.properties file. 
 
 ## A pairwise spectrum comparison GUI
-This GUI enables manual inspection how spectra actually look alike with corresponding to similarity score.
+This GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
 
-Coming soon..
+The required inputs 
+- Two folders containing spectra that are compared (specA and specB, and must be mgf files) 
+- A text file containing calculated scores
+- Indices of spectrum titles from these two spectra folders on a given text file. 
+
+After introducing these inputs, a pairwise spectra can be inspected by either bubble spectra or mirrored spectra, with allowing filtering either based on percentage remaining peaks or adaptive noise filtering from [pride-asa-pipeline](https://github.com/compomics/pride-asa-pipeline) 
+
