@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>   
      
     <groupId>com.compomics</groupId>
-    <artifactId>spectrum_similarity</artifactId>
+    <artifactId>scoring_pipeline</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
       
@@ -79,7 +79,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>bookChapter.CompareScoringFunctions</mainClass>                            
+                            <!--mainClass>gui_spectral_match_visualization.MainGUI</mainClass-->     
+                            <mainClass>main.Score_Tsol</mainClass>                          
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
@@ -200,7 +201,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.45.24</version>
+            <version>4.0.0</version>
             <type>jar</type>            
         </dependency>
         <dependency>

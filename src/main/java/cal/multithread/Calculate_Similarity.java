@@ -65,7 +65,8 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
      * @param calculationOptionIntensityMSRobin
      * @param msRobinIntensityOption
      */
-    public Calculate_Similarity(MSnSpectrum givenMSnSpectrum, ArrayList<MSnSpectrum> allMSnSpectraComparedTogivenMSnSpectrum, double fragTol, double precTol, int calculationOptionIntensityMSRobin, int msRobinIntensityOption) {
+    public Calculate_Similarity(MSnSpectrum givenMSnSpectrum, ArrayList<MSnSpectrum> allMSnSpectraComparedTogivenMSnSpectrum, double fragTol, double precTol,
+            int calculationOptionIntensityMSRobin, int msRobinIntensityOption) {
         this.allMSnSpectraComparedTogivenMSnSpectrum = allMSnSpectraComparedTogivenMSnSpectrum;
         this.givenMSnSpectrum = givenMSnSpectrum;
         this.fragTol = fragTol;

@@ -17,7 +17,8 @@ public class ConfigHolder extends PropertiesConfiguration {
 
     static {
         try {
-            Resource propertiesResource = ResourceUtils.getResourceByRelativePath("BookChapter.properties");
+            //Resource propertiesResource = ResourceUtils.getResourceByRelativePath("BookChapter.properties");
+            Resource propertiesResource = ResourceUtils.getResourceByRelativePath("MS2Similatiry.properties");
             ourInstance = new ConfigHolder(propertiesResource);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
