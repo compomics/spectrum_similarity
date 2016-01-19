@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.log4j.Logger;
-import precursorRemoval.PrecursorPeakRemoval;
+import preprocess.filter.precursor.RemovePrecursorRelatedPeaks;
 import preprocess.filter.noise.implementation.NoiseFilteringPrideAsap;
 import preprocess.filter.noise.implementation.TopNFiltering;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
@@ -69,7 +69,7 @@ public class ScorePipeline {
             ConvertToBinMSnSpectrum convertToBinMSnSpectrumObj, boolean isNFTR) throws MzMLUnmarshallerException, IOException, ClassNotFoundException, NumberFormatException {
         BinMSnSpectrum binMSnSpectrum = null;
         if (is_precursor_peak_removal) {
-            PrecursorPeakRemoval removal = new PrecursorPeakRemoval(ms, fragment_tolerance);
+            RemovePrecursorRelatedPeaks removal = new RemovePrecursorRelatedPeaks(ms, fragment_tolerance);
             removal.removePrecursor();
         }
         if (!ms.getPeakMap().isEmpty()) {
@@ -538,7 +538,7 @@ public class ScorePipeline {
                 MSnSpectrum ms = (MSnSpectrum) fct.getSpectrum(mgf_file.getName(), title);
                 if (charge == 0 || charge == ms.getPrecursor().getPossibleCharges().get(0).value) {
                     if (is_precursor_peak_removal) {
-                        PrecursorPeakRemoval removal = new PrecursorPeakRemoval(ms, fragment_tolerance);
+                        RemovePrecursorRelatedPeaks removal = new RemovePrecursorRelatedPeaks(ms, fragment_tolerance);
                         removal.removePrecursor();
                     }
                     if (noiseFiltering > 0) {

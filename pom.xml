@@ -170,12 +170,7 @@
             <groupId>com.compomics</groupId>
             <artifactId>dbtoolkit</artifactId>
             <version>4.2</version>
-        </dependency>                          
-        <dependency>
-            <groupId>com.compomics</groupId>
-            <artifactId>CrossLinkedPeptides</artifactId>
-            <version>0.1</version>
-        </dependency>        
+        </dependency>                                  
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>pride-asa-pipeline</artifactId>
@@ -204,11 +199,7 @@
             <version>4.0.0</version>
             <type>jar</type>            
         </dependency>
-        <dependency>
-            <groupId>unknown.binary</groupId>
-            <artifactId>AbsoluteLayout</artifactId>
-            <version>SNAPSHOT</version>
-        </dependency>      
+            
     </dependencies>    
     
     <!-- a remote repository for the deploy -->

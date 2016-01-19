@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import scoringFunction.Andromeda_derived;
+import cal.cumulativeBinomialProbability.score.Andromeda_derived;
 
 /**
  * This class scores a given spectrum against a peptide sequence according to either
