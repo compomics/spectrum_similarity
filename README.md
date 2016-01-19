@@ -36,6 +36,8 @@ The scoring functions enlisted here were used to evaluate their ability to asses
 The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
 The settings to perform spectrum comparison are on the bookChapter.properties file. 
 
+Moreover, the implemented scoring functions could be used to compare two experimental data sets in a comparative pipeline. A stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/0.1/	scoring_pipeline-0.1.zip). Input files and parameters can be set on MS2Similatiry.properties file. The GUI version of this stand-alone program will be soon avaliable. 
+
 ## A pairwise spectrum comparison GUI
 This GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
 
