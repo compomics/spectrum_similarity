@@ -5,14 +5,14 @@
  */
 package cal.binBased;
 
+import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import preprocess.filter.noise.implementation.DiscardLowIntensePeaks;
 import preprocess.filter.noise.implementation.NoiseFilteringPrideAsap;
 import preprocess.filter.noise.implementation.TopNFiltering;
-import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import com.compomics.util.experiment.massspectrometry.preprocess.transformation.implementation.TransformIntensitiesImp;
-import com.compomics.util.experiment.massspectrometry.preprocess.transformation.methods.Transformations;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import preprocess.transformation.implementation.TransformIntensitiesImp;
+import preprocess.transformation.methods.Transformations;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
