@@ -66,7 +66,7 @@ public class DivideAndTopNFilter extends Filter {
             if (tmpMZ < limitMz) {
                 cPeaks.add(tmpPeak);
             } else {
-                Collections.sort(cPeaks, Peak.DESC_intensity_order);
+                Collections.sort(cPeaks, Peak.DescendingIntensityComparator);
                 int tmp_num = topN;
                 if (topN > cPeaks.size()) {
                     tmp_num = cPeaks.size();
@@ -81,7 +81,7 @@ public class DivideAndTopNFilter extends Filter {
             }
         }
         if (!cPeaks.isEmpty()) {
-            Collections.sort(cPeaks, Peak.DESC_intensity_order);
+            Collections.sort(cPeaks, Peak.DescendingIntensityComparator);
             int tmp_num = topN;
             if (topN > cPeaks.size()) {
                 tmp_num = cPeaks.size();

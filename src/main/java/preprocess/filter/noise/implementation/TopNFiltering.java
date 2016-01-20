@@ -38,7 +38,7 @@ public class TopNFiltering implements NoiseFilter {
     public MSnSpectrum noiseFilter(MSnSpectrum ms) {
         ArrayList<Peak> peakList = new ArrayList<Peak>(ms.getPeakList());
         // Sort peaks in descending order on intensities
-        Collections.sort(peakList, Peak.DESC_intensity_order);
+        Collections.sort(peakList, Peak.DescendingIntensityComparator);
         // This part makes sure that topN can never be bigger than peakList 
        if (peakList.size() < topN) {
             topN = peakList.size();

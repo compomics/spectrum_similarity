@@ -53,7 +53,7 @@ public class PrecursorPeakRemovalTest extends TestCase {
                     assertEquals(84, ms.getPeakList().size());
 
                     ArrayList<Peak> tmpPeaks = new ArrayList<Peak>(ms.getPeakList());
-                    Collections.sort(tmpPeaks, Peak.ASC_mz_order);
+                    Collections.sort(tmpPeaks, Peak.AscendingMzComparator);
                     assertEquals(tmpPeaks.get(37).getMz(), 436.441101, 0.01);
                     assertEquals(tmpPeaks.get(54).getMz(), 581.136267, 0.01);
                     assertEquals(tmpPeaks.get(83).getMz(),871.1807631, 0.01);
@@ -63,7 +63,7 @@ public class PrecursorPeakRemovalTest extends TestCase {
                     assertEquals(81, ms.getPeakList().size());
 
                     ArrayList<Peak> actualPeaks = new ArrayList<Peak>(ms.getPeakList());
-                    Collections.sort(actualPeaks, Peak.ASC_mz_order);
+                    Collections.sort(actualPeaks, Peak.AscendingMzComparator);
                     assertEquals(actualPeaks.get(37).getMz(), 437.388, 0.01);
                     assertEquals(actualPeaks.get(53).getMz(), 599.5991, 0.01);
                     assertEquals(actualPeaks.get(actualPeaks.size() - 1).getMz(), 849.78491, 0.01);

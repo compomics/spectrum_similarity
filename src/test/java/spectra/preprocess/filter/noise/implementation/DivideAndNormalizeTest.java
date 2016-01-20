@@ -113,7 +113,7 @@ public class DivideAndNormalizeTest extends TestCase {
         DivideAndNormalize instance = new DivideAndNormalize(ms, intervals, normalize_value);
         instance.process();
         ArrayList<Peak> filteredPeaks = instance.getFilteredPeaks();
-        Collections.sort(filteredPeaks, Peak.ASC_mz_order);
+        Collections.sort(filteredPeaks, Peak.AscendingMzComparator);
         for (Peak p : filteredPeaks) {
             System.out.println(p.mz + "\t" + p.intensity);
         }

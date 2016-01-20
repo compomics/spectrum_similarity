@@ -28,8 +28,8 @@ import java.util.HashSet;
 import cal.cumulativeBinomialProbability.score.Andromeda_derived;
 
 /**
- * This class scores a given spectrum against a peptide sequence according to either
- * Sequest-like or Andromeda-like scoring functions
+ * This class scores a given spectrum against a peptide sequence according to
+ * either Sequest-like or Andromeda-like scoring functions
  *
  * @author Sule
  */
@@ -223,7 +223,7 @@ public class Identify {
             Filter filterA = new DivideAndNormalize(spectrum, interval, normalizeValue);
             ArrayList<Peak> fP_spectrumA = filterA.getFilteredPeaks();
             ArrayList<TheoreticalPeak> theoPeaks = new ArrayList<TheoreticalPeak>(theoretical_peaks);
-            Collections.sort(theoPeaks, TheoreticalPeak.ASC_mz_order);
+            Collections.sort(theoPeaks, TheoreticalPeak.AscendingMzComparator);
             // now convert to binExperimental spectrum
             double min_value = spectrum.getMinMz(),
                     max_value = spectrum.getMaxMz();
@@ -318,7 +318,9 @@ public class Identify {
         return true;
     }
 
-    // put a method to compare Identify objects..
+    /**
+     * Compares two Identify instances on descending calculated score.
+     */
     public static final Comparator<Identify> ScoreDESC = new Comparator<Identify>() {
         @Override
         public int compare(Identify o1, Identify o2) {
@@ -332,7 +334,7 @@ public class Identify {
     }
 
     /**
-     * To sort CPeptideIon in a ascending mass order
+     * Compares two Identify instances on ascending calculated score.
      */
     public static final Comparator<Identify> ASC_score
             = new Comparator<Identify>() {

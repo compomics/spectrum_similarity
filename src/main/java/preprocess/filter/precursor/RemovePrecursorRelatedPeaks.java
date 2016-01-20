@@ -45,7 +45,7 @@ public class RemovePrecursorRelatedPeaks extends RemovePrecursor {
         // first select peaks may derive from a precursor
         double precursorMass = ms.getPrecursor().getMass(charge),
                 protonTheoMass = ElementaryIon.proton.getTheoreticMass();
-        if (charge > 1) {
+        if (charge >= 1) {
             while (charge >= 1) {
                 double tmpMZ = (precursorMass + (protonTheoMass * charge)) / charge;
                 precursorPeaksMZ.add(tmpMZ);

@@ -347,10 +347,9 @@ public class ScorePipeline {
                 max_mz = ConfigHolder.getInstance().getDouble("max.mz"), // To end binning
                 fragment_tolerance = 0.5, // A bin size if 2*0.5
                 precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference
-        int startIndex = ConfigHolder.getInstance().getInt("start.index"),
-                endIndex = ConfigHolder.getInstance().getInt("end.index"),
-                sliceIndex = ConfigHolder.getInstance().getInt("slice.index");
-        String scoreType = ConfigHolder.getInstance().getString("score"); // Avaliable ones: msrobin/spearman/pearson/dot
+        int sliceIndex = ConfigHolder.getInstance().getInt("slice.index");
+        // Select a scoring function name as msrobin (this is pROBility INtensity weighted scoring function, dot, spearman, and pearson (all lower case)) 
+        String scoreType = "msrobin"; // Avaliable scoring functions: msrobin/spearman/pearson/dot
 
         /// SETTINGS//////////////////////////////////////////
         File thydatigenas_directory = new File(thydFolder),
@@ -413,9 +412,10 @@ public class ScorePipeline {
         LOGGER.info("Run is ready to start with " + param + " for " + scoreType);
         LOGGER.info("Only calculate +/-2 slices up and down: " + doesCalculateOnly5);
         //Get indices for each spectrum.. 
-        for (int index = startIndex; index < endIndex; index++) {
-            for (File tsol : tsoliums_directory.listFiles()) {
-                for (File thyd : thydatigenas_directory.listFiles()) {
+
+        for (int index = 0; index < thydatigenas_directory.listFiles().length; index++) {
+            for (File thyd : thydatigenas_directory.listFiles()) {
+                for (File tsol : tsoliums_directory.listFiles()) {
                     int tsolIndex = Integer.parseInt(tsol.getName().split("_")[sliceIndex].substring(0, tsol.getName().split("_")[sliceIndex].indexOf(".mgf"))),
                             thydIndex = Integer.parseInt(thyd.getName().split("_")[sliceIndex].substring(0, thyd.getName().split("_")[sliceIndex].indexOf(".mgf")));
                     if (doesCalculateOnly5) {
@@ -424,7 +424,6 @@ public class ScorePipeline {
                             LOGGER.info("slice number (spectra.folder and spectra.folder.to.compare)=" + thydIndex + "\t" + tsolIndex);
                             LOGGER.info("a name of an mgf from the spectra.folder=" + thyd.getName());
                             LOGGER.info("a name of an mgf from the spectra.folder.to.compare=" + tsol.getName());
-
                             if (!scoreType.equals("msrobin")) {
                                 // Run against all - no restriction for binned based calculation
                                 if (!is_charged_based) {

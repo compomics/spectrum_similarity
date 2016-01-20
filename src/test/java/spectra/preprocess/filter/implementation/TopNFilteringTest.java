@@ -59,7 +59,7 @@ public class TopNFilteringTest extends TestCase {
                     assertEquals(50, ms.getPeakList().size());
 
                     ArrayList<Peak> actualPeaks = new ArrayList<Peak>(result.getPeakList());
-                    Collections.sort(actualPeaks, Peak.ASC_mz_order);
+                    Collections.sort(actualPeaks, Peak.AscendingMzComparator);
 
                     assertEquals(actualPeaks.get(0).getMz(), 129.0795898, 0);
                     assertEquals(actualPeaks.get(1).getMz(), 130.1602173, 0);
