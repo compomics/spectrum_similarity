@@ -5,7 +5,7 @@ The scoring functions to assess spectrum similarity play a crucial role in many 
 The most commonly used scoring functions in experimental versus theoretical spectrum matching could be divided into two groups:
 
 - non-probabilistic (cross correlations which was used for [SEQUEST](http://fields.scripps.edu/sequest/))
-- probabilistic (cumulative binomial probability derived scoring functions in [Andromeda](http://141.61.102.17/maxquant_doku/doku.php?id=maxquant:andromeda) and [MS-Amanda](http://ms.imp.ac.at/?goto=msamanda))
+- probabilistic (cumulative binomial probability derived scoring functions in [Andromeda](http://141.61.102.17/maxquant_doku/doku.php?id=maxquant:andromeda) and [MS Amanda](http://ms.imp.ac.at/?goto=msamanda))
  
  
 Scoring functions for the comparison of two experimental spectra:
