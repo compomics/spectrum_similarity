@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
+import main.ScorePipeline;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
@@ -65,6 +65,8 @@ public class MainController {
      * Init the controller.
      */
     public void init() {
+        mainFrame.setTitle("Spectrum similarity score pipeline " + ConfigHolder.getInstance().getString("score.pipeline.version", ""));
+
         runDialog = new RunDialog(mainFrame, true);
         runDialog.getLogTextArea().setText("..." + System.lineSeparator());
 
@@ -76,12 +78,6 @@ public class MainController {
         mainFrame.getFileNameSliceIndexTextField().setEnabled(false);
         mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(false);
         mainFrame.getPeakIntensityCutoffTextField().setEnabled(false);
-
-        //init the combo boxes
-        mainFrame.setPreprocessingOrderComboBox(new JComboBox<>(new String[]{"noise filter - transformation", "transformation - noise filter"}));
-        mainFrame.setBinWeightingComboBox(new JComboBox<>(new String[]{"sum of intensities", "mean", "median"}));
-        mainFrame.setTransformationComboBox(new JComboBox<>(new String[]{"none", "log2", "square root"}));
-        mainFrame.setNoiseFilterComboBox(new JComboBox<>(new String[]{"PrideAsap-Adaptive noise filtering", "TopN intense peak selection", "Discard peaks with less than x% of precursor-intensity"}));
 
         //init file choosers
         //disable select multiple files
@@ -170,13 +166,14 @@ public class MainController {
                                 + ce.getMessage(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                if (reply != JOptionPane.CANCEL_OPTION) {
+                    scorePipelineSwingWorker = new ScorePipelineSwingWorker();
+                    scorePipelineSwingWorker.execute();
 
-                scorePipelineSwingWorker = new ScorePipelineSwingWorker();
-                scorePipelineSwingWorker.execute();
-
-                //show the run dialog
-                centerRunDialog();
-                runDialog.setVisible(true);
+                    //show the run dialog
+                    centerRunDialog();
+                    runDialog.setVisible(true);
+                }
             }
         });
 
@@ -200,6 +197,7 @@ public class MainController {
             scorePipelineSwingWorker.cancel(true);
         });
 
+        //load the parameters from the properties file
         loadParameterValues();
     }
 
@@ -227,11 +225,7 @@ public class MainController {
         mainFrame.getNeighbourSlicesOnlyCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(NEIGHBOUR_SLICE_PROP));
         mainFrame.getFileNameSliceIndexTextField().setText(Integer.toString(ConfigHolder.getInstance().getInt(FILE_NAME_SLICE_INDEX_PROP)));
         boolean preprocessingOrder = ConfigHolder.getInstance().getBoolean(PREPROCESSING_ORDER_PROP);
-        if (preprocessingOrder) {
-            mainFrame.getPreprocessingOrderComboBox().setSelectedIndex(0);
-        } else {
-            mainFrame.getPreprocessingOrderComboBox().setSelectedIndex(1);
-        }
+        mainFrame.getPreprocessingOrderComboBox().setSelectedIndex(preprocessingOrder ? 0 : 1);
         mainFrame.getBinWeightingComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(BIN_WEIGHTING_PROP));
         mainFrame.getTransformationComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(TRANSORMATION_PROP));
         mainFrame.getNoiseFilterComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(NOISE_FILTER_PROP));
@@ -435,8 +429,7 @@ public class MainController {
         @Override
         protected Void doInBackground() throws Exception {
             LOGGER.info("starting spectrum similarity score pipeline");
-            Thread.sleep(10000);
-            LOGGER.info("busy with spectrum similarity score pipeline");
+            ScorePipeline.run();
 
             return null;
         }
@@ -449,7 +442,7 @@ public class MainController {
                 JOptionPane.showMessageDialog(runDialog, "The score pipeline has finished.");
             } catch (InterruptedException | ExecutionException ex) {
                 LOGGER.error(ex.getMessage(), ex);
-                showMessageDialog("Unexpected error", ex.getMessage(), JOptionPane.ERROR);
+                showMessageDialog("Unexpected error", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
             } catch (CancellationException ex) {
                 LOGGER.info("the spectrum similarity score pipeline run was cancelled");
             } finally {

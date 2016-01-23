@@ -205,7 +205,6 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Spectrum similarity score pipeline");
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -292,13 +291,21 @@ public class MainFrame extends javax.swing.JFrame {
 
         removePrecursorIonPeaksCheckBox.setText("Remove precursor ion peaks");
 
+        binWeightingComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "sum of intensities", "mean", "median" }));
+
         jLabel1.setText("Transformation*:");
 
-        numberOfPeaksCutoffLabel.setText("# of peaks cutoff:");
+        noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "PrideAsap-Adaptive noise filtering", "TopN intense peak selection", "Discard peaks with less than x% of precursor-intensity" }));
+
+        transformationComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "none", "log2", "square root" }));
+
+        numberOfPeaksCutoffLabel.setText("Number of peaks cutoff:");
 
         peakIntensityCutoffLabel.setText("Peak intensity cutoff (%):");
 
         preprocessingOrderLabel.setText("Preprocessing order*:");
+
+        preprocessingOrderComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "noise filter - transformation", "transformation - noise filter" }));
 
         javax.swing.GroupLayout preprocessingParametersPanelLayout = new javax.swing.GroupLayout(preprocessingParametersPanel);
         preprocessingParametersPanel.setLayout(preprocessingParametersPanelLayout);
@@ -321,7 +328,7 @@ public class MainFrame extends javax.swing.JFrame {
                                     .addComponent(peakIntensityCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(numberOfPeaksCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(removePrecursorIonPeaksCheckBox))
-                        .addGap(0, 175, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)

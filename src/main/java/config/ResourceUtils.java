@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package config;
 
 import java.io.File;
-import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -18,7 +16,6 @@ import org.springframework.core.io.Resource;
  */
 public class ResourceUtils {
 
-    private static final Logger LOGGER = Logger.getLogger(ResourceUtils.class);
     private static final String RESOURCES_FOLDER = "resources";
 
     /**

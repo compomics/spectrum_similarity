@@ -17,15 +17,6 @@
     </properties>  
     
     <build>       
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering> 
-                <excludes>
-                    <exclude>ProteinDiversity.properties</exclude>
-                </excludes>
-            </resource>            
-        </resources>
         
         <!-- Required for Maven deploy (with scp-url) -->
         <extensions> 
@@ -80,10 +71,13 @@
                     <archive>
                         <manifest>
                             <!--mainClass>gui_spectral_match_visualization.MainGUI</mainClass-->     
-                            <mainClass>main.Score_Tsol</mainClass>                          
+                            <mainClass>main.ScorePipelineStarter</mainClass>                          
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>resources/MS2Similarity.properties</Class-Path>
+                        </manifestEntries>
                     </archive>
                     <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
                     </outputDirectory>
@@ -133,9 +127,28 @@
                                 <resource>
                                     <directory>src/main/resources</directory> 
                                     <filtering>true</filtering> 
-                                    <excludes>
-                                        <exclude>ProteinDiversity.properties</exclude>
-                                    </excludes>                                      
+                                    <includes>
+                                        <include>MS2Similarity.properties</include>
+                                    </includes>                                                                                                               
+                                </resource>                                
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-package-license</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>LICENSE-2.0.txt</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
