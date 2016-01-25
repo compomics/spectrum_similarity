@@ -27,30 +27,9 @@
             </extension> 
         </extensions>
         
-        
         <!-- Plugins -->
         <plugins>
-            <!-- Enable zipping of a target folder (must be an src/main/assembly folder with zip.xml) -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/zip.xml</descriptor>
-                    </descriptors>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> 
-            
+        
             <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -63,27 +42,7 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <!--mainClass>gui_spectral_match_visualization.MainGUI</mainClass-->     
-                            <mainClass>main.ScorePipelineStarter</mainClass>                          
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib</classpathPrefix>
-                        </manifest>
-                        <manifestEntries>
-                            <Class-Path>resources/MS2Similarity.properties</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
-                    </outputDirectory>
-                </configuration>
-            </plugin>
-            
+        
             <!-- Dependency plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -154,7 +113,51 @@
                         </configuration>
                     </execution>                   
                 </executions>
-            </plugin>           
+            </plugin>                                                                                   
+            
+            <!-- Jar plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>BookChapter.properties</exclude>
+                        <exclude>MS2Similarity.properties</exclude>
+                        <exclude>ProteinDiversity.properties</exclude>                        
+                    </excludes>   
+                    <archive>
+                        <manifest>                            
+                            <mainClass>main.ScorePipelineStarter</mainClass>                          
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
+                    </outputDirectory>
+                </configuration>
+            </plugin>
+            
+            <!-- Enable zipping of a target folder (must be an src/main/assembly folder with zip.xml) -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/zip.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
                    
         </plugins>
     </build>

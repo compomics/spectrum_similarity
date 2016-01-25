@@ -350,7 +350,7 @@ public class MainController {
                 validationMessages.add("Please a provide peak cutoff number when choosing the TopN intense peak selection filter.");
             } else {
                 try {
-                    Integer number = Integer.valueOf(mainFrame.getFileNameSliceIndexTextField().getText());
+                    Integer number = Integer.valueOf(mainFrame.getNumberOfPeaksCutoffTextField().getText());
                     if (number < 0) {
                         validationMessages.add("Please provide a positive peak cutoff number value.");
                     }
@@ -359,17 +359,29 @@ public class MainController {
                 }
             }
         } else if (mainFrame.getNoiseFilterComboBox().getSelectedIndex() == 3) {
-            if (mainFrame.getNumberOfPeaksCutoffTextField().getText().isEmpty()) {
+            if (mainFrame.getPeakIntensityCutoffTextField().getText().isEmpty()) {
                 validationMessages.add("Please provide peak cutoff percentage when choosing the Discard peaks with less than x% of precursor-intensity filter.");
             } else {
                 try {
-                    Double percentage = Double.valueOf(mainFrame.getFileNameSliceIndexTextField().getText());
+                    Double percentage = Double.valueOf(mainFrame.getPeakIntensityCutoffTextField().getText());
                     if (percentage < 0.0) {
                         validationMessages.add("Please provide a positive peak cutoff percentage value.");
                     }
                 } catch (NumberFormatException nfe) {
                     validationMessages.add("Please provide a numeric peak cutoff percentage value.");
                 }
+            }
+        }
+        if (mainFrame.getNumberOfThreadsTextField().getText().isEmpty()) {
+            validationMessages.add("Please provide a number of threads.");
+        } else {
+            try {
+                Integer numberOfThreads = Integer.valueOf(mainFrame.getNumberOfThreadsTextField().getText());
+                if (numberOfThreads < 0) {
+                    validationMessages.add("Please provide a positive number of threads.");
+                }
+            } catch (NumberFormatException nfe) {
+                validationMessages.add("Please provide a numeric number of threads.");
             }
         }
 

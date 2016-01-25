@@ -472,6 +472,7 @@ public class MainFrame extends javax.swing.JFrame {
         closeButton.setPreferredSize(new java.awt.Dimension(85, 27));
 
         runButton.setText("run");
+        runButton.setToolTipText("run the pipeline with the given parameter values");
         runButton.setMaximumSize(new java.awt.Dimension(85, 27));
         runButton.setMinimumSize(new java.awt.Dimension(85, 27));
         runButton.setPreferredSize(new java.awt.Dimension(85, 27));

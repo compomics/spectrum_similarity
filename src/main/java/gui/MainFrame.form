@@ -594,6 +594,7 @@
         <Component class="javax.swing.JButton" name="runButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="run"/>
+            <Property name="toolTipText" type="java.lang.String" value="run the pipeline with the given parameter values"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[85, 27]"/>
             </Property>
