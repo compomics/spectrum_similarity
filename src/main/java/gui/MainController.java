@@ -3,6 +3,10 @@ package gui;
 import config.ConfigHolder;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -90,96 +94,117 @@ public class MainController {
         mainFrame.getOutputDirectoryChooser().setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         //add action listeners
-        mainFrame.getSpectraDirectoryButton().addActionListener(e -> {
-            //in response to the button click, show open dialog
-            int returnVal = mainFrame.getSpectraDirectoryChooser().showOpenDialog(mainFrame);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //show spectra directory path in text field
-                mainFrame.getSpectraDirectoryTextField().setText(mainFrame.getSpectraDirectoryChooser().getSelectedFile().getAbsolutePath());
+        mainFrame.getSpectraDirectoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //in response to the button click, show open dialog
+                int returnVal = mainFrame.getSpectraDirectoryChooser().showOpenDialog(mainFrame);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    //show spectra directory path in text field
+                    mainFrame.getSpectraDirectoryTextField().setText(mainFrame.getSpectraDirectoryChooser().getSelectedFile().getAbsolutePath());
+                }
             }
         });
 
-        mainFrame.getComparisonSpectraDirectoryButton().addActionListener(e -> {
-            //in response to the button click, show open dialog
-            int returnVal = mainFrame.getComparisonSpectraDirectoryChooser().showOpenDialog(mainFrame);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //show spectra directory path in text field
-                mainFrame.getComparisonSpectraDirectoryTextField().setText(mainFrame.getComparisonSpectraDirectoryChooser().getSelectedFile().getAbsolutePath());
+        mainFrame.getComparisonSpectraDirectoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //in response to the button click, show open dialog
+                int returnVal = mainFrame.getComparisonSpectraDirectoryChooser().showOpenDialog(mainFrame);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    //show spectra directory path in text field
+                    mainFrame.getComparisonSpectraDirectoryTextField().setText(mainFrame.getComparisonSpectraDirectoryChooser().getSelectedFile().getAbsolutePath());
+                }
             }
         });
 
-        mainFrame.getOutputDirectoryButton().addActionListener(e -> {
-            //in response to the button click, show open dialog
-            int returnVal = mainFrame.getOutputDirectoryChooser().showOpenDialog(mainFrame);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //show spectra directory path in text field
-                mainFrame.getOutputDirectoryTextField().setText(mainFrame.getOutputDirectoryChooser().getSelectedFile().getAbsolutePath());
+        mainFrame.getOutputDirectoryButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //in response to the button click, show open dialog
+                int returnVal = mainFrame.getOutputDirectoryChooser().showOpenDialog(mainFrame);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    //show spectra directory path in text field
+                    mainFrame.getOutputDirectoryTextField().setText(mainFrame.getOutputDirectoryChooser().getSelectedFile().getAbsolutePath());
+                }
             }
         });
 
-        mainFrame.getNeighbourSlicesOnlyCheckBox().addItemListener(e -> {
-            if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
-                mainFrame.getFileNameSliceIndexTextField().setEnabled(true);
-            } else {
-                mainFrame.getFileNameSliceIndexTextField().setEnabled(false);
+        mainFrame.getNeighbourSlicesOnlyCheckBox().addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
+                    mainFrame.getFileNameSliceIndexTextField().setEnabled(true);
+                } else {
+                    mainFrame.getFileNameSliceIndexTextField().setEnabled(false);
+                }
             }
         });
 
-        mainFrame.getNoiseFilterComboBox().addActionListener(e -> {
-            switch (mainFrame.getNoiseFilterComboBox().getSelectedIndex()) {
-                case 2:
-                    mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(true);
-                    mainFrame.getPeakIntensityCutoffTextField().setEnabled(false);
-                    break;
-                case 3:
-                    mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(false);
-                    mainFrame.getPeakIntensityCutoffTextField().setEnabled(true);
-                    break;
-                default:
-                    if (mainFrame.getNumberOfPeaksCutoffTextField().isEnabled()) {
-                        mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(false);
-                    }
-                    if (mainFrame.getPeakIntensityCutoffTextField().isEnabled()) {
+        mainFrame.getNoiseFilterComboBox().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (mainFrame.getNoiseFilterComboBox().getSelectedIndex()) {
+                    case 2:
+                        mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(true);
                         mainFrame.getPeakIntensityCutoffTextField().setEnabled(false);
-                    }
-                    break;
-            }
-        });
-
-        mainFrame.getRunButton().addActionListener(e -> {
-            //validate input
-            List<String> validationMessages = validateInput();
-            if (!validationMessages.isEmpty()) {
-                String message = validationMessages.stream().collect(Collectors.joining(System.lineSeparator()));
-                showMessageDialog("Validation errors", message, JOptionPane.WARNING_MESSAGE);
-            } else {
-                //copy the parameter values to the ConfigHolder
-                copyParameterValues();
-                int reply = JOptionPane.showConfirmDialog(mainFrame, "Save the current settings for future usage?"
-                        + System.lineSeparator() + "Otherwise the settings will be used for this run only.", "Save settings", JOptionPane.INFORMATION_MESSAGE);
-                if (reply == JOptionPane.YES_OPTION) {
-                    try {
-                        ConfigHolder.getInstance().save();
-                    } catch (ConfigurationException ce) {
-                        showMessageDialog("Save problem", "The settings could not be saved."
-                                + System.lineSeparator()
-                                + ce.getMessage(), JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                if (reply != JOptionPane.CANCEL_OPTION) {
-                    scorePipelineSwingWorker = new ScorePipelineSwingWorker();
-                    scorePipelineSwingWorker.execute();
-
-                    //show the run dialog
-                    centerRunDialog();
-                    runDialog.setVisible(true);
+                        break;
+                    case 3:
+                        mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(false);
+                        mainFrame.getPeakIntensityCutoffTextField().setEnabled(true);
+                        break;
+                    default:
+                        if (mainFrame.getNumberOfPeaksCutoffTextField().isEnabled()) {
+                            mainFrame.getNumberOfPeaksCutoffTextField().setEnabled(false);
+                        }
+                        if (mainFrame.getPeakIntensityCutoffTextField().isEnabled()) {
+                            mainFrame.getPeakIntensityCutoffTextField().setEnabled(false);
+                        }
+                        break;
                 }
             }
         });
 
-        mainFrame.getCloseButton().addActionListener(e -> {
-            mainFrame.dispose();
-            System.exit(0);
+        mainFrame.getRunButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //validate input
+                List<String> validationMessages = validateInput();
+                if (!validationMessages.isEmpty()) {
+                    String message = validationMessages.stream().collect(Collectors.joining(System.lineSeparator()));
+                    showMessageDialog("Validation errors", message, JOptionPane.WARNING_MESSAGE);
+                } else {
+                    //copy the parameter values to the ConfigHolder
+                    copyParameterValues();
+                    int reply = JOptionPane.showConfirmDialog(mainFrame, "Save the current settings for future usage?"
+                            + System.lineSeparator() + "Otherwise the settings will be used for this run only.", "Save settings", JOptionPane.INFORMATION_MESSAGE);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        try {
+                            ConfigHolder.getInstance().save();
+                        } catch (ConfigurationException ce) {
+                            showMessageDialog("Save problem", "The settings could not be saved."
+                                    + System.lineSeparator()
+                                    + ce.getMessage(), JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    if (reply != JOptionPane.CANCEL_OPTION) {
+                        scorePipelineSwingWorker = new ScorePipelineSwingWorker();
+                        scorePipelineSwingWorker.execute();
+
+                        //show the run dialog
+                        centerRunDialog();
+                        runDialog.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        mainFrame.getCloseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+                System.exit(0);
+            }
         });
 
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -189,12 +214,18 @@ public class MainController {
             }
         });
 
-        runDialog.getClearButton().addActionListener(e -> {
-            runDialog.getLogTextArea().setText("..." + System.lineSeparator());
+        runDialog.getClearButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runDialog.getLogTextArea().setText("..." + System.lineSeparator());
+            }
         });
 
-        runDialog.getCancelButton().addActionListener(e -> {
-            scorePipelineSwingWorker.cancel(true);
+        runDialog.getCancelButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scorePipelineSwingWorker.cancel(true);
+            }
         });
 
         //load the parameters from the properties file

@@ -24,11 +24,14 @@ public class LogTextAreaAppender extends WriterAppender {
     public void append(LoggingEvent event) {
         final String message = this.layout.format(event);
 
-        SwingUtilities.invokeLater(() -> {
-            runDialog.getLogTextArea().append(message);
-            //repaint view
-            runDialog.validate();
-            runDialog.repaint();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                runDialog.getLogTextArea().append(message);
+                //repaint view
+                runDialog.validate();
+                runDialog.repaint();
+            }
         });
     }
 
