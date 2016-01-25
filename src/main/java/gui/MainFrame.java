@@ -184,15 +184,15 @@ public class MainFrame extends javax.swing.JFrame {
         peakIntensityCutoffTextField = new javax.swing.JTextField();
         binWeightingLabel = new javax.swing.JLabel();
         removePrecursorIonPeaksCheckBox = new javax.swing.JCheckBox();
-        binWeightingComboBox = new javax.swing.JComboBox<>();
+        binWeightingComboBox = new javax.swing.JComboBox<String>();
         numberOfPeaksCutoffTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        noiseFilterComboBox = new javax.swing.JComboBox<>();
-        transformationComboBox = new javax.swing.JComboBox<>();
+        noiseFilterComboBox = new javax.swing.JComboBox<String>();
+        transformationComboBox = new javax.swing.JComboBox<String>();
         numberOfPeaksCutoffLabel = new javax.swing.JLabel();
         peakIntensityCutoffLabel = new javax.swing.JLabel();
         preprocessingOrderLabel = new javax.swing.JLabel();
-        preprocessingOrderComboBox = new javax.swing.JComboBox<>();
+        preprocessingOrderComboBox = new javax.swing.JComboBox<String>();
         neighbourSlicesOnlyCheckBox = new javax.swing.JCheckBox();
         fileNameSliceIndexLabel = new javax.swing.JLabel();
         fileNameSliceIndexTextField = new javax.swing.JTextField();
@@ -291,13 +291,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         removePrecursorIonPeaksCheckBox.setText("Remove precursor ion peaks");
 
-        binWeightingComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "sum of intensities", "mean", "median" }));
+        binWeightingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "sum of intensities", "mean", "median" }));
 
         jLabel1.setText("Transformation*:");
 
-        noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "PrideAsap-Adaptive noise filtering", "TopN intense peak selection", "Discard peaks with less than x% of precursor-intensity" }));
+        noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "prideAsap-Adaptive noise filtering", "topN intense peak selection", "discard peaks with less than x% of precursor-intensity" }));
 
-        transformationComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "none", "log2", "square root" }));
+        transformationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "log2", "square root" }));
 
         numberOfPeaksCutoffLabel.setText("Number of peaks cutoff:");
 
@@ -305,7 +305,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         preprocessingOrderLabel.setText("Preprocessing order*:");
 
-        preprocessingOrderComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "noise filter - transformation", "transformation - noise filter" }));
+        preprocessingOrderComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "noise filter - transformation", "transformation - noise filter" }));
 
         javax.swing.GroupLayout preprocessingParametersPanelLayout = new javax.swing.GroupLayout(preprocessingParametersPanel);
         preprocessingParametersPanel.setLayout(preprocessingParametersPanelLayout);
@@ -387,7 +387,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                                 .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -171,8 +170,11 @@ public class MainController {
                 //validate input
                 List<String> validationMessages = validateInput();
                 if (!validationMessages.isEmpty()) {
-                    String message = validationMessages.stream().collect(Collectors.joining(System.lineSeparator()));
-                    showMessageDialog("Validation errors", message, JOptionPane.WARNING_MESSAGE);
+                    StringBuilder message = new StringBuilder();
+                    for(String validationMessage : validationMessages){
+                        message.append(validationMessage).append(System.lineSeparator());
+                    }
+                    showMessageDialog("Validation errors", message.toString(), JOptionPane.WARNING_MESSAGE);
                 } else {
                     //copy the parameter values to the ConfigHolder
                     copyParameterValues();
@@ -202,7 +204,6 @@ public class MainController {
         mainFrame.getCloseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.dispose();
                 System.exit(0);
             }
         });
@@ -224,7 +225,9 @@ public class MainController {
         runDialog.getCancelButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                scorePipelineSwingWorker.cancel(true);
+//                scorePipelineSwingWorker.cancel(true);
+//                runDialog.dispose();
+                System.exit(0);
             }
         });
 

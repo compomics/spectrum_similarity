@@ -88,6 +88,7 @@
                                     <filtering>true</filtering> 
                                     <includes>
                                         <include>MS2Similarity.properties</include>
+                                        <include>BookChapter.properties</include>
                                     </includes>                                                                                                               
                                 </resource>                                
                             </resources>
@@ -128,7 +129,7 @@
                     </excludes>   
                     <archive>
                         <manifest>                            
-                            <mainClass>main.ScorePipelineStarter</mainClass>                          
+                            <!--mainClass>main.ScorePipelineStarter</mainClass-->                          
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
