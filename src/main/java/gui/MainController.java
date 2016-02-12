@@ -20,7 +20,10 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import main.ScorePipeline;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Priority;
 
 /**
  * This class is main controller for the graphical user interface (GUI).
@@ -68,13 +71,24 @@ public class MainController {
      * Init the controller.
      */
     public void init() {
+        // add gui appender
+        LogTextAreaAppender logTextAreaAppender = new LogTextAreaAppender();
+        logTextAreaAppender.setThreshold(Priority.INFO);
+        logTextAreaAppender.setImmediateFlush(true);
+        PatternLayout layout = new org.apache.log4j.PatternLayout();
+        layout.setConversionPattern("%d{yyyy-MM-dd HH:mm:ss} - %m%n");
+        logTextAreaAppender.setLayout(layout);
+                
+                
+        LOGGER.addAppender(logTextAreaAppender);
+        LOGGER.setLevel((Level) Level.INFO);
+
         mainFrame.setTitle("Spectrum similarity score pipeline " + ConfigHolder.getInstance().getString("score.pipeline.version", ""));
 
         runDialog = new RunDialog(mainFrame, true);
         runDialog.getLogTextArea().setText("..." + System.lineSeparator());
 
         //get the appender for setting the text area
-        LogTextAreaAppender logTextAreaAppender = (LogTextAreaAppender) Logger.getLogger("gui").getAppender("gui");
         logTextAreaAppender.setRunDialog(runDialog);
 
         //disable the necessary text fields
@@ -171,7 +185,7 @@ public class MainController {
                 List<String> validationMessages = validateInput();
                 if (!validationMessages.isEmpty()) {
                     StringBuilder message = new StringBuilder();
-                    for(String validationMessage : validationMessages){
+                    for (String validationMessage : validationMessages) {
                         message.append(validationMessage).append(System.lineSeparator());
                     }
                     showMessageDialog("Validation errors", message.toString(), JOptionPane.WARNING_MESSAGE);
@@ -475,7 +489,7 @@ public class MainController {
         @Override
         protected Void doInBackground() throws Exception {
             LOGGER.info("starting spectrum similarity score pipeline");
-            ScorePipeline.run();
+            ScorePipeline.run(true);
 
             return null;
         }

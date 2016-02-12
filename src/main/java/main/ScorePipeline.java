@@ -12,10 +12,9 @@ import cal.multithread.Calculate_Similarity;
 import cal.multithread.SimilarityResult;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
-import preprocess.transformation.implementation.TransformIntensitiesImp;
-import preprocess.transformation.methods.Transformations;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import config.ConfigHolder;
+import gui.MainController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,10 +26,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import static main.ScorePipeline.LOGGER;
 import org.apache.log4j.Logger;
-import preprocess.filter.precursor.RemovePrecursorRelatedPeaks;
 import preprocess.filter.noise.implementation.NoiseFilteringPrideAsap;
 import preprocess.filter.noise.implementation.TopNFiltering;
+import preprocess.filter.precursor.RemovePrecursorRelatedPeaks;
+import preprocess.transformation.implementation.TransformIntensitiesImp;
+import preprocess.transformation.methods.Transformations;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
@@ -41,7 +43,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 public class ScorePipeline {
 
     static SpectrumFactory fct = SpectrumFactory.getInstance();
-    final static Logger LOGGER = Logger.getLogger(ScorePipeline.class);
+    static Logger LOGGER = Logger.getLogger(ScorePipeline.class);
 
     /**
      * @param args the command line arguments
@@ -53,12 +55,14 @@ public class ScorePipeline {
      * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, InterruptedException, ExecutionException {
-        run();
+        run(false);
     }
 
     /**
      * Run the spectrum similarity pipeline.
      *
+     * @param isGUI true if the GUI is asked, false: a standalone version 
+     * 
      * @throws IOException in case of an I/O related problem
      * @throws FileNotFoundException in case of file opening related problem
      * @throws ClassNotFoundException in case of a class loading by name problem
@@ -71,7 +75,10 @@ public class ScorePipeline {
      * @throws InterruptedException in case of an inactive thread interruption
      * problem
      */
-    public static void run() throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
+    public static void run(boolean isGUI) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
+        if (isGUI) {
+            LOGGER = Logger.getLogger(MainController.class);
+        }
         String thydFolder = ConfigHolder.getInstance().getString("spectra.folder"),
                 tsolFolder = ConfigHolder.getInstance().getString("spectra.to.compare.folder"),
                 outputFolder = ConfigHolder.getInstance().getString("output.folder");
