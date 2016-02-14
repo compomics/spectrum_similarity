@@ -31,6 +31,8 @@ This project contains the enlisted scoring functions in [Project description](##
 
 The scoring functions enlisted here were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets. The settings are on the bookChapter.properties.
 
+----
+
 # Download
 
 ### Differential pipeline
@@ -45,4 +47,8 @@ This GUI enables the manual inspection how spectra actually look alike with corr
 The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
 The settings to perform spectrum comparison are on the bookChapter.properties file. 
 
+----
+
+## Usage
+See the [wiki](https://github.com/compomics/spectrum_similarity/wiki) for additional information on how to setup, run and configure spectrum comparison related projects.
 
