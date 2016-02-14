@@ -190,14 +190,17 @@ public class MainFrame extends javax.swing.JFrame {
         inputAndOutputPanel.setOpaque(false);
 
         spectraDirectoryLabel.setText("Select the spectra directory*:");
+        spectraDirectoryLabel.setToolTipText("give a folder that contains spectra");
 
         spectraDirectoryButton.setText("browse...");
 
         spectraToCompareDirectoryLabel.setText("Select the comparison spectra directory*:");
+        spectraToCompareDirectoryLabel.setToolTipText("give a folder that contains spectra on the comparison data set");
 
         comparisonSpectraDirectoryButton.setText("browse...");
 
         outputDirectoryLabel.setText("Select the output directory*:");
+        outputDirectoryLabel.setToolTipText("give a folder where an output text file will be generated after the comparison");
 
         outputDirectoryButton.setText("browse...");
 
@@ -250,7 +253,8 @@ public class MainFrame extends javax.swing.JFrame {
         pipelineParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pipeline parameters"));
         pipelineParametersPanel.setOpaque(false);
 
-        chargeCheckBox.setText("Compare spectra regardless of charge");
+        chargeCheckBox.setText("Compare spectra regardless of precursor charge");
+        chargeCheckBox.setToolTipText("enables the comparison of spectra with the same precursor charge");
 
         precursorLabelToleranceLabel.setText("Precursor tolerance (ppm)*:");
 
@@ -260,18 +264,22 @@ public class MainFrame extends javax.swing.JFrame {
         preprocessingParametersPanel.setOpaque(false);
 
         noiseFilterLabel.setText("Noise filter*:");
+        noiseFilterLabel.setToolTipText("select the noise filtering option to remove peaks");
 
         removePrecursorIonPeaksCheckBox.setText("Remove precursor ion peaks");
 
         jLabel1.setText("Transformation*:");
+        jLabel1.setToolTipText("select the transformation option to transform peak intensity");
 
         noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "prideAsap-Adaptive noise filtering", "topN intense peak selection", "discard peaks with less than x% of precursor-intensity" }));
 
         transformationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "log2", "square root" }));
 
         numberOfPeaksCutoffLabel.setText("Number of peaks cutoff:");
+        numberOfPeaksCutoffLabel.setToolTipText("required for topN intense peak selection");
 
         peakIntensityCutoffLabel.setText("Peak intensity cutoff (%):");
+        peakIntensityCutoffLabel.setToolTipText("required for discarding peaks with less than x% of precursor intensity");
 
         preprocessingOrderLabel.setText("Preprocessing order*:");
 
@@ -338,6 +346,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         neighbourSlicesOnlyCheckBox.setText("Consider only the 5 neighbour slices");
+        neighbourSlicesOnlyCheckBox.setToolTipText("enables the comparison of spectra generated from the neighbour slices");
 
         fileNameSliceIndexLabel.setText("File name slice index:");
 
@@ -394,6 +403,7 @@ public class MainFrame extends javax.swing.JFrame {
         otherParametersPanel.setOpaque(false);
 
         numberOfThreadsLabel.setText("Number of threads*:");
+        numberOfThreadsLabel.setToolTipText("required for multithreading");
         numberOfThreadsLabel.setPreferredSize(new java.awt.Dimension(176, 15));
 
         javax.swing.GroupLayout otherParametersPanelLayout = new javax.swing.GroupLayout(otherParametersPanel);
