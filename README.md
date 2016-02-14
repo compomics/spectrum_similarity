@@ -32,19 +32,17 @@ This project contains the enlisted scoring functions in [Project description](##
 The scoring functions enlisted here were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets. The settings are on the bookChapter.properties.
 
 # Download
-## Spectrum comparison 
-The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
-The settings to perform spectrum comparison are on the bookChapter.properties file. 
+
+### Differential pipeline
 
 Moreover, the implemented scoring functions could be used to compare two experimental data sets in a comparative pipeline. A stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/0.1/scoring_pipeline-0.1.zip). Input files and parameters can be set on MS2Similatiry.properties file. The GUI version of this stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.0/scoring_pipeline-1.0.zip). 
 
-## A pairwise spectrum comparison GUI
+
+### A pairwise spectrum comparison GUI
 This GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
 
-The required inputs 
-- Two folders containing spectra that are compared (specA and specB, and must be mgf files) 
-- A text file containing calculated scores
-- Indices of spectrum titles from these two spectra folders on a given text file. 
+### Book chapter
+The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
+The settings to perform spectrum comparison are on the bookChapter.properties file. 
 
-After introducing these inputs, a pairwise spectra can be inspected by either bubble spectra or mirrored spectra, with allowing filtering either based on percentage remaining peaks or adaptive noise filtering from [pride-asa-pipeline](https://github.com/compomics/pride-asa-pipeline) 
 
