@@ -218,26 +218,17 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="precursorLabelToleranceLabel" pref="176" max="32767" attributes="0"/>
+                                      <Component id="precursorLabelToleranceLabel" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="fragmentToleranceLabel" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="maximumMzLabel" pref="176" max="32767" attributes="0"/>
-                                          <Component id="minimumMzLabel" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                  </Group>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="precursorToleranceTextField" max="32767" attributes="0"/>
                                   <Component id="fragmentToleranceTextField" max="32767" attributes="0"/>
-                                  <Component id="minimumMzTextField" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="maximumMzTextField" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -268,17 +259,7 @@
                           <Component id="fragmentToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fragmentToleranceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="minimumMzLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="minimumMzTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="maximumMzLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="maximumMzTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                       <Component id="neighbourSlicesOnlyCheckBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -309,20 +290,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fragmentToleranceTextField">
-            </Component>
-            <Component class="javax.swing.JLabel" name="minimumMzLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Min m/z*:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="maximumMzLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Max m/z*:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="minimumMzTextField">
-            </Component>
-            <Component class="javax.swing.JTextField" name="maximumMzTextField">
             </Component>
             <Container class="javax.swing.JPanel" name="preprocessingParametersPanel">
               <Properties>
@@ -364,13 +331,11 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jLabel1" pref="176" max="32767" attributes="0"/>
-                                      <Component id="binWeightingLabel" max="32767" attributes="0"/>
                                       <Component id="preprocessingOrderLabel" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="preprocessingOrderComboBox" max="32767" attributes="0"/>
-                                      <Component id="binWeightingComboBox" max="32767" attributes="0"/>
                                       <Component id="transformationComboBox" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -387,17 +352,12 @@
                               <Component id="preprocessingOrderLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="preprocessingOrderComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="binWeightingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="binWeightingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="transformationComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="noiseFilterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="noiseFilterComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -427,29 +387,10 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="peakIntensityCutoffTextField">
                 </Component>
-                <Component class="javax.swing.JLabel" name="binWeightingLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Bin weighting*:"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JCheckBox" name="removePrecursorIonPeaksCheckBox">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Remove precursor ion peaks"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="binWeightingComboBox">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
-                        <StringItem index="0" value="sum of intensities"/>
-                        <StringItem index="1" value="mean"/>
-                        <StringItem index="2" value="median"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JTextField" name="numberOfPeaksCutoffTextField">
                 </Component>
