@@ -12,7 +12,7 @@ Scoring functions for the comparison of two experimental spectra:
 - Normalized dot product (most commonly used in spectrum library search algorithms such as [SpectraST](http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST), [BiblioSpec](https://skyline.gs.washington.edu/labkey/project/home/software/BiblioSpec/begin.view)
 - Pearson’s and Spearman's correlation coefficients
 
-# Avaliable scoring functios
+# Avaliable scoring functions
 This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions  are in order to compare an acquired MS/MS spectrum against:
 
 - a theoretical spectrum via
@@ -29,22 +29,34 @@ This project contains the enlisted scoring functions in [Project description](##
  - Median Squared Error (MdSE) (and also root MdSE)
  - Probabilistic scoring functon (including peak intensities)
 
-The scoring functions enlisted here were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets. The settings are on the bookChapter.properties.
+
+
+----
 
 # Download
-## Spectrum comparison 
+
+### Differential pipeline
+
+The  probabilistic scoring function was applied on the differential pipeline in order to compare two experimental data sets in a differential analysis. 
+
+A stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/0.1/scoring_pipeline-0.1.zip). Input files and parameters can be set on MS2Similatiry.properties file. 
+
+The GUI version of this stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.0/scoring_pipeline-1.0.zip). 
+
+
+### A pairwise spectrum view GUI
+A pairwise spectrum view GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
+
+### Book chapter
+
+The scoring functions enlisted [Avaliable scoring functions] were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets.
+
 The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
+
 The settings to perform spectrum comparison are on the bookChapter.properties file. 
 
-Moreover, the implemented scoring functions could be used to compare two experimental data sets in a comparative pipeline. A stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/0.1/scoring_pipeline-0.1.zip). Input files and parameters can be set on MS2Similatiry.properties file. The GUI version of this stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.0/scoring_pipeline-1.0.zip). 
+----
 
-## A pairwise spectrum comparison GUI
-This GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
-
-The required inputs 
-- Two folders containing spectra that are compared (specA and specB, and must be mgf files) 
-- A text file containing calculated scores
-- Indices of spectrum titles from these two spectra folders on a given text file. 
-
-After introducing these inputs, a pairwise spectra can be inspected by either bubble spectra or mirrored spectra, with allowing filtering either based on percentage remaining peaks or adaptive noise filtering from [pride-asa-pipeline](https://github.com/compomics/pride-asa-pipeline) 
+# Usage
+See the [wiki](https://github.com/compomics/spectrum_similarity/wiki) for additional information on how to setup, run and configure spectrum comparison related projects.
 
