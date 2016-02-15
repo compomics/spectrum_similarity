@@ -37,11 +37,9 @@ This project contains the enlisted scoring functions in [Project description](##
 
 ### Differential pipeline
 
-The  probabilistic scoring function was applied on the differential pipeline in order to compare two experimental data sets in a differential analysis. 
+The  probabilistic scoring function was succesfully applied on the differential pipeline in order to compare two experimental data sets in a differential analysis. 
 
-A stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/0.1/scoring_pipeline-0.1.zip). Input files and parameters can be set on MS2Similatiry.properties file. 
-
-The GUI version of this stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.0/scoring_pipeline-1.0.zip). 
+A stand-alone program and the GUI version of this stand-alone program can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.0/scoring_pipeline-1.0.zip). 
 
 
 ### A pairwise spectrum view GUI
