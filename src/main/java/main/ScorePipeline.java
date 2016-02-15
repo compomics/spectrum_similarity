@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import static main.ScorePipeline.LOGGER;
 import org.apache.log4j.Logger;
+import preprocess.filter.noise.implementation.DiscardLowIntensePeaks;
 import preprocess.filter.noise.implementation.NoiseFilteringPrideAsap;
 import preprocess.filter.noise.implementation.TopNFiltering;
 import preprocess.filter.precursor.RemovePrecursorRelatedPeaks;
@@ -61,8 +62,8 @@ public class ScorePipeline {
     /**
      * Run the spectrum similarity pipeline.
      *
-     * @param isGUI true if the GUI is asked, false: a standalone version 
-     * 
+     * @param isGUI true if the GUI is asked, false: a standalone version
+     *
      * @throws IOException in case of an I/O related problem
      * @throws FileNotFoundException in case of file opening related problem
      * @throws ClassNotFoundException in case of a class loading by name problem
@@ -88,14 +89,15 @@ public class ScorePipeline {
                 msRobinCalculationOption = 1, // Calculation is  #0: -10*Log10(Pro)*SQRT(IP)) #1: -10*Log10(Pro)*IP #2: -Log10(Pro*IP) #3: (1-Pro)*IP
                 calculationOptionIntensityMSRobin = 1; // IP is calculated as 0:Summing up intensity-ratios #1:Multiply intensity-ratios #2:Math.pow(10, (1-IP))
         boolean is_charged_based = ConfigHolder.getInstance().getBoolean("is.charged.based"), // F- All against all T-only the same charge state 2-bigger than 4, check against all
-                is_hq_data = ConfigHolder.getInstance().getBoolean("is.hq"),
+                is_hq_data = true,//removed is.hq = true from MS2Similarity.properties
                 is_precursor_peak_removed = ConfigHolder.getInstance().getBoolean("precursor.peak.removal"),
                 doesCalculateOnly5 = ConfigHolder.getInstance().getBoolean("calculate.only5"),
                 isNFTR = ConfigHolder.getInstance().getBoolean("isNFTR");
-        double min_mz = ConfigHolder.getInstance().getDouble("min.mz"), // To start binning
-                max_mz = ConfigHolder.getInstance().getDouble("max.mz"), // To end binning
-                fragment_tolerance = 0.5, // A bin size if 2*0.5
-                precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference
+        double min_mz = 100, // To start binning (removed min.mz from MS2Similarity.properties because only for cumulative binomial scoring function) 
+                max_mz = 3500, // To end binning (removed max.mz from MS2Similarity.properties because only for cumulative binomial scoring function) 
+                fragment_tolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance"), // A bin size if 2*0.5
+                percentage = ConfigHolder.getInstance().getDouble("percent"),
+                precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference         
         int sliceIndex = ConfigHolder.getInstance().getInt("slice.index");
         // Select a scoring function name as msrobin (this is pROBility INtensity weighted scoring function, dot, spearman, and pearson (all lower case))
         String scoreType = "msrobin"; // Avaliable scoring functions: msrobin/spearman/pearson/dot
@@ -117,6 +119,8 @@ public class ScorePipeline {
             noiseFilteringInfo = "Pride";
         } else if (noiseFiltering == 2) {
             noiseFilteringInfo = "TopN";
+        } else if (noiseFiltering == 3) {
+            noiseFilteringInfo = "DiscardLowAbundance";
         }
         if (transformation == 1) {
             transformationInfo = "Log2";
@@ -199,16 +203,16 @@ public class ScorePipeline {
                                     }
                                 } else if (!is_charged_based) {
                                     // Run against all for MSRobin
-                                    ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, is_precursor_peak_removed, 0, fragment_tolerance),
-                                            tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, is_precursor_peak_removed, 0, fragment_tolerance);
+                                    ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance),
+                                            tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance);
                                     LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                     LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
 
                                     calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
                                 } else if (is_charged_based) {
                                     for (int charge : charges) {
-                                        ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, is_precursor_peak_removed, charge, fragment_tolerance),
-                                                tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, is_precursor_peak_removed, charge, fragment_tolerance);
+                                        ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
+                                                tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
                                         LOGGER.info("Charge=" + charge);
                                         LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                         LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
@@ -241,16 +245,16 @@ public class ScorePipeline {
                                 }
                             } else if (!is_charged_based) {
                                 // Run against all for MSRobin
-                                ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, is_precursor_peak_removed, 0, fragment_tolerance),
-                                        tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, is_precursor_peak_removed, 0, fragment_tolerance);
+                                ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance),
+                                        tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance);
                                 LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                 LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
 
                                 calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
                             } else if (is_charged_based) {
                                 for (int charge : charges) {
-                                    ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, is_precursor_peak_removed, charge, fragment_tolerance),
-                                            tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, is_precursor_peak_removed, charge, fragment_tolerance);
+                                    ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
+                                            tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
                                     LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                     LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
                                     calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
@@ -544,7 +548,7 @@ public class ScorePipeline {
      * @throws ClassNotFoundException
      * @throws MzMLUnmarshallerException
      */
-    private static ArrayList<MSnSpectrum> prepareData(File mgf_file, int transformation, int noiseFiltering, boolean is_precursor_peak_removal, int charge, double fragment_tolerance) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException {
+    private static ArrayList<MSnSpectrum> prepareData(File mgf_file, int transformation, int noiseFiltering, int topN, double percentage, boolean is_precursor_peak_removal, int charge, double fragment_tolerance) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException {
         ArrayList<MSnSpectrum> spectra = new ArrayList<>();
         if (mgf_file.getName().endsWith(".mgf")) {
             fct.clearFactory();
@@ -557,7 +561,7 @@ public class ScorePipeline {
                         removal.removePrecursor();
                     }
                     if (noiseFiltering > 0) {
-                        apply_noise_filtering(ms, noiseFiltering);
+                        apply_noise_filtering(ms, noiseFiltering, topN, percentage);
                     }
                     if (transformation > 0) {
                         transform_intensities(ms, transformation);
@@ -580,17 +584,22 @@ public class ScorePipeline {
      * @param ms an MSnSpectrum object
      *
      */
-    private static void apply_noise_filtering(MSnSpectrum ms, int noise_filtering_case) {
+    private static void apply_noise_filtering(MSnSpectrum ms, int noise_filtering_case, int topN, double percentage) {
         switch (noise_filtering_case) {
+
             case 1:
                 NoiseFilteringPrideAsap noiseFilterImp = new NoiseFilteringPrideAsap();
                 noiseFilterImp.noiseFilter(ms);
                 break;
             case 2:
-                TopNFiltering topNFiltering = new TopNFiltering(50);
+                TopNFiltering topNFiltering = new TopNFiltering(topN);
                 topNFiltering.noiseFilter(ms);
                 break;
 
+            case 3:
+                DiscardLowIntensePeaks discardlowintense = new DiscardLowIntensePeaks(percentage);
+                discardlowintense.noiseFilter(ms);
+                break;
         }
     }
 

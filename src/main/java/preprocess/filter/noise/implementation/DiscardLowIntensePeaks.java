@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public class DiscardLowIntensePeaks implements NoiseFilter {
 
-    private int percentage = 5; // X% of the highest intensity
+    private double percentage = 5.00; // X% of the highest intensity
 
-    public DiscardLowIntensePeaks(int percentage) {
+    public DiscardLowIntensePeaks(double percentage) {
         this.percentage = percentage;
     }
 
