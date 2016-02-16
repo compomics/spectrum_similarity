@@ -72,14 +72,6 @@ public class MainFrame extends javax.swing.JFrame {
         return fragmentToleranceTextField;
     }
 
-    public JTextField getMaximumMzTextField() {
-        return maximumMzTextField;
-    }
-
-    public JTextField getMinimumMzTextField() {
-        return minimumMzTextField;
-    }
-
     public JCheckBox getNeighbourSlicesOnlyCheckBox() {
         return neighbourSlicesOnlyCheckBox;
     }
@@ -120,20 +112,12 @@ public class MainFrame extends javax.swing.JFrame {
         return transformationComboBox;
     }
 
-    public JComboBox<String> getBinWeightingComboBox() {
-        return binWeightingComboBox;
-    }
-
     public JButton getCloseButton() {
         return closeButton;
     }
 
     public JButton getRunButton() {
         return runButton;
-    }
-
-    public void setBinWeightingComboBox(JComboBox<String> binWeightingComboBox) {
-        this.binWeightingComboBox = binWeightingComboBox;
     }
 
     public void setNoiseFilterComboBox(JComboBox<String> noiseFilterComboBox) {
@@ -175,16 +159,10 @@ public class MainFrame extends javax.swing.JFrame {
         precursorToleranceTextField = new javax.swing.JTextField();
         fragmentToleranceLabel = new javax.swing.JLabel();
         fragmentToleranceTextField = new javax.swing.JTextField();
-        minimumMzLabel = new javax.swing.JLabel();
-        maximumMzLabel = new javax.swing.JLabel();
-        minimumMzTextField = new javax.swing.JTextField();
-        maximumMzTextField = new javax.swing.JTextField();
         preprocessingParametersPanel = new javax.swing.JPanel();
         noiseFilterLabel = new javax.swing.JLabel();
         peakIntensityCutoffTextField = new javax.swing.JTextField();
-        binWeightingLabel = new javax.swing.JLabel();
         removePrecursorIonPeaksCheckBox = new javax.swing.JCheckBox();
-        binWeightingComboBox = new javax.swing.JComboBox<String>();
         numberOfPeaksCutoffTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         noiseFilterComboBox = new javax.swing.JComboBox<String>();
@@ -212,14 +190,17 @@ public class MainFrame extends javax.swing.JFrame {
         inputAndOutputPanel.setOpaque(false);
 
         spectraDirectoryLabel.setText("Select the spectra directory*:");
+        spectraDirectoryLabel.setToolTipText("give a folder that contains spectra");
 
         spectraDirectoryButton.setText("browse...");
 
         spectraToCompareDirectoryLabel.setText("Select the comparison spectra directory*:");
+        spectraToCompareDirectoryLabel.setToolTipText("give a folder that contains spectra on the comparison data set");
 
         comparisonSpectraDirectoryButton.setText("browse...");
 
         outputDirectoryLabel.setText("Select the output directory*:");
+        outputDirectoryLabel.setToolTipText("give a folder where an output text file will be generated after the comparison");
 
         outputDirectoryButton.setText("browse...");
 
@@ -272,36 +253,33 @@ public class MainFrame extends javax.swing.JFrame {
         pipelineParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pipeline parameters"));
         pipelineParametersPanel.setOpaque(false);
 
-        chargeCheckBox.setText("Compare spectra regardless of charge");
+        chargeCheckBox.setText("Compare spectra regardless of precursor charge");
+        chargeCheckBox.setToolTipText("enables the comparison of spectra with the same precursor charge");
 
         precursorLabelToleranceLabel.setText("Precursor tolerance (ppm)*:");
 
         fragmentToleranceLabel.setText("Fragment tolerance (Da)*:");
 
-        minimumMzLabel.setText("Min m/z*:");
-
-        maximumMzLabel.setText("Max m/z*:");
-
         preprocessingParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Preprocessing"));
         preprocessingParametersPanel.setOpaque(false);
 
         noiseFilterLabel.setText("Noise filter*:");
-
-        binWeightingLabel.setText("Bin weighting*:");
+        noiseFilterLabel.setToolTipText("select the noise filtering option to remove peaks");
 
         removePrecursorIonPeaksCheckBox.setText("Remove precursor ion peaks");
 
-        binWeightingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "sum of intensities", "mean", "median" }));
-
         jLabel1.setText("Transformation*:");
+        jLabel1.setToolTipText("select the transformation option to transform peak intensity");
 
         noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "prideAsap-Adaptive noise filtering", "topN intense peak selection", "discard peaks with less than x% of precursor-intensity" }));
 
         transformationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "none", "log2", "square root" }));
 
         numberOfPeaksCutoffLabel.setText("Number of peaks cutoff:");
+        numberOfPeaksCutoffLabel.setToolTipText("required for topN intense peak selection");
 
         peakIntensityCutoffLabel.setText("Peak intensity cutoff (%):");
+        peakIntensityCutoffLabel.setToolTipText("required for discarding peaks with less than x% of precursor intensity");
 
         preprocessingOrderLabel.setText("Preprocessing order*:");
 
@@ -332,12 +310,10 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                            .addComponent(binWeightingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(preprocessingOrderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(6, 6, 6)
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(preprocessingOrderComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(binWeightingComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(transformationComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -348,15 +324,11 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(preprocessingOrderLabel)
                     .addComponent(preprocessingOrderComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(binWeightingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(binWeightingLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(transformationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(20, 20, 20)
                 .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(noiseFilterLabel)
                     .addComponent(noiseFilterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -374,6 +346,7 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         neighbourSlicesOnlyCheckBox.setText("Consider only the 5 neighbour slices");
+        neighbourSlicesOnlyCheckBox.setToolTipText("enables the comparison of spectra generated from the neighbour slices");
 
         fileNameSliceIndexLabel.setText("File name slice index:");
 
@@ -387,21 +360,14 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                                .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                                 .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(6, 6, 6))
-                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(maximumMzLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                                    .addComponent(minimumMzLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGap(6, 6, 6)))
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(precursorToleranceTextField)
-                            .addComponent(fragmentToleranceTextField)
-                            .addComponent(minimumMzTextField)
-                            .addComponent(maximumMzTextField)))
+                            .addComponent(fragmentToleranceTextField)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pipelineParametersPanelLayout.createSequentialGroup()
                         .addComponent(fileNameSliceIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -424,15 +390,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentToleranceLabel)
                     .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minimumMzLabel)
-                    .addComponent(minimumMzTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maximumMzLabel)
-                    .addComponent(maximumMzTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(54, 54, 54)
                 .addComponent(neighbourSlicesOnlyCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -445,6 +403,7 @@ public class MainFrame extends javax.swing.JFrame {
         otherParametersPanel.setOpaque(false);
 
         numberOfThreadsLabel.setText("Number of threads*:");
+        numberOfThreadsLabel.setToolTipText("required for multithreading");
         numberOfThreadsLabel.setPreferredSize(new java.awt.Dimension(176, 15));
 
         javax.swing.GroupLayout otherParametersPanelLayout = new javax.swing.GroupLayout(otherParametersPanel);
@@ -527,8 +486,6 @@ public class MainFrame extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> binWeightingComboBox;
-    private javax.swing.JLabel binWeightingLabel;
     private javax.swing.JCheckBox chargeCheckBox;
     private javax.swing.JButton closeButton;
     private javax.swing.JButton comparisonSpectraDirectoryButton;
@@ -541,10 +498,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel maximumMzLabel;
-    private javax.swing.JTextField maximumMzTextField;
-    private javax.swing.JLabel minimumMzLabel;
-    private javax.swing.JTextField minimumMzTextField;
     private javax.swing.JCheckBox neighbourSlicesOnlyCheckBox;
     private javax.swing.JComboBox<String> noiseFilterComboBox;
     private javax.swing.JLabel noiseFilterLabel;

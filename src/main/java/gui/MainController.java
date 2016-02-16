@@ -20,7 +20,10 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 import main.ScorePipeline;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Priority;
 
 /**
  * This class is main controller for the graphical user interface (GUI).
@@ -44,7 +47,6 @@ public class MainController {
     private static final String MAX_MZ_PROP = "max.mz";
     private static final String NEIGHBOUR_SLICE_PROP = "calculate.only5";
     private static final String FILE_NAME_SLICE_INDEX_PROP = "slice.index";
-    private static final String BIN_WEIGHTING_PROP = "sum_mean_median";
     private static final String TRANSORMATION_PROP = "transformation";
     private static final String NOISE_FILTER_PROP = "noise.filtering";
     private static final String NUMBER_OF_PEAKS_CUTOFF_PROP = "topN";
@@ -68,13 +70,24 @@ public class MainController {
      * Init the controller.
      */
     public void init() {
+        // add gui appender
+        LogTextAreaAppender logTextAreaAppender = new LogTextAreaAppender();
+        logTextAreaAppender.setThreshold(Priority.INFO);
+        logTextAreaAppender.setImmediateFlush(true);
+        PatternLayout layout = new org.apache.log4j.PatternLayout();
+        layout.setConversionPattern("%d{yyyy-MM-dd HH:mm:ss} - %m%n");
+        logTextAreaAppender.setLayout(layout);
+                
+                
+        LOGGER.addAppender(logTextAreaAppender);
+        LOGGER.setLevel((Level) Level.INFO);
+
         mainFrame.setTitle("Spectrum similarity score pipeline " + ConfigHolder.getInstance().getString("score.pipeline.version", ""));
 
         runDialog = new RunDialog(mainFrame, true);
         runDialog.getLogTextArea().setText("..." + System.lineSeparator());
 
         //get the appender for setting the text area
-        LogTextAreaAppender logTextAreaAppender = (LogTextAreaAppender) Logger.getLogger("gui").getAppender("gui");
         logTextAreaAppender.setRunDialog(runDialog);
 
         //disable the necessary text fields
@@ -171,7 +184,7 @@ public class MainController {
                 List<String> validationMessages = validateInput();
                 if (!validationMessages.isEmpty()) {
                     StringBuilder message = new StringBuilder();
-                    for(String validationMessage : validationMessages){
+                    for (String validationMessage : validationMessages) {
                         message.append(validationMessage).append(System.lineSeparator());
                     }
                     showMessageDialog("Validation errors", message.toString(), JOptionPane.WARNING_MESSAGE);
@@ -254,13 +267,10 @@ public class MainController {
         mainFrame.getChargeCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(CHARGE_PROP));
         mainFrame.getPrecursorToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(PRECURSOR_PROP)));
         mainFrame.getFragmentToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(FRAGMENT_PROP)));
-        mainFrame.getMinimumMzTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(MIN_MZ_PROP)));
-        mainFrame.getMaximumMzTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(MAX_MZ_PROP)));
         mainFrame.getNeighbourSlicesOnlyCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(NEIGHBOUR_SLICE_PROP));
         mainFrame.getFileNameSliceIndexTextField().setText(Integer.toString(ConfigHolder.getInstance().getInt(FILE_NAME_SLICE_INDEX_PROP)));
         boolean preprocessingOrder = ConfigHolder.getInstance().getBoolean(PREPROCESSING_ORDER_PROP);
         mainFrame.getPreprocessingOrderComboBox().setSelectedIndex(preprocessingOrder ? 0 : 1);
-        mainFrame.getBinWeightingComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(BIN_WEIGHTING_PROP));
         mainFrame.getTransformationComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(TRANSORMATION_PROP));
         mainFrame.getNoiseFilterComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(NOISE_FILTER_PROP));
         mainFrame.getRemovePrecursorIonPeaksCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(PRECURSOR_PEAK_REMOVAL_PROP));
@@ -280,14 +290,11 @@ public class MainController {
         ConfigHolder.getInstance().setProperty(CHARGE_PROP, mainFrame.getChargeCheckBox().isSelected());
         ConfigHolder.getInstance().setProperty(PRECURSOR_PROP, mainFrame.getPrecursorToleranceTextField().getText());
         ConfigHolder.getInstance().setProperty(FRAGMENT_PROP, mainFrame.getFragmentToleranceTextField().getText());
-        ConfigHolder.getInstance().setProperty(MIN_MZ_PROP, mainFrame.getMinimumMzTextField().getText());
-        ConfigHolder.getInstance().setProperty(MAX_MZ_PROP, mainFrame.getMaximumMzTextField().getText());
         ConfigHolder.getInstance().setProperty(NEIGHBOUR_SLICE_PROP, mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected());
         if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
             ConfigHolder.getInstance().setProperty(FILE_NAME_SLICE_INDEX_PROP, mainFrame.getFileNameSliceIndexTextField().getText());
         }
         ConfigHolder.getInstance().setProperty(PREPROCESSING_ORDER_PROP, mainFrame.getPreprocessingOrderComboBox().getSelectedIndex() == 0);
-        ConfigHolder.getInstance().setProperty(BIN_WEIGHTING_PROP, mainFrame.getBinWeightingComboBox().getSelectedIndex());
         ConfigHolder.getInstance().setProperty(TRANSORMATION_PROP, mainFrame.getTransformationComboBox().getSelectedIndex());
         ConfigHolder.getInstance().setProperty(NOISE_FILTER_PROP, mainFrame.getNoiseFilterComboBox().getSelectedIndex());
         if (mainFrame.getNoiseFilterComboBox().getSelectedIndex() == 2) {
@@ -340,33 +347,10 @@ public class MainController {
             } catch (NumberFormatException nfe) {
                 validationMessages.add("Please provide a numeric fragment tolerance value.");
             }
-        }
-        if (mainFrame.getMinimumMzTextField().getText().isEmpty()) {
-            validationMessages.add("Please provide a minimum m/z value.");
-        } else {
-            try {
-                Double tolerance = Double.valueOf(mainFrame.getMinimumMzTextField().getText());
-                if (tolerance < 0.0) {
-                    validationMessages.add("Please provide a positive minimum m/z value.");
-                }
-            } catch (NumberFormatException nfe) {
-                validationMessages.add("Please provide a numeric minimum m/z value.");
-            }
-        }
-        if (mainFrame.getMaximumMzTextField().getText().isEmpty()) {
-            validationMessages.add("Please provide a maximum m/z value.");
-        } else {
-            try {
-                Double tolerance = Double.valueOf(mainFrame.getMaximumMzTextField().getText());
-                if (tolerance < 0.0) {
-                    validationMessages.add("Please provide a positive maximum m/z value.");
-                }
-            } catch (NumberFormatException nfe) {
-                validationMessages.add("Please provide a numeric maximum m/z value.");
-            }
-        }
+        }      
+        
         if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
-            if (mainFrame.getMaximumMzTextField().getText().isEmpty()) {
+            if (mainFrame.getFileNameSliceIndexTextField().getText().isEmpty()) {
                 validationMessages.add("Please provide a file name slice index value.");
             } else {
                 try {
@@ -475,7 +459,7 @@ public class MainController {
         @Override
         protected Void doInBackground() throws Exception {
             LOGGER.info("starting spectrum similarity score pipeline");
-            ScorePipeline.run();
+            ScorePipeline.run(true);
 
             return null;
         }

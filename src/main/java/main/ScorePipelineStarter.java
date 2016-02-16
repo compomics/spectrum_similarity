@@ -1,5 +1,6 @@
 package main;
 
+import gui.LogTextAreaAppender;
 import gui.MainController;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +12,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Painter;
 import javax.swing.UIManager;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Priority;
 
 /**
  * This class runs the score pipeline graphical user interface (GUI).
@@ -76,12 +80,12 @@ public class ScorePipelineStarter {
         //set background color for JFileChooser instances
         UIManager.getLookAndFeelDefaults().put("FileChooser[Enabled].backgroundPainter",
                 (Painter<JFileChooser>) new Painter<JFileChooser>() {
-            @Override
-            public void paint(Graphics2D g, JFileChooser object, int width, int height) {
-                g.setColor(Color.WHITE);
-                g.draw(object.getBounds());
-            }
-        });
+                    @Override
+                    public void paint(Graphics2D g, JFileChooser object, int width, int height) {
+                        g.setColor(Color.WHITE);
+                        g.draw(object.getBounds());
+                    }
+                });
 
         ScorePipelineStarter scorePipelineStarter = new ScorePipelineStarter();
         scorePipelineStarter.launch();
