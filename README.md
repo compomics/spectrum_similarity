@@ -9,11 +9,11 @@ The most commonly used scoring functions in experimental versus theoretical spec
  
  
 Scoring functions for the comparison of two experimental spectra:
-- Normalized dot product (most commonly used in spectrum library search algorithms such as [SpectraST](http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST), [BiblioSpec](https://skyline.gs.washington.edu/labkey/project/home/software/BiblioSpec/begin.view)
+- Normalized dot product (most commonly used in spectrum library search algorithms such as [SpectraST](http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST), [BiblioSpec](https://skyline.gs.washington.edu/labkey/project/home/software/BiblioSpec/begin.view))
 - Pearson’s and Spearman's correlation coefficients
 
 # Avaliable scoring functions
-This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions  are in order to compare an acquired MS/MS spectrum against:
+This project contains the enlisted scoring functions in [Project description](## Project description). The scoring functions in order to compare an acquired MS/MS spectrum against:
 
 - a theoretical spectrum via
  - SEQUEST-like scoring function (non-probabilistic)
@@ -43,15 +43,16 @@ A stand-alone program and the GUI version of this stand-alone program can be dow
 
 
 ### A pairwise spectrum view GUI
-A pairwise spectrum view GUI enables the manual inspection how spectra actually look alike with corresponding to similarity score and can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
+A pairwise spectrum view GUI enables the manual inspection of how spectra actually look alike and can be downloaded
+[here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
 
 ### Book chapter
 
-The scoring functions enlisted [Avaliable scoring functions] were used to evaluate their ability to assess spectrum similarity on a book chapter by evaluating one of the CPTAC data sets.
+The scoring functions enlisted [Avaliable scoring functions] were used to evaluate their ability to assess spectrum similarity by evaluating them on one of the CPTAC data sets. This has been described in a book chapter.
 
 The program to compare spectra with the avaliable scoring functions, against either theoretical or experimental spectra can be downloaded [here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity/0.1/spectrum_similarity-0.1.zip).
 
-The settings to perform spectrum comparison are on the bookChapter.properties file. 
+The settings to perform spectrum comparison are in the bookChapter.properties file. 
 
 ----
 
