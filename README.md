@@ -29,6 +29,10 @@ This project contains the enlisted scoring functions in [Project description](##
  - Median Squared Error (MdSE) (and also root MdSE)
  - Probabilistic scoring functon (including peak intensities)
 
+# Citation
+
+Yılmaz et al: J Proteome Res. Publication Date (Web): April 18, 2016 (DOI: 10.1021/acs.jproteome.6b00140)
+If you use differential pipeline stand-alone tool or the GUI version, please include the reference above. 
 
 
 ----
