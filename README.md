@@ -48,8 +48,7 @@ A stand-alone program and the GUI version of this stand-alone program can be dow
 
 
 ### A pairwise spectrum view GUI
-A pairwise spectrum view GUI enables the manual inspection of how spectra actually look alike and can be downloaded
-[here](http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip).
+A pairwise spectrum view GUI enables the manual inspection of how spectra actually look alike and can be downloaded <a href="http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip" onclick="trackOutboundLink('usage','download','spectrum-similarity-gui','http://genesis.ugent.be/maven2/com/compomics/spectrum_similarity_pairwise_GUI/0.1/spectrum_similarity_pairwise_GUI-0.1.zip'); return false;">here</a>.
 
 ### Book chapter
 
