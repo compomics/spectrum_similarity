@@ -28,6 +28,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import static main.ScorePipeline.LOGGER;
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import preprocess.filter.noise.implementation.DiscardLowIntensePeaks;
 import preprocess.filter.noise.implementation.NoiseFilteringPrideAsap;
 import preprocess.filter.noise.implementation.TopNFiltering;
@@ -77,6 +81,8 @@ public class ScorePipeline {
      * problem
      */
     public static void run(boolean isGUI) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
+        //send an event
+        sendAnalyticsEvent();
         if (isGUI) {
             LOGGER = Logger.getLogger(MainController.class);
         }
@@ -93,11 +99,11 @@ public class ScorePipeline {
                 is_precursor_peak_removed = ConfigHolder.getInstance().getBoolean("precursor.peak.removal"),
                 doesCalculateOnly5 = ConfigHolder.getInstance().getBoolean("calculate.only5"),
                 isNFTR = ConfigHolder.getInstance().getBoolean("isNFTR");
-        double min_mz = 100, // To start binning (removed min.mz from MS2Similarity.properties because only for cumulative binomial scoring function) 
-                max_mz = 3500, // To end binning (removed max.mz from MS2Similarity.properties because only for cumulative binomial scoring function) 
+        double min_mz = 100, // To start binning (removed min.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
+                max_mz = 3500, // To end binning (removed max.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
                 fragment_tolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance"), // A bin size if 2*0.5
                 percentage = ConfigHolder.getInstance().getDouble("percent"),
-                precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference         
+                precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference
         int sliceIndex = ConfigHolder.getInstance().getInt("slice.index");
         // Select a scoring function name as msrobin (this is pROBility INtensity weighted scoring function, dot, spearman, and pearson (all lower case))
         String scoreType = "msrobin"; // Avaliable scoring functions: msrobin/spearman/pearson/dot
@@ -619,6 +625,25 @@ public class ScorePipeline {
                 transform.transform(tr);
                 ms.setPeakList(transform.getTr_peaks());
                 break;
+        }
+    }
+
+    /**
+     * Send an event to the google analytics server for tool start monitoring.
+     */
+    private static void sendAnalyticsEvent() {
+        String COLLECT_URL = "http://www.google-analytics.com/collect";
+        String POST = "v=1&tid=UA-36198780-13&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=toolstart&el=spectrumsimilarity";
+
+        //spring rest template
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> request = new HttpEntity<>(POST);
+        ResponseEntity<String> postForEntity
+                = restTemplate.postForEntity(COLLECT_URL,
+                        request, String.class);
+
+        if (postForEntity.getStatusCode().equals(HttpStatus.OK)) {
+            LOGGER.info("Successfully sent analytics event.");
         }
     }
 
