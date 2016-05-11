@@ -181,9 +181,9 @@ public class ScorePipeline {
             for (int index = 0; index < thydatigenas_directory.listFiles().length; index++) {
                 for (File thyd : thydatigenas_directory.listFiles()) {
                     for (File tsol : tsoliums_directory.listFiles()) {
-                        int tsolIndex = Integer.parseInt(tsol.getName().split("_")[sliceIndex].substring(0, tsol.getName().split("_")[sliceIndex].indexOf(".mgf"))),
-                                thydIndex = Integer.parseInt(thyd.getName().split("_")[sliceIndex].substring(0, thyd.getName().split("_")[sliceIndex].indexOf(".mgf")));
                         if (doesCalculateOnly5) {
+                            int tsolIndex = Integer.parseInt(tsol.getName().split("_")[sliceIndex].substring(0, tsol.getName().split("_")[sliceIndex].indexOf(".mgf"))),
+                                    thydIndex = Integer.parseInt(thyd.getName().split("_")[sliceIndex].substring(0, thyd.getName().split("_")[sliceIndex].indexOf(".mgf")));
                             // Now select an mgf files from the same slices..
                             if (index - 2 <= thydIndex && thydIndex <= index + 2 && tsolIndex == index) {
                                 LOGGER.info("slice number (spectra.folder and spectra.folder.to.compare)=" + thydIndex + "\t" + tsolIndex);
@@ -228,7 +228,7 @@ public class ScorePipeline {
                             }
                             // Calculate all against all..
                         } else {
-                            LOGGER.info("slice number (spectra.folder and spectra.to.compare.folder)=" + thydIndex + "\t" + tsolIndex);
+//                            LOGGER.info("slice number (spectra.folder and spectra.to.compare.folder)=" + thydIndex + "\t" + tsolIndex);
                             LOGGER.info("a name of an mgf from the spectra.folder=" + thyd.getName());
                             LOGGER.info("a name of an mgf from the spectra.to.compare.folder=" + tsol.getName());
                             if (!scoreType.equals("msrobin")) {
