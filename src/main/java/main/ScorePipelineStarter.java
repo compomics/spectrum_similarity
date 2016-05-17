@@ -27,7 +27,7 @@ public class ScorePipelineStarter {
     /**
      * Logger instance.
      */
-    private static final Logger LOGGER = Logger.getLogger(ScorePipelineStarter.class);
+    private static Logger LOGGER;
 
     /**
      * The startup error message.
@@ -52,6 +52,7 @@ public class ScorePipelineStarter {
      * @param args the main method arguments
      */
     public static void main(final String[] args) {
+        LOGGER = Logger.getLogger(ScorePipelineStarter.class);
         /*
          * Set the Nimbus look and feel
          */

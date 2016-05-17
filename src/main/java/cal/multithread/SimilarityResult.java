@@ -10,7 +10,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.util.EnumMap;
 
 /**
- * This class holds all information to run multithreaded Game
+ * This class holds all information to run multithreaded
  *
  * @author Sule
  */
@@ -18,8 +18,8 @@ public class SimilarityResult {
 
     private String spectrumName,
             spectrumChargeAsString,
-            tmpSpectrumName = "",
-            tmpSpectrumChargeAsString = "";
+            spectrumToCompare = "",
+            spectrumToCompareChargeAsString = "";
     private MSnSpectrum bestSimilarSpec;
     private double spectrumPrecursorMZ,
             score;
@@ -74,20 +74,20 @@ public class SimilarityResult {
         this.scores = scores;
     }
 
-    public String getTmpSpectrumName() {
-        return tmpSpectrumName;
+    public String getSpectrumToCompare() {
+        return spectrumToCompare;
     }
 
-    public void setTmpSpectrumName(String tmpSpectrumName) {
-        this.tmpSpectrumName = tmpSpectrumName;
+    public void setSpectrumToCompareName(String spectrumToCompare) {
+        this.spectrumToCompare = spectrumToCompare;
     }
 
-    public String getTmpSpectrumChargeAsString() {
-        return tmpSpectrumChargeAsString;
+    public String getSpectrumToCompareChargeAsString() {
+        return spectrumToCompareChargeAsString;
     }
 
-    public void setTmpSpectrumChargeAsString(String tmpSpectrumChargeAsString) {
-        this.tmpSpectrumChargeAsString = tmpSpectrumChargeAsString;
+    public void setspectrumToCompareChargeAsString(String spectrumToCompareChargeAsString) {
+        this.spectrumToCompareChargeAsString = spectrumToCompareChargeAsString;
     }
 
     /**
@@ -97,12 +97,14 @@ public class SimilarityResult {
      * @param similarityMethods
      * @param score
      */
-    public void updateScore(SimilarityMethods similarityMethods, double score) {
+    public void updateScore(SimilarityMethods similarityMethods, double score, String name) {
         if (score > scores.get(similarityMethods) && (!similarityMethods.equals(SimilarityMethods.MEAN_SQUARED_ERROR))) {
             scores.put(similarityMethods, score);
+            setSpectrumToCompareName(name);
         }
         if (score < scores.get(similarityMethods) && (similarityMethods.equals(SimilarityMethods.MEAN_SQUARED_ERROR))) {
             scores.put(similarityMethods, score);
+            setSpectrumToCompareName(name);
         }
     }
 }

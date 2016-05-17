@@ -95,7 +95,7 @@ public class ScorePipeline {
                 msRobinCalculationOption = 1, // Calculation is  #0: -10*Log10(Pro)*SQRT(IP)) #1: -10*Log10(Pro)*IP #2: -Log10(Pro*IP) #3: (1-Pro)*IP
                 calculationOptionIntensityMSRobin = 1; // IP is calculated as 0:Summing up intensity-ratios #1:Multiply intensity-ratios #2:Math.pow(10, (1-IP))
         boolean is_charged_based = ConfigHolder.getInstance().getBoolean("is.charged.based"), // F- All against all T-only the same charge state 2-bigger than 4, check against all
-                is_hq_data = true,//removed is.hq = true from MS2Similarity.properties
+                is_hq_data = false,//removed is.hq = true from MS2Similarity.properties
                 is_precursor_peak_removed = ConfigHolder.getInstance().getBoolean("precursor.peak.removal"),
                 doesCalculateOnly5 = ConfigHolder.getInstance().getBoolean("calculate.only5"),
                 isNFTR = ConfigHolder.getInstance().getBoolean("isNFTR");
@@ -104,7 +104,8 @@ public class ScorePipeline {
                 fragment_tolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance"), // A bin size if 2*0.5
                 percentage = ConfigHolder.getInstance().getDouble("percent"),
                 precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference
-        int sliceIndex = ConfigHolder.getInstance().getInt("slice.index");
+        int sliceIndex = ConfigHolder.getInstance().getInt("slice.index"),
+                maxCharge = ConfigHolder.getInstance().getInt("max.charge");
         // Select a scoring function name as msrobin (this is pROBility INtensity weighted scoring function, dot, spearman, and pearson (all lower case))
         String scoreType = "msrobin"; // Avaliable scoring functions: msrobin/spearman/pearson/dot
 
@@ -170,40 +171,105 @@ public class ScorePipeline {
         // write a title on an output
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(output))) {
             // write a title on an output
-            bw.write("Spectrum Title" + "\t" + "Charge" + "\t" + "PrecursorMZ" + "\t" + "Spectrum_Title_Calculated_Against" + "\t" + scoreType + paramTitle + "\n");
+            String title_score_type = scoreType;
+            if (scoreType.endsWith("msrobin")) {
+                title_score_type = "ScoringFunction_Pipeline";
+            }
+            String version = ConfigHolder.getInstance().getString("score.pipeline.version");
+            LOGGER.info("The version of score.pipeline :" + version);
+            bw.write("The version of Score.Pipeline is " + version + "\n");
+            bw.write("Spectrum Title" + "\t" + "Charge" + "\t" + "PrecursorMZ" + "\t" + "Spectrum_Title_Comparison_Dataset" + "\t" + title_score_type + paramTitle + "\n");
 
             /// RUNNING //////////////////////////////////////////
-            int[] charges = {2, 3, 4, 5}; // restricting to only charge state based
+            int[] charges = new int[maxCharge]; // restricting to only charge state based
+            int i = 0;
+            for (int charge = 2; charge < maxCharge; charge++) {
+                charges[i] = charge;
+                i++;
+            }
             LOGGER.info("Run is ready to start with " + param + " for " + scoreType);
             LOGGER.info("Only calculate +/-2 slices up and down: " + doesCalculateOnly5);
             //Get indices for each spectrum..
 
-            for (int index = 0; index < thydatigenas_directory.listFiles().length; index++) {
-                for (File thyd : thydatigenas_directory.listFiles()) {
+            int index = 1;
+            for (File thyd : thydatigenas_directory.listFiles()) {
+                if (thyd.getName().endsWith(".mgf")) {
                     for (File tsol : tsoliums_directory.listFiles()) {
-                        if (doesCalculateOnly5) {
-                            int tsolIndex = Integer.parseInt(tsol.getName().split("_")[sliceIndex].substring(0, tsol.getName().split("_")[sliceIndex].indexOf(".mgf"))),
-                                    thydIndex = Integer.parseInt(thyd.getName().split("_")[sliceIndex].substring(0, thyd.getName().split("_")[sliceIndex].indexOf(".mgf")));
-                            // Now select an mgf files from the same slices..
-                            if (index - 2 <= thydIndex && thydIndex <= index + 2 && tsolIndex == index) {
-                                LOGGER.info("slice number (spectra.folder and spectra.folder.to.compare)=" + thydIndex + "\t" + tsolIndex);
+                        if (tsol.getName().endsWith(".mgf")) {
+                            if (doesCalculateOnly5) {
+                                int tsolIndex = Integer.parseInt(tsol.getName().split("_")[sliceIndex].substring(0, tsol.getName().split("_")[sliceIndex].indexOf(".mgf"))),
+                                        thydIndex = Integer.parseInt(thyd.getName().split("_")[sliceIndex].substring(0, thyd.getName().split("_")[sliceIndex].indexOf(".mgf")));
+                                // Now select an mgf files from the same slices..
+                                if (index - 2 <= thydIndex && thydIndex <= index + 2 && tsolIndex == index) {
+                                    LOGGER.info("slice number (spectra.folder and spectra.folder.to.compare)=" + thydIndex + "\t" + tsolIndex);
+                                    LOGGER.info("a name of an mgf from the spectra.folder=" + thyd.getName());
+                                    LOGGER.info("a name of an mgf from the spectra.folder.to.compare=" + tsol.getName());
+                                    if (!scoreType.equals("msrobin")) {
+                                        // Run against all - no restriction for binned based calculation
+                                        if (!is_charged_based) {
+                                            ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR),
+                                                    tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR);
+                                            if (!thydBinSpectra.isEmpty() && !tsolBinSpectra.isEmpty()) {
+                                                LOGGER.info("Size of BinSpectra at spectra.folder=" + thydBinSpectra.size());
+                                                LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
+                                                calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, 0, precTol, fragment_tolerance, scoreType);
+                                            }
+                                            // Run only the same charge state
+                                        } else if (is_charged_based) {
+                                            for (int charge : charges) {
+                                                ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR),
+                                                        tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR);
+                                                if (!thydBinSpectra.isEmpty() && !tsolBinSpectra.isEmpty()) {
+                                                    LOGGER.info("Size of BinSpectra at spectra.folder=" + thydBinSpectra.size());
+                                                    LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
+                                                    calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, charge, precTol, fragment_tolerance, scoreType);
+                                                }
+                                            }
+                                        }
+                                    } else if (!is_charged_based) {
+                                        // Run against all for MSRobin
+                                        ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance),
+                                                tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance);
+                                        if (!thydMSnSpectra.isEmpty() && !tsolMSnSpectra.isEmpty()) {
+
+                                            LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
+                                            LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
+
+                                            calculate_MSRobins(tsolMSnSpectra, thydMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
+                                        }
+                                    } else if (is_charged_based) {
+                                        for (int charge : charges) {
+                                            ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
+                                                    tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
+                                            if (!thydMSnSpectra.isEmpty() && !tsolMSnSpectra.isEmpty()) {
+                                                LOGGER.info("Charge=" + charge);
+                                                LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
+                                                LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
+                                                calculate_MSRobins(tsolMSnSpectra, thydMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
+                                            }
+                                        }
+                                    }
+                                }
+                                // Calculate all against all..
+                            } else {
+//                            LOGGER.info("slice number (spectra.folder and spectra.to.compare.folder)=" + thydIndex + "\t" + tsolIndex);
                                 LOGGER.info("a name of an mgf from the spectra.folder=" + thyd.getName());
-                                LOGGER.info("a name of an mgf from the spectra.folder.to.compare=" + tsol.getName());
+                                LOGGER.info("a name of an mgf from the spectra.to.compare.folder=" + tsol.getName());
                                 if (!scoreType.equals("msrobin")) {
                                     // Run against all - no restriction for binned based calculation
                                     if (!is_charged_based) {
                                         ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR),
                                                 tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR);
-                                        LOGGER.info("Size of BinSpectra at spectra.folder=" + thydBinSpectra.size());
-                                        LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
+                                        LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + thydBinSpectra.size());
+                                        LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
                                         calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, 0, precTol, fragment_tolerance, scoreType);
                                         // Run only the same charge state
                                     } else if (is_charged_based) {
                                         for (int charge : charges) {
                                             ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR),
                                                     tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR);
-                                            LOGGER.info("Size of BinSpectra at spectra.folder=" + thydBinSpectra.size());
-                                            LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
+                                            LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + thydBinSpectra.size());
+                                            LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
                                             calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, charge, precTol, fragment_tolerance, scoreType);
                                         }
                                     }
@@ -214,61 +280,21 @@ public class ScorePipeline {
                                     LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                     LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
 
-                                    calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
+                                    calculate_MSRobins(tsolMSnSpectra, thydMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
                                 } else if (is_charged_based) {
                                     for (int charge : charges) {
                                         ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
                                                 tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
-                                        LOGGER.info("Charge=" + charge);
                                         LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
                                         LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
-                                        calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
+                                        calculate_MSRobins(tsolMSnSpectra, thydMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
                                     }
-                                }
-                            }
-                            // Calculate all against all..
-                        } else {
-//                            LOGGER.info("slice number (spectra.folder and spectra.to.compare.folder)=" + thydIndex + "\t" + tsolIndex);
-                            LOGGER.info("a name of an mgf from the spectra.folder=" + thyd.getName());
-                            LOGGER.info("a name of an mgf from the spectra.to.compare.folder=" + tsol.getName());
-                            if (!scoreType.equals("msrobin")) {
-                                // Run against all - no restriction for binned based calculation
-                                if (!is_charged_based) {
-                                    ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR),
-                                            tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR);
-                                    LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + thydBinSpectra.size());
-                                    LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
-                                    calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, 0, precTol, fragment_tolerance, scoreType);
-                                    // Run only the same charge state
-                                } else if (is_charged_based) {
-                                    for (int charge : charges) {
-                                        ArrayList<BinMSnSpectrum> thydBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(thyd, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR),
-                                                tsolBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(tsol, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR);
-                                        LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + thydBinSpectra.size());
-                                        LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + tsolBinSpectra.size());
-                                        calculate_BinBasedScores(thydBinSpectra, tsolBinSpectra, bw, charge, precTol, fragment_tolerance, scoreType);
-                                    }
-                                }
-                            } else if (!is_charged_based) {
-                                // Run against all for MSRobin
-                                ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance),
-                                        tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance);
-                                LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
-                                LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
-
-                                calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
-                            } else if (is_charged_based) {
-                                for (int charge : charges) {
-                                    ArrayList<MSnSpectrum> thydMSnSpectra = prepareData(thyd, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
-                                            tsolMSnSpectra = prepareData(tsol, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
-                                    LOGGER.info("Size of MSnSpectra at spectra.folder=" + thydMSnSpectra.size());
-                                    LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + tsolMSnSpectra.size());
-                                    calculate_MSRobins(thydMSnSpectra, tsolMSnSpectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
                                 }
                             }
                         }
                     }
                 }
+                index++;
             }
         }
 //        System.exit(0);
@@ -408,15 +434,16 @@ public class ScorePipeline {
             try {
                 SimilarityResult get = future.get();
                 String tmp_charge = get.getSpectrumChargeAsString(),
-                        tmp_Name = get.getSpectrumName();
+                        spectrum = get.getSpectrumName();
                 double tmpPrecMZ = get.getSpectrumPrecursorMZ(),
                         score = get.getScores().get(method);
                 if (score == Double.MIN_VALUE) {
+                    LOGGER.info("The similarity for the spectrum " + spectrum + " is too small to keep the record, therefore score is not computed.");
                     // Means that score has not been calculated!
 //                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t");
 //                    bw.write("NA" + "\t" + "NA" + "\t" + "NA" + "\t" + "NA");
                 } else {
-                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t" + get.getTmpSpectrumName() + "\t" + score + "\n");
+                    bw.write(spectrum + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t" + get.getSpectrumToCompare() + "\t" + score + "\n");
                 }
             } catch (InterruptedException | ExecutionException e) {
                 LOGGER.error(e);
@@ -469,18 +496,19 @@ public class ScorePipeline {
             try {
                 SimilarityResult get = future.get();
                 String tmp_charge = get.getSpectrumChargeAsString(),
-                        tmp_Name = get.getSpectrumName();
+                        spectrum = get.getSpectrumName();
                 double tmpPrecMZ = get.getSpectrumPrecursorMZ();
                 double dot_product = get.getScores().get(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD),
                         dot_product_skolow = get.getScores().get(SimilarityMethods.NORMALIZED_DOT_PRODUCT_SOKOLOW),
                         pearson = get.getScores().get(SimilarityMethods.PEARSONS_CORRELATION),
                         spearman = get.getScores().get(SimilarityMethods.SPEARMANS_CORRELATION);
                 if (dot_product == Double.MIN_VALUE) {
+                    LOGGER.info("The similarity for the spectrum " + spectrum + " is too small to keep the record, therefore score is not computed.");
                     // Means that score has not been calculated!
 //                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t");
 //                    bw.write("NA" + "\t" + "NA" + "\t" + "NA" + "\t" + "NA");
                 } else {
-                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t" + get.getTmpSpectrumName() + "\t");
+                    bw.write(spectrum + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t" + get.getSpectrumToCompare() + "\t");
                     bw.write(dot_product + "\t" + dot_product_skolow + "\t" + pearson + "\t" + spearman + "\n");
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -495,8 +523,10 @@ public class ScorePipeline {
      * yeast_human_spectra on the first data set against all yeast spectra on
      * the second data set
      *
-     * @param yeast_spectra
-     * @param yeast_human_spectra
+     * thydMSnSpectra-yeast-human, tsolMSnSpectra-yeast,
+     *
+     * @param tsolMSnSpectra
+     * @param thydMSnSpectra
      * @param bw
      * @param fragTol
      * @param precTol
@@ -507,13 +537,13 @@ public class ScorePipeline {
      * @throws NumberFormatException
      * @throws InterruptedException
      */
-    private static void calculate_MSRobins(ArrayList<MSnSpectrum> yeast_spectra, ArrayList<MSnSpectrum> yeast_human_spectra,
+    private static void calculate_MSRobins(ArrayList<MSnSpectrum> tsolMSnSpectra, ArrayList<MSnSpectrum> thydMSnSpectra,
             BufferedWriter bw, double fragTol, double precTol, int calculationOptionIntensityMSRobin, int msRobinCalculationOption)
             throws IllegalArgumentException, ClassNotFoundException, IOException, MzMLUnmarshallerException, NumberFormatException, InterruptedException {
         ExecutorService excService = Executors.newFixedThreadPool(ConfigHolder.getInstance().getInt("thread.numbers"));
         List<Future<SimilarityResult>> futureList = new ArrayList<>();
-        for (MSnSpectrum yeast_human_spectrum : yeast_human_spectra) {
-            Calculate_Similarity similarity = new Calculate_Similarity(yeast_human_spectrum, yeast_spectra, fragTol, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
+        for (MSnSpectrum thydMSnSpectrum : thydMSnSpectra) {
+            Calculate_Similarity similarity = new Calculate_Similarity(thydMSnSpectrum, tsolMSnSpectra, fragTol, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
             Future future = excService.submit(similarity);
             futureList.add(future);
         }
@@ -521,15 +551,16 @@ public class ScorePipeline {
             try {
                 SimilarityResult get = future.get();
                 String tmp_charge = get.getSpectrumChargeAsString(),
-                        tmp_Name = get.getSpectrumName();
-                double tmpPrecMZ = get.getSpectrumPrecursorMZ(),
+                        spectrum = get.getSpectrumName();
+                double tmp_precursor_mz = get.getSpectrumPrecursorMZ(),
                         msrobin = get.getScores().get(SimilarityMethods.MSRobin);
                 if (msrobin == Double.MIN_VALUE) {
+                    LOGGER.info("The similarity for the spectrum " + spectrum + " is too small to keep the record, therefore score is not computed.");
                     // Means that score has not been calculated!
 //                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t");
 //                    bw.write("NA" + "\n");
                 } else {
-                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t" + get.getTmpSpectrumName() + "\t" + msrobin + "\n");
+                    bw.write(spectrum + "\t" + tmp_charge + "\t" + tmp_precursor_mz + "\t" + get.getSpectrumToCompare() + "\t" + msrobin + "\n");
                 }
             } catch (InterruptedException | ExecutionException e) {
                 LOGGER.error(e);

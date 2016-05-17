@@ -43,6 +43,7 @@ public class MainController {
     private static final String CHARGE_PROP = "is.charged.based";
     private static final String PRECURSOR_PROP = "precursor.tolerance";
     private static final String FRAGMENT_PROP = "fragment.tolerance";
+    private static final String MAX_PREC_CHARGE_PROP = "max.charge";
     private static final String MIN_MZ_PROP = "min.mz";
     private static final String MAX_MZ_PROP = "max.mz";
     private static final String NEIGHBOUR_SLICE_PROP = "calculate.only5";
@@ -77,8 +78,7 @@ public class MainController {
         PatternLayout layout = new org.apache.log4j.PatternLayout();
         layout.setConversionPattern("%d{yyyy-MM-dd HH:mm:ss} - %m%n");
         logTextAreaAppender.setLayout(layout);
-                
-                
+
         LOGGER.addAppender(logTextAreaAppender);
         LOGGER.setLevel((Level) Level.INFO);
 
@@ -265,6 +265,7 @@ public class MainController {
         mainFrame.getComparisonSpectraDirectoryTextField().setText(ConfigHolder.getInstance().getString(COMP_SPECTRA_PROP));
         mainFrame.getOutputDirectoryTextField().setText(ConfigHolder.getInstance().getString(OUTPUT_PROP));
         mainFrame.getChargeCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(CHARGE_PROP));
+        mainFrame.getMaxPrecursorChargejTextField().setText(ConfigHolder.getInstance().getString(MAX_PREC_CHARGE_PROP));
         mainFrame.getPrecursorToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(PRECURSOR_PROP)));
         mainFrame.getFragmentToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(FRAGMENT_PROP)));
         mainFrame.getNeighbourSlicesOnlyCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(NEIGHBOUR_SLICE_PROP));
@@ -336,6 +337,18 @@ public class MainController {
                 validationMessages.add("Please provide a numeric precursor tolerance value.");
             }
         }
+        if (mainFrame.getMaxPrecursorChargejTextField().getText().isEmpty()) {
+            validationMessages.add("Please provide a maximum precursor charge value in both data sets.");
+        } else {
+            try {
+                Double maxCharge = Double.valueOf(mainFrame.getMaxPrecursorChargejTextField().getText());
+                if (maxCharge < 0.0) {
+                    validationMessages.add("Please provide a maximum precursor charge value.");
+                }
+            } catch (NumberFormatException nfe) {
+                validationMessages.add("Please provide a numeric maximum precursor charge value.");
+            }
+        }
         if (mainFrame.getFragmentToleranceTextField().getText().isEmpty()) {
             validationMessages.add("Please provide a fragment tolerance value.");
         } else {
@@ -347,8 +360,8 @@ public class MainController {
             } catch (NumberFormatException nfe) {
                 validationMessages.add("Please provide a numeric fragment tolerance value.");
             }
-        }      
-        
+        }
+
         if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
             if (mainFrame.getFileNameSliceIndexTextField().getText().isEmpty()) {
                 validationMessages.add("Please provide a file name slice index value.");

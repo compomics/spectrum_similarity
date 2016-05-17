@@ -240,8 +240,13 @@
                               <Component id="fileNameSliceIndexTextField" max="32767" attributes="0"/>
                           </Group>
                           <Component id="neighbourSlicesOnlyCheckBox" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="maxPrecChargejLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="maxPrecursorChargejTextField" min="-2" pref="22" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="preprocessingParametersPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -250,34 +255,44 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chargeCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="precursorLabelToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorToleranceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="chargeCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="precursorLabelToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="precursorToleranceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="fragmentToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="fragmentToleranceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="neighbourSlicesOnlyCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="fileNameSliceIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="fileNameSliceIndexTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="maxPrecChargejLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="maxPrecursorChargejTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="preprocessingParametersPanel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="fragmentToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="fragmentToleranceTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                      <Component id="neighbourSlicesOnlyCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="fileNameSliceIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="fileNameSliceIndexTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
                   </Group>
-                  <Component id="preprocessingParametersPanel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JCheckBox" name="chargeCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Compare spectra regardless of precursor charge"/>
+                <Property name="text" type="java.lang.String" value="Compare spectra regarding to precursor charge"/>
                 <Property name="toolTipText" type="java.lang.String" value="enables the comparison of spectra with the same precursor charge"/>
               </Properties>
             </Component>
@@ -478,6 +493,17 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fileNameSliceIndexTextField">
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxPrecChargejLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Precursor charge (Max in both data set)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Maximum value of precursor charge in both data set. This is only functional, when &quot;Compare spectra regardless of precursor charge&quot; is unselected "/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPrecursorChargejTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="5"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

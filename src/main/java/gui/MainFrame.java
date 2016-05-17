@@ -132,6 +132,16 @@ public class MainFrame extends javax.swing.JFrame {
         this.transformationComboBox = transformationComboBox;
     }
 
+    public JTextField getMaxPrecursorChargejTextField() {
+        return maxPrecursorChargejTextField;
+    }
+
+    public void setMaxPrecursorChargejTextField(JTextField maxPrecursorChargejTextField) {
+        this.maxPrecursorChargejTextField = maxPrecursorChargejTextField;
+    }
+    
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -174,6 +184,8 @@ public class MainFrame extends javax.swing.JFrame {
         neighbourSlicesOnlyCheckBox = new javax.swing.JCheckBox();
         fileNameSliceIndexLabel = new javax.swing.JLabel();
         fileNameSliceIndexTextField = new javax.swing.JTextField();
+        maxPrecChargejLabel = new javax.swing.JLabel();
+        maxPrecursorChargejTextField = new javax.swing.JTextField();
         otherParametersPanel = new javax.swing.JPanel();
         numberOfThreadsLabel = new javax.swing.JLabel();
         numberOfThreadsTextField = new javax.swing.JTextField();
@@ -253,7 +265,7 @@ public class MainFrame extends javax.swing.JFrame {
         pipelineParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pipeline parameters"));
         pipelineParametersPanel.setOpaque(false);
 
-        chargeCheckBox.setText("Compare spectra regardless of precursor charge");
+        chargeCheckBox.setText("Compare spectra regarding to precursor charge");
         chargeCheckBox.setToolTipText("enables the comparison of spectra with the same precursor charge");
 
         precursorLabelToleranceLabel.setText("Precursor tolerance (ppm)*:");
@@ -350,6 +362,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         fileNameSliceIndexLabel.setText("File name slice index:");
 
+        maxPrecChargejLabel.setText("Precursor charge (Max in both data set)");
+        maxPrecChargejLabel.setToolTipText("Maximum value of precursor charge in both data set. This is only functional, when \"Compare spectra regardless of precursor charge\" is unselected ");
+
+        maxPrecursorChargejTextField.setText("5");
+
         javax.swing.GroupLayout pipelineParametersPanelLayout = new javax.swing.GroupLayout(pipelineParametersPanel);
         pipelineParametersPanel.setLayout(pipelineParametersPanelLayout);
         pipelineParametersPanelLayout.setHorizontalGroup(
@@ -372,7 +389,11 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(fileNameSliceIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fileNameSliceIndexTextField))
-                    .addComponent(neighbourSlicesOnlyCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(neighbourSlicesOnlyCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                        .addComponent(maxPrecChargejLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -380,23 +401,30 @@ public class MainFrame extends javax.swing.JFrame {
         pipelineParametersPanelLayout.setVerticalGroup(
             pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chargeCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(precursorLabelToleranceLabel)
-                    .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fragmentToleranceLabel)
-                    .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(54, 54, 54)
-                .addComponent(neighbourSlicesOnlyCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fileNameSliceIndexLabel)
-                    .addComponent(fileNameSliceIndexTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(chargeCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(precursorLabelToleranceLabel)
+                            .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fragmentToleranceLabel)
+                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54)
+                        .addComponent(neighbourSlicesOnlyCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fileNameSliceIndexLabel)
+                            .addComponent(fileNameSliceIndexTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxPrecChargejLabel)
+                            .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         otherParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
@@ -498,6 +526,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JLabel maxPrecChargejLabel;
+    private javax.swing.JTextField maxPrecursorChargejTextField;
     private javax.swing.JCheckBox neighbourSlicesOnlyCheckBox;
     private javax.swing.JComboBox<String> noiseFilterComboBox;
     private javax.swing.JLabel noiseFilterLabel;

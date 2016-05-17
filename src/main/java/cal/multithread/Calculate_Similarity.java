@@ -105,7 +105,7 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
             InnerIteratorSync<BinMSnSpectrum> iteratorBinSpectra = new InnerIteratorSync(allBinMSnSpectraComparedTogivenBinMSnSpectrum.iterator());
             while (iteratorBinSpectra.iter.hasNext()) {
                 BinMSnSpectrum tmpBinMSnSpectrum = (BinMSnSpectrum) iteratorBinSpectra.iter.next();
-                similarityResult.setTmpSpectrumName(tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+//                similarityResult.setSpectrumToCompareName(tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
                 synchronized (tmpBinMSnSpectrum) {
                     // If precursor tolerance is bigger than 0, it means that PrecursorTolerance is important while calculation!
                     if (precTol > 0) {
@@ -125,7 +125,7 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
             InnerIteratorSync<MSnSpectrum> iteratorSpectra = new InnerIteratorSync(allMSnSpectraComparedTogivenMSnSpectrum.iterator());
             while (iteratorSpectra.iter.hasNext()) {
                 MSnSpectrum tmpMSnSpectrum = (MSnSpectrum) iteratorSpectra.iter.next();
-                similarityResult.setTmpSpectrumName(tmpMSnSpectrum.getSpectrumTitle());
+//                similarityResult.setSpectrumToCompareName(tmpMSnSpectrum.getSpectrumTitle());
                 synchronized (tmpMSnSpectrum) {
                     // Here precursor tolerance is important! 
                     if (precTol > 0) {
@@ -134,12 +134,12 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
                                 diff = Math.abs(precursorMZOfGivenSpec - precursor_mz);
                         if (diff <= precTol) {
                             double ms_robin = obj.getMSRobinScore();
-                            similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin);
+                            similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin, tmpMSnSpectrum.getSpectrumTitle());
                         }
                     } else {
                         CompareAndScore obj = new CompareAndScore(givenMSnSpectrum, tmpMSnSpectrum, fragTol, msRobinIntensityOption, calculationOptionIntensityMSRobin);
                         double ms_robin = obj.getMSRobinScore();
-                        similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin);
+                        similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin, tmpMSnSpectrum.getSpectrumTitle());
                     }
                 }
             }
@@ -150,23 +150,23 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
     private void calculateBinBasedScores(BinMSnSpectrum binMSnSpectrum, BinMSnSpectrum tmpBinMSnSpectrum, SimilarityResult similarityResult) {
         Calculate_BinSpectrum_Similarity calculate = new Calculate_BinSpectrum_Similarity(binMSnSpectrum, tmpBinMSnSpectrum);
         double dot_score = calculate.getScore();
-        similarityResult.updateScore(SimilarityMethods.DOT_PRODUCT, dot_score);
+        similarityResult.updateScore(SimilarityMethods.DOT_PRODUCT, dot_score, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
 
         calculate.setMethod(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD);
         double normalized_dot_score = calculate.getScore();
-        similarityResult.updateScore(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD, normalized_dot_score);
+        similarityResult.updateScore(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD, normalized_dot_score, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
 
         calculate.setMethod(SimilarityMethods.PEARSONS_CORRELATION);
         double pearson = calculate.getScore();
-        similarityResult.updateScore(SimilarityMethods.PEARSONS_CORRELATION, pearson);
+        similarityResult.updateScore(SimilarityMethods.PEARSONS_CORRELATION, pearson, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
 
         calculate.setMethod(SimilarityMethods.SPEARMANS_CORRELATION);
         double spearman = calculate.getScore();
-        similarityResult.updateScore(SimilarityMethods.SPEARMANS_CORRELATION, spearman);
+        similarityResult.updateScore(SimilarityMethods.SPEARMANS_CORRELATION, spearman, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
 
         calculate.setMethod(SimilarityMethods.MEAN_SQUARED_ERROR);
         double mean_squared_error = calculate.getScore();
-        similarityResult.updateScore(SimilarityMethods.MEAN_SQUARED_ERROR, mean_squared_error);
+        similarityResult.updateScore(SimilarityMethods.MEAN_SQUARED_ERROR, mean_squared_error, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
 
         similarityResult.setBestSimilarSpec(tmpBinMSnSpectrum.getSpectrum());
     }
