@@ -44,7 +44,7 @@ If you use our differential pipeline stand-alone tool or GUI version, please inc
 
 The  probabilistic scoring function was succesfully applied on the differential pipeline in order to compare two experimental data sets in a differential analysis. 
 
-A stand-alone program and the GUI version of this stand-alone program can be downloaded <a href="http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.2/scoring_pipeline-1.2.zip" onclick="trackOutboundLink('usage','download','spectrumsimilarity','http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.2/scoring_pipeline-1.2.zip'); return false;">here</a>. 
+A stand-alone program and the GUI version of this stand-alone program can be downloaded <a href="http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.3/scoring_pipeline-1.3.zip" onclick="trackOutboundLink('usage','download','spectrumsimilarity','http://genesis.ugent.be/maven2/com/compomics/scoring_pipeline/1.2/scoring_pipeline-1.2.zip'); return false;">here</a>. 
 
 
 ### A pairwise spectrum view GUI
