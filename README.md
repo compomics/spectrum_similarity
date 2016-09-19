@@ -31,7 +31,7 @@ This project contains the enlisted scoring functions in [Project description](##
 
 # Citation
 
-[Yılmaz et al: J Proteome Res. Publication Date (Web): April 18, 2016 (DOI:10.1021/acs.jproteome.6b00140)](http://pubs.acs.org/doi/abs/10.1021/acs.jproteome.6b00140)
+[Yılmaz et al: J Proteome Res., 2016, 15 (6), pp 1963–1970 (DOI:10.1021/acs.jproteome.6b00140)](http://pubs.acs.org/doi/abs/10.1021/acs.jproteome.6b00140)
 
 If you use our differential pipeline stand-alone tool or GUI version, please include the reference above. 
 
