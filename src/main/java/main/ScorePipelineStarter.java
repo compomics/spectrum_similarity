@@ -1,13 +1,11 @@
 package main;
 
-import gui.LogTextAreaAppender;
 import gui.MainController;
 import gui_specLib.SpecLibSearchMainFrame;
 import gui_spectral_match_visualization.MainGUI;
 import gui_spectral_match_visualization.StartDialog;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,16 +25,19 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.Priority;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
- * This class runs the score pipeline graphical user interface (GUI).
+ * This class runs 4 different programs:
+ * 
+ * 1. the score pipeline graphical user interface (GUI)
+ * 2. the score pipeline command line interface (CLI)
+ * 3. visualization of pairwise spectra along with their scores
+ * 4. run spectrum library search tool (currently for only mgf files)
+ * 
  *
- * @author Niels Hulstaert
+ * @author Niels Hulstaert/Sule Yilmaz
  */
 public class ScorePipelineStarter {
 
@@ -85,7 +86,7 @@ public class ScorePipelineStarter {
     /**
      * Main method.
      *
-     * @param args the main method arguments
+     * @param commandLineArguments the main method arguments
      */
     public static void main(final String[] commandLineArguments) {
         LOGGER = Logger.getLogger(ScorePipelineStarter.class);
