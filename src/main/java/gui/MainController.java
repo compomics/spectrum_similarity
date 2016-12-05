@@ -492,6 +492,9 @@ public class MainController {
 
     protected class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
 
+        public ScorePipelineSwingWorker() {
+        }
+
         @Override
         protected Void doInBackground() throws Exception {
             LOGGER.info("starting spectrum similarity score pipeline");
