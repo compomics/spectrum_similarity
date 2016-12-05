@@ -55,8 +55,10 @@ public class ScorePipeline {
     private static String selected_option = "c"; // keep the previously parsed commandline option to control System.exit() during program run 
 
     /**
-
-    /**
+     *
+     * /
+     *
+     **
      * @param args the command line arguments
      * @throws java.io.IOException
      * @throws java.io.FileNotFoundException
@@ -105,17 +107,20 @@ public class ScorePipeline {
                 is_precursor_peak_removed = ConfigHolder.getInstance().getBoolean("precursor.peak.removal"),
                 doesCalculateOnly5 = ConfigHolder.getInstance().getBoolean("calculate.only5"),
                 isNFTR = ConfigHolder.getInstance().getBoolean("isNFTR");
-        double min_mz = ConfigHolder.getInstance().getDouble("minmz"), // To start binning (removed min.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
-                max_mz = ConfigHolder.getInstance().getDouble("maxmz"), // To end binning (removed max.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
+        double min_mz = ConfigHolder.getInstance().getDouble("min.mz"), // To start binning (removed min.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
+                max_mz = ConfigHolder.getInstance().getDouble("max.mz"), // To end binning (removed max.mz from MS2Similarity.properties because only for cumulative binomial scoring function)
                 fragment_tolerance = ConfigHolder.getInstance().getDouble("fragment.tolerance"), // A bin size if 2*0.5
                 percentage = ConfigHolder.getInstance().getDouble("percent"),
                 precTol = ConfigHolder.getInstance().getDouble("precursor.tolerance"); // 0-No PM tolerance otherwise the exact mass difference
         int sliceIndex = ConfigHolder.getInstance().getInt("slice.index"),
                 maxCharge = ConfigHolder.getInstance().getInt("max.charge"),
                 searching_mode = ConfigHolder.getInstance().getInt("search.mode");// 0-published pipeline, 1-library searching ????
-        // Select a scoring function name as msrobin (this is pROBility INtensity weighted scoring function, dot, spearman, and pearson (all lower case))
-        // String scoreType = "msrobin"; // Avaliable scoring functions: msrobin/spearman/pearson/dot
-        String scoreType = ConfigHolder.getInstance().getString("scoringType").toLowerCase(); // Avaliable scoring functions: msrobin/spearman/pearson/dot
+        // Initially, a scoring function used during comparative pipeline (Yilmaz et al, JPR, 2016) was called as msrobin (this is pROBility INtensity weighted scoring function).
+        // Then, this function was renamed as cumulative binominal scoring function. 
+        // However, it might be possible to find this name throughout the code. 
+        // Avaliable scoring functions: cumulative binomial scoring function, normalized dot product, pearson and spearman 
+        int scoreType = ConfigHolder.getInstance().getInt("scoring.function"); // Avaliable scoring functions: 0-cum.binomial/1-dot/2-pearson/3-spearman
+        String scoreName = "CumBinom";
 
         /// SETTINGS//////////////////////////////////////////
         File spec_directory = new File(spectraFolder),
@@ -157,20 +162,22 @@ public class ScorePipeline {
             param = "HQ_" + param;
         }
         switch (scoreType) {
-            case "msrobin":
-            case "cumbinom":
+            case 0:
                 param += "_MSRobin";
-                scoreType="msrobin";
                 break;
-            case "dot":
+            case 1:
                 param += "_Dot";
+                scoreName = "dot";
                 break;
-            case "spearman":
-                param += "_Spearman";
-                break;
-            case "pearson":
+            case 2:
                 param += "_Pearson";
+                scoreName = "pearson";
                 break;
+            case 3:
+                param += "_Spearman";
+                scoreName = "spearman";
+                break;
+
             default:
                 LOGGER.info("Selected scoring name is not avaliable. Available functions are msrobin, dot, spearman and pearson");
                 System.exit(0);
@@ -181,8 +188,8 @@ public class ScorePipeline {
         // write a title on an output
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(output))) {
             // write a title on an output
-            String title_score_type = scoreType;
-            if (scoreType.endsWith("msrobin")) {
+            String title_score_type = scoreName;
+            if (scoreType == 0) {
                 title_score_type = "ScoringFunction_Pipeline";
             }
             String version = ConfigHolder.getInstance().getString("score.pipeline.version");
@@ -216,7 +223,7 @@ public class ScorePipeline {
                                     LOGGER.info("slice number (spectra.folder and spectra.folder.to.compare)=" + tmpIndex + "\t" + compIndex);
                                     LOGGER.info("a name of an mgf from the spectra.folder=" + spec.getName());
                                     LOGGER.info("a name of an mgf from the spectra.folder.to.compare=" + spec_at_comparison_dataset.getName());
-                                    if (!scoreType.equals("msrobin")) {
+                                    if (scoreType != 0) {
                                         // Run against all - no restriction for binned based calculation
                                         if (!is_charged_based) {
                                             ArrayList<BinMSnSpectrum> binSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(spec, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR),
@@ -224,7 +231,7 @@ public class ScorePipeline {
                                             if (!binSpectra.isEmpty() && !comparisonBinSpectra.isEmpty()) {
                                                 LOGGER.info("Size of BinSpectra at spectra.folder=" + binSpectra.size());
                                                 LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + comparisonBinSpectra.size());
-                                                calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, 0, precTol, fragment_tolerance, scoreType);
+                                                calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, 0, precTol, fragment_tolerance, scoreName);
                                             }
                                             // Run only the same charge state
                                         } else if (is_charged_based) {
@@ -234,7 +241,7 @@ public class ScorePipeline {
                                                 if (!binSpectra.isEmpty() && !comparisonBinSpectra.isEmpty()) {
                                                     LOGGER.info("Size of BinSpectra at spectra.folder=" + binSpectra.size());
                                                     LOGGER.info("Size of BinSpectra at spectra.to.compare.folder=" + comparisonBinSpectra.size());
-                                                    calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, charge, precTol, fragment_tolerance, scoreType);
+                                                    calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, charge, precTol, fragment_tolerance, scoreName);
                                                 }
                                             }
                                         }
@@ -266,28 +273,31 @@ public class ScorePipeline {
                             } else {
                                 LOGGER.info("a name of an mgf from the spectra.folder=" + spec.getName());
                                 LOGGER.info("a name of an mgf from the spectra.to.compare.folder=" + spec_at_comparison_dataset.getName());
-                                if (!scoreType.equals("msrobin")) {
+                                if (scoreType != 0) {
                                     // Run against all - no restriction for binned based calculation
                                     if (!is_charged_based) {
                                         ArrayList<BinMSnSpectrum> binSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(spec, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR),
                                                 comparisonBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(spec_at_comparison_dataset, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, 0, isNFTR);
+                                        LOGGER.info("No precursor charge restriction");
                                         LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + binSpectra.size());
                                         LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + comparisonBinSpectra.size());
-                                        calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, 0, precTol, fragment_tolerance, scoreType);
+                                        calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, 0, precTol, fragment_tolerance, scoreName);
                                         // Run only the same charge state
                                     } else if (is_charged_based) {
                                         for (int charge : charges) {
                                             ArrayList<BinMSnSpectrum> binSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(spec, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR),
                                                     comparisonBinSpectra = convert_all_MSnSpectra_to_BinMSnSpectra(spec_at_comparison_dataset, min_mz, max_mz, fragment_tolerance, noiseFiltering, transformation, topN, is_precursor_peak_removed, charge, isNFTR);
+                                            LOGGER.info("Spectra with a precursor charge of " + charge + "+");
                                             LOGGER.info("Size of BinMSnSpectra spectra at spectra.folder=" + binSpectra.size());
                                             LOGGER.info("Size of BinMSnSpectra spectra at spectra.to.compare.folder=" + comparisonBinSpectra.size());
-                                            calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, charge, precTol, fragment_tolerance, scoreType);
+                                            calculate_BinBasedScores(binSpectra, comparisonBinSpectra, bw, charge, precTol, fragment_tolerance, scoreName);
                                         }
                                     }
                                 } else if (!is_charged_based) {
                                     // Run against all for MSRobin
                                     ArrayList<MSnSpectrum> spectra = prepareData(spec, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance),
                                             comparisonSpectra = prepareData(spec_at_comparison_dataset, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, 0, fragment_tolerance);
+                                    LOGGER.info("No precursor charge restriction");
                                     LOGGER.info("Size of MSnSpectra at spectra.folder=" + spectra.size());
                                     LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + comparisonSpectra.size());
 
@@ -296,6 +306,7 @@ public class ScorePipeline {
                                     for (int charge : charges) {
                                         ArrayList<MSnSpectrum> spectra = prepareData(spec, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance),
                                                 comparisonSpectra = prepareData(spec_at_comparison_dataset, transformation, noiseFiltering, topN, percentage, is_precursor_peak_removed, charge, fragment_tolerance);
+                                        LOGGER.info("Spectra with a precursor charge of " + charge + "+");
                                         LOGGER.info("Size of MSnSpectra at spectra.folder=" + spectra.size());
                                         LOGGER.info("Size of MSnSpectra at spectra.to.compare.folder=" + comparisonSpectra.size());
                                         calculate_MSRobins(comparisonSpectra, spectra, bw, fragment_tolerance, precTol, calculationOptionIntensityMSRobin, msRobinCalculationOption);
@@ -449,7 +460,7 @@ public class ScorePipeline {
                 double tmpPrecMZ = get.getSpectrumPrecursorMZ(),
                         score = get.getScores().get(method);
                 if (score == Double.MIN_VALUE) {
-                    LOGGER.info("The similarity for the spectrum " + spectrum + " is too small to keep the record, therefore score is not computed.");
+                    LOGGER.info("The similarity for the spectrum " + spectrum + " is too small to keep the record, therefore a score is not computed.");
                     // Means that score has not been calculated!
 //                    bw.write(tmp_Name + "\t" + tmp_charge + "\t" + tmpPrecMZ + "\t");
 //                    bw.write("NA" + "\t" + "NA" + "\t" + "NA" + "\t" + "NA");
@@ -689,7 +700,4 @@ public class ScorePipeline {
         }
     }
 
-    
-    
-    
 }
