@@ -1,5 +1,6 @@
 package gui_specLib;
 
+import gui.MainFrame;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -12,119 +13,159 @@ import javax.swing.JTextField;
  *
  * @author Niels Hulstaert/Sule Yilmaz
  */
-public class SpecLibSearchMainFrame extends javax.swing.JFrame {
-
-    private final JFileChooser spectraDirectoryChooser = new JFileChooser();
-    private final JFileChooser comparisonSpectraDirectoryChooser = new JFileChooser();
-    private final JFileChooser outputDirectoryChooser = new JFileChooser();
+public class SpecLibSearchMainFrame extends MainFrame {
 
     /**
      * Constructor.
      */
     public SpecLibSearchMainFrame() {
+        super(false); // to make sure that super class of MainFrame will not be called 
         initComponents();
     }
 
+    @Override
     public JFileChooser getSpectraDirectoryChooser() {
         return spectraDirectoryChooser;
     }
 
+    @Override
     public JFileChooser getComparisonSpectraDirectoryChooser() {
         return comparisonSpectraDirectoryChooser;
     }
 
+    @Override
     public JFileChooser getOutputDirectoryChooser() {
         return outputDirectoryChooser;
     }
 
+    @Override
     public JButton getComparisonSpectraDirectoryButton() {
         return comparisonSpectraDirectoryButton;
     }
 
+    @Override
     public JTextField getComparisonSpectraDirectoryTextField() {
         return comparisonSpectraDirectoryTextField;
     }
 
+    @Override
     public JButton getOutputDirectoryButton() {
         return outputDirectoryButton;
     }
 
+    @Override
     public JTextField getOutputDirectoryTextField() {
         return outputDirectoryTextField;
     }
 
+    @Override
     public JButton getSpectraDirectoryButton() {
         return spectraDirectoryButton;
     }
 
+    @Override
     public JTextField getSpectraDirectoryTextField() {
         return spectraDirectoryTextField;
     }
 
+    @Override
     public JCheckBox getChargeCheckBox() {
         return chargeCheckBox;
     }
-    
+
+    @Override
     public JTextField getFragmentLabelToleranceLabel() {
         return fragmentToleranceTextField;
     }
-  
+
+    @Override
     public JComboBox<String> getNoiseFilterComboBox() {
         return noiseFilterComboBox;
     }
 
+    @Override
     public JTextField getNumberOfPeaksCutoffTextField() {
         return numberOfPeaksCutoffTextField;
     }
 
+    @Override
     public JTextField getNumberOfThreadsTextField() {
         return numberOfThreadsTextField;
     }
 
+    @Override
     public JTextField getPeakIntensityCutoffTextField() {
         return peakIntensityCutoffTextField;
     }
 
+    @Override
     public JTextField getPrecursorToleranceTextField() {
         return precursorToleranceTextField;
     }
 
+    @Override
     public JTextField getFragmentToleranceTextField() {
         return fragmentToleranceTextField;
     }
 
+    @Override
     public JComboBox<String> getPreprocessingOrderComboBox() {
         return preprocessingOrderComboBox;
     }
 
+    @Override
     public JCheckBox getRemovePrecursorIonPeaksCheckBox() {
         return removePrecursorIonPeaksCheckBox;
     }
 
+    @Override
     public JComboBox<String> getTransformationComboBox() {
         return transformationComboBox;
     }
 
+    @Override
     public JButton getCloseButton() {
         return closeButton;
     }
 
+    @Override
     public JButton getRunButton() {
         return runButton;
     }
 
+    @Override
     public void setNoiseFilterComboBox(JComboBox<String> noiseFilterComboBox) {
         this.noiseFilterComboBox = noiseFilterComboBox;
     }
 
+    @Override
     public void setPreprocessingOrderComboBox(JComboBox<String> preprocessingOrderComboBox) {
         this.preprocessingOrderComboBox = preprocessingOrderComboBox;
     }
 
+    @Override
     public void setTransformationComboBox(JComboBox<String> transformationComboBox) {
         this.transformationComboBox = transformationComboBox;
     }
 
+    @Override
+    public JTextField getMaxPrecursorChargejTextField() {
+        return maxPrecursorChargejTextField;
+    }
+
+    @Override
+    public void setMaxPrecursorChargejTextField(JTextField maxPrecursorChargejTextField) {
+        this.maxPrecursorChargejTextField = maxPrecursorChargejTextField;
+    }
+
+    public JComboBox<String> getWeightingjComboBox() {
+        return weightingjComboBox;
+    }
+
+    public void setWeightingjComboBox(JComboBox<String> weightingjComboBox) {
+        this.weightingjComboBox = weightingjComboBox;
+    }
+    
     public JComboBox<String> getScoringFunctionjComboBox() {
         return scoringFunctionjComboBox;
     }
@@ -172,10 +213,6 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
     public void setMinMZjTextField(JTextField minMZjTextField) {
         this.minMZjTextField = minMZjTextField;
     }
-    
-    
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -222,6 +259,10 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
         minMZjTextField = new javax.swing.JTextField();
         maxMZjLabel = new javax.swing.JLabel();
         maxMZjTextField = new javax.swing.JTextField();
+        maxPrecChargejLabel = new javax.swing.JLabel();
+        maxPrecursorChargejTextField = new javax.swing.JTextField();
+        weightingjLabel = new javax.swing.JLabel();
+        weightingjComboBox = new javax.swing.JComboBox<>();
         otherParametersPanel = new javax.swing.JPanel();
         numberOfThreadsLabel = new javax.swing.JLabel();
         numberOfThreadsTextField = new javax.swing.JTextField();
@@ -235,7 +276,7 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum library searching tool "));
-        mainPanel.setPreferredSize(new java.awt.Dimension(1000, 750));
+        mainPanel.setPreferredSize(new java.awt.Dimension(900, 700));
 
         inputAndOutputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input & Output"));
         inputAndOutputPanel.setOpaque(false);
@@ -350,7 +391,7 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
                     .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
                         .addComponent(noiseFilterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(noiseFilterComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(noiseFilterComboBox, 0, 1, Short.MAX_VALUE))
                     .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
@@ -359,20 +400,23 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
                                     .addComponent(peakIntensityCutoffLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(peakIntensityCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(numberOfPeaksCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(numberOfPeaksCutoffTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(peakIntensityCutoffTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(removePrecursorIonPeaksCheckBox))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(transformationJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                            .addComponent(preprocessingOrderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(transformationJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(preprocessingOrderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
                         .addGap(6, 6, 6)
                         .addGroup(preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(preprocessingOrderComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(preprocessingOrderComboBox, 0, 273, Short.MAX_VALUE)
                             .addComponent(transformationComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
+
+        preprocessingParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {numberOfPeaksCutoffTextField, peakIntensityCutoffTextField});
+
         preprocessingParametersPanelLayout.setVerticalGroup(
             preprocessingParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(preprocessingParametersPanelLayout.createSequentialGroup()
@@ -400,19 +444,21 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
                 .addComponent(removePrecursorIonPeaksCheckBox))
         );
 
+        preprocessingParametersPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {numberOfPeaksCutoffTextField, peakIntensityCutoffTextField});
+
         scoringFunctionjLabel.setText("Scoring function:");
 
         scoringFunctionjComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cum. Binom.", "Dot-product", "Pearson's", "Spearman's" }));
 
-        minMZjLabel.setText("minimum m/z value:");
+        minMZjLabel.setText("Minimum m/z value:");
 
         minMZjTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minMZjTextField.setText("100");
         minMZjTextField.setPreferredSize(new java.awt.Dimension(6, 20));
-        minMZjTextField.setSelectionEnd(0);
-        minMZjTextField.setSelectionStart(0);
+        minMZjTextField.setSelectionEnd(1);
+        minMZjTextField.setSelectionStart(1);
 
-        maxMZjLabel.setText("maximum m/z value:");
+        maxMZjLabel.setText("Maximum m/z value:");
 
         maxMZjTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxMZjTextField.setText("3500");
@@ -425,73 +471,100 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
             }
         });
 
+        maxPrecChargejLabel.setText("Maximum precursor charge:");
+
+        maxPrecursorChargejTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        maxPrecursorChargejTextField.setText("5");
+
+        weightingjLabel.setText("Weight option for binned spectra:");
+
+        weightingjComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sum", "Mean", "Median" }));
+
         javax.swing.GroupLayout pipelineParametersPanelLayout = new javax.swing.GroupLayout(pipelineParametersPanel);
         pipelineParametersPanel.setLayout(pipelineParametersPanelLayout);
         pipelineParametersPanelLayout.setHorizontalGroup(
             pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                 .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chargeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fragmentToleranceTextField)
-                            .addComponent(precursorToleranceTextField)))
-                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                        .addComponent(scoringFunctionjLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(scoringFunctionjComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(maxPrecChargejLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(minMZjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(maxMZjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(100, 100, 100)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(minMZjTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxMZjTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(18, 18, 18)
+                            .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minMZjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxMZjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(chargeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(21, 21, 21))
+            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scoringFunctionjLabel)
+                    .addComponent(weightingjLabel))
+                .addGap(42, 43, Short.MAX_VALUE)
+                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(weightingjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scoringFunctionjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(516, 516, 516))
         );
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fragmentToleranceTextField, maxMZjTextField, maxPrecursorChargejTextField, minMZjTextField, precursorToleranceTextField});
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fragmentToleranceLabel, maxMZjLabel, maxPrecChargejLabel, minMZjLabel, precursorLabelToleranceLabel});
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {scoringFunctionjComboBox, weightingjComboBox});
+
         pipelineParametersPanelLayout.setVerticalGroup(
             pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(scoringFunctionjLabel)
                             .addComponent(scoringFunctionjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(weightingjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(weightingjLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(chargeCheckBox)
-                        .addGap(11, 11, 11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxPrecChargejLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(minMZjLabel))
-                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(minMZjTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(maxMZjLabel))
-                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(maxMZjTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(minMZjLabel)
+                            .addComponent(minMZjTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxMZjLabel)
+                            .addComponent(maxMZjTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {fragmentToleranceTextField, maxMZjTextField, maxPrecursorChargejTextField, minMZjTextField, precursorToleranceTextField});
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {fragmentToleranceLabel, maxMZjLabel, maxPrecChargejLabel, minMZjLabel, precursorLabelToleranceLabel});
+
+        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {scoringFunctionjComboBox, weightingjComboBox});
 
         otherParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
         otherParametersPanel.setOpaque(false);
@@ -500,13 +573,16 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
         numberOfThreadsLabel.setToolTipText("required for multithreading");
         numberOfThreadsLabel.setPreferredSize(new java.awt.Dimension(176, 15));
 
+        numberOfThreadsTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        numberOfThreadsTextField.setText("2");
+
         javax.swing.GroupLayout otherParametersPanelLayout = new javax.swing.GroupLayout(otherParametersPanel);
         otherParametersPanel.setLayout(otherParametersPanelLayout);
         otherParametersPanelLayout.setHorizontalGroup(
             otherParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(otherParametersPanelLayout.createSequentialGroup()
                 .addComponent(numberOfThreadsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(69, 69, 69)
                 .addComponent(numberOfThreadsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -516,7 +592,7 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
                 .addGroup(otherParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberOfThreadsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numberOfThreadsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         closeButton.setText("close");
@@ -541,16 +617,16 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inputAndOutputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pipelineParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(otherParametersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(otherParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pipelineParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(inputAndOutputPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -561,25 +637,29 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
                 .addComponent(pipelineParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(otherParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        mainPanel.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -605,6 +685,8 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel maxMZjLabel;
     private javax.swing.JTextField maxMZjTextField;
+    private javax.swing.JLabel maxPrecChargejLabel;
+    private javax.swing.JTextField maxPrecursorChargejTextField;
     private javax.swing.JLabel minMZjLabel;
     private javax.swing.JTextField minMZjTextField;
     private javax.swing.JComboBox<String> noiseFilterComboBox;
@@ -635,5 +717,7 @@ public class SpecLibSearchMainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel spectraToCompareDirectoryLabel;
     private javax.swing.JComboBox<String> transformationComboBox;
     private javax.swing.JLabel transformationJLabel;
+    private javax.swing.JComboBox<String> weightingjComboBox;
+    private javax.swing.JLabel weightingjLabel;
     // End of variables declaration//GEN-END:variables
 }
