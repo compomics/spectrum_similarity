@@ -28,49 +28,72 @@ import org.apache.log4j.Priority;
 /**
  * This class is main controller for the graphical user interface (GUI).
  *
- * @author Niels Hulstaert
+ * @author Niels Hulstaert,Sule Yilmaz
  */
 public class MainController {
 
+    /**
+     * LOGGER to keep information while running GUI
+     */
     private static final Logger LOGGER = Logger.getLogger(MainController.class);
 
     /**
      * The parameters properties names.
      */
-    private static final String SPECTRA_PROP = "spectra.folder";
-    private static final String COMP_SPECTRA_PROP = "spectra.to.compare.folder";
-    private static final String OUTPUT_PROP = "output.folder";
-    private static final String CHARGE_PROP = "is.charged.based";
-    private static final String PRECURSOR_PROP = "precursor.tolerance";
-    private static final String FRAGMENT_PROP = "fragment.tolerance";
-    private static final String MAX_PREC_CHARGE_PROP = "max.charge";
-    private static final String MIN_MZ_PROP = "min.mz";
-    private static final String MAX_MZ_PROP = "max.mz";
-    private static final String NEIGHBOUR_SLICE_PROP = "calculate.only5";
-    private static final String FILE_NAME_SLICE_INDEX_PROP = "slice.index";
-    private static final String TRANSORMATION_PROP = "transformation";
-    private static final String NOISE_FILTER_PROP = "noise.filtering";
-    private static final String NUMBER_OF_PEAKS_CUTOFF_PROP = "topN";
-    private static final String PEAK_PERCENTAGE_CUTOFF = "percent";
-    private static final String PREPROCESSING_ORDER_PROP = "isNFTR";
-    private static final String PRECURSOR_PEAK_REMOVAL_PROP = "precursor.peak.removal";
-    private static final String NUMBER_OF_THREADS_PROP = "thread.numbers";
-
+    protected static final String SPECTRA_PROP = "spectra.folder",
+            COMP_SPECTRA_PROP = "spectra.to.compare.folder",
+            OUTPUT_PROP = "output.folder",
+            CHARGE_PROP = "is.charged.based",
+            MAX_PREC_CHARGE_PROP = "max.charge",
+            PRECURSOR_PROP = "precursor.tolerance",
+            FRAGMENT_PROP = "fragment.tolerance",
+            NEIGHBOUR_SLICE_PROP = "calculate.only5",
+            FILE_NAME_SLICE_INDEX_PROP = "slice.index",
+            MIN_MZ_PROP = "min.mz",
+            MAX_MZ_PROP = "max.mz",
+            SCORING_FUNC_PROP = "scoring.function",
+            TRANSORMATION_PROP = "transformation",
+            NOISE_FILTER_PROP = "noise.filtering",
+            NUMBER_OF_PEAKS_CUTOFF_PROP = "topN",
+            PEAK_PERCENTAGE_CUTOFF = "percent",
+            PRECURSOR_PEAK_REMOVAL_PROP = "precursor.peak.removal",
+            PREPROCESSING_ORDER_PROP = "isNFTR",
+            NUMBER_OF_THREADS_PROP = "thread.numbers";
     /**
      * Model fields.
      */
-    private ScorePipelineSwingWorker scorePipelineSwingWorker;
+    protected ScorePipelineSwingWorker scorePipelineSwingWorker;
 
     /**
      * The views of this controller.
      */
-    private final MainFrame mainFrame = new MainFrame();
-    private RunDialog runDialog;
+    protected MainFrame mainFrame;
+    protected RunDialog runDialog;
+
+    /**
+     * To construct a MainFrame object
+     *
+     * @param createContent-if it is true, the super class can initialize its
+     * components
+     */
+    public MainController(boolean createContent) {
+        if (createContent) {
+            init();
+        }
+    }
+
+    /**
+     * Constructor.
+     */
+    public MainController() {
+        this(true); // to make sure to initalize components for this super class
+    }
 
     /**
      * Init the controller.
      */
     public void init() {
+        mainFrame = new MainFrame();
         // add gui appender
         LogTextAreaAppender logTextAreaAppender = new LogTextAreaAppender();
         logTextAreaAppender.setThreshold(Priority.INFO);
@@ -260,7 +283,7 @@ public class MainController {
      * Load the parameter values from the properties file and set them in the
      * matching fields.
      */
-    private void loadParameterValues() {
+    protected void loadParameterValues() {
         mainFrame.getSpectraDirectoryTextField().setText(ConfigHolder.getInstance().getString(SPECTRA_PROP));
         mainFrame.getComparisonSpectraDirectoryTextField().setText(ConfigHolder.getInstance().getString(COMP_SPECTRA_PROP));
         mainFrame.getOutputDirectoryTextField().setText(ConfigHolder.getInstance().getString(OUTPUT_PROP));
@@ -284,7 +307,7 @@ public class MainController {
      * Copy the parameter values to the ConfigHolder so that the can be used in
      * the pipeline.
      */
-    private void copyParameterValues() {
+    protected void copyParameterValues() {
         ConfigHolder.getInstance().setProperty(SPECTRA_PROP, mainFrame.getSpectraDirectoryTextField().getText());
         ConfigHolder.getInstance().setProperty(COMP_SPECTRA_PROP, mainFrame.getComparisonSpectraDirectoryTextField().getText());
         ConfigHolder.getInstance().setProperty(OUTPUT_PROP, mainFrame.getOutputDirectoryTextField().getText());
@@ -313,7 +336,7 @@ public class MainController {
      *
      * @return the list of validation messages
      */
-    private List<String> validateInput() {
+    protected List<String> validateInput() {
         List<String> validationMessages = new ArrayList<>();
 
         if (mainFrame.getSpectraDirectoryTextField().getText().isEmpty()) {
@@ -426,7 +449,7 @@ public class MainController {
      * @param message the dialog message
      * @param messageType the dialog message type
      */
-    private void showMessageDialog(final String title, final String message, final int messageType) {
+    protected void showMessageDialog(final String title, final String message, final int messageType) {
         //add message to JTextArea
         JTextArea textArea = new JTextArea(message);
         //put JTextArea in JScrollPane
@@ -443,7 +466,7 @@ public class MainController {
     /**
      * Center the run dialog on the frame.
      */
-    private void centerRunDialog() {
+    protected void centerRunDialog() {
         Point topLeft = mainFrame.getLocationOnScreen();
         Dimension parentSize = mainFrame.getSize();
 
@@ -467,7 +490,7 @@ public class MainController {
         runDialog.setLocation(x, y);
     }
 
-    private class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
+    protected class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
 
         @Override
         protected Void doInBackground() throws Exception {
