@@ -2,6 +2,7 @@ package main;
 
 import gui.MainController;
 import gui_specLib.SpecLibSearchMainFrame;
+import gui_specLib.SpecLibSearchModeMainController;
 import gui_spectral_match_visualization.MainGUI;
 import gui_spectral_match_visualization.StartDialog;
 import java.awt.Color;
@@ -30,12 +31,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
  * This class runs 4 different programs:
- * 
- * 1. the score pipeline graphical user interface (GUI)
- * 2. the score pipeline command line interface (CLI)
- * 3. visualization of pairwise spectra along with their scores
- * 4. run spectrum library search tool (currently for only mgf files)
- * 
+ *
+ * 1. the score pipeline graphical user interface (GUI) 2. the score pipeline
+ * command line interface (CLI) 3. visualization of pairwise spectra along with
+ * their scores 4. run spectrum library search tool (currently for only mgf
+ * files)
+ *
  *
  * @author Niels Hulstaert/Sule Yilmaz
  */
@@ -95,10 +96,9 @@ public class ScorePipelineStarter {
 
         displayBlankLines(1, System.out);
         displayHeader(System.out);
-        
+
         displayBlankLines(2, System.out);
         parse(commandLineArguments);
-
 
 //        /*
 //         * Set the Nimbus look and feel
@@ -449,6 +449,44 @@ public class ScorePipelineStarter {
          * Set the Nimbus look and feel.
          */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
+        //set background color for JOptionPane and JPanel instances
+        UIManager.getLookAndFeelDefaults().put("OptionPane.background", Color.WHITE);
+        UIManager.getLookAndFeelDefaults().put("Panel.background", Color.WHITE);
+        UIManager.getLookAndFeelDefaults().put("FileChooser.background", Color.WHITE);
+        //set background color for JFileChooser instances
+        UIManager.getLookAndFeelDefaults().put("FileChooser[Enabled].backgroundPainter",
+                (Painter<JFileChooser>) new Painter<JFileChooser>() {
+            @Override
+            public void paint(Graphics2D g, JFileChooser object, int width, int height) {
+                g.setColor(Color.WHITE);
+                g.draw(object.getBounds());
+            }
+        });
+        //</editor-fold>
+
+        SpecLibSearchModeMainController specLibSearchMainController = new SpecLibSearchModeMainController();
+        specLibSearchMainController.init();
+        specLibSearchMainController.showView();
+        /**
+         * Set the Nimbus look and feel.
+         */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
@@ -488,17 +526,6 @@ public class ScorePipelineStarter {
         });
         //</editor-fold>
 
-        //Create and display the form
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new SpecLibSearchMainFrame().setVisible(true);
-                } catch (Exception ex) {
-                    LOGGER.error(ex.getMessage(), ex);
-                }
-            }
-        });
     }
 
 }
