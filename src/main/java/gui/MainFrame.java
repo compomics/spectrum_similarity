@@ -13,15 +13,27 @@ import javax.swing.JTextField;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private final JFileChooser spectraDirectoryChooser = new JFileChooser();
-    private final JFileChooser comparisonSpectraDirectoryChooser = new JFileChooser();
-    private final JFileChooser outputDirectoryChooser = new JFileChooser();
+    protected final JFileChooser spectraDirectoryChooser = new JFileChooser();
+    protected final JFileChooser comparisonSpectraDirectoryChooser = new JFileChooser();
+    protected final JFileChooser outputDirectoryChooser = new JFileChooser();
+
+    /**
+     * To construct a MainFrame object
+     *
+     * @param createContent-if it is true, the super class can initialize its
+     * components
+     */
+    public MainFrame(boolean createContent) {
+        if (createContent) {
+            initComponents();
+        }
+    }
 
     /**
      * Constructor.
      */
     public MainFrame() {
-        initComponents();
+        this(true); // to make sure to initalize components for this super class
     }
 
     public JFileChooser getSpectraDirectoryChooser() {
@@ -139,8 +151,6 @@ public class MainFrame extends javax.swing.JFrame {
     public void setMaxPrecursorChargejTextField(JTextField maxPrecursorChargejTextField) {
         this.maxPrecursorChargejTextField = maxPrecursorChargejTextField;
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
