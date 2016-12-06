@@ -490,7 +490,7 @@ public class MainController {
         runDialog.setLocation(x, y);
     }
 
-    protected class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
+    public class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
 
         public ScorePipelineSwingWorker() {
         }

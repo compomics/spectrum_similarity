@@ -380,7 +380,7 @@ public class ScorePipeline {
     private static ArrayList<BinMSnSpectrum> convert_all_MSnSpectra_to_BinMSnSpectra(File mgf_file, double min_mz, double max_mz, double fragment_tolerance,
             int noiseFiltering, int transformation, int topN, boolean is_precursor_peak_removal, int charge, boolean isNFTR)
             throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException {
-        int weighting = ConfigHolder.getInstance().getInt("sum_mean_median"),
+        int weighting = ConfigHolder.getInstance().getInt("sum.mean.median"),
                 percent = ConfigHolder.getInstance().getInt("percent");
         ConvertToBinMSnSpectrum convertToBinMSnSpectrumObj = new ConvertToBinMSnSpectrum(min_mz, max_mz, topN, percent, fragment_tolerance, noiseFiltering, transformation, weighting);
         ArrayList<BinMSnSpectrum> binspectra = new ArrayList<BinMSnSpectrum>();
