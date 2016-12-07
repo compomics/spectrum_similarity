@@ -11,8 +11,6 @@ import gui.MainController;
 import gui.RunDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.JFileChooser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -123,46 +121,6 @@ public class SpecLibSearchModeMainController extends MainController {
             }
         });
 
-//        mainFrame.getNeighbourSlicesOnlyCheckBox().addItemListener(new ItemListener() {
-//            @Override
-//            public void itemStateChanged(ItemEvent e) {
-//                if (mainFrame.getNeighbourSlicesOnlyCheckBox().isSelected()) {
-//                    mainFrame.getFileNameSliceIndexTextField().setEnabled(true);
-//                } else {
-//                    mainFrame.getFileNameSliceIndexTextField().setEnabled(false);
-//                }
-//            }
-//        });
-        ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedScoringFunction = ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().getSelectedIndex();
-
-//                switch (selectedScoringFunction) {
-//                    case 0:
-//                    // Cumulative binomial scoring function 
-//                        ((SpecLibSearchMainFrame)mainFrame).setScoringFunctionjComboBox(selectedScoringFunction);
-//
-//                    case 1:
-//                        // Dot product 
-//                        s.getNumberOfPeaksCutoffTextField().setEnabled(true);
-//                        s.getPeakIntensityCutoffTextField().setEnabled(false);
-//                        break;
-//                    case 2:
-//                        // Pearson's correlation 
-//
-//                        s.getNumberOfPeaksCutoffTextField().setEnabled(false);
-//                        s.getPeakIntensityCutoffTextField().setEnabled(true);
-//                        break;
-//                    case 3:
-//                    // Speaerman's correlation 
-//
-//                   
-//                        break;
-//                }
-            }
-        });
-
         mainFrame.getNoiseFilterComboBox().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -213,7 +171,7 @@ public class SpecLibSearchModeMainController extends MainController {
                         }
                     }
                     if (reply != JOptionPane.CANCEL_OPTION) {
-                        scorePipelineSwingWorker = new ScorePipelineSwingWorker();
+                        scorePipelineSwingWorker = new ScorePipelineSwingWorker(true);
                         scorePipelineSwingWorker.execute();
 
                         //show the run dialog
@@ -280,11 +238,7 @@ public class SpecLibSearchModeMainController extends MainController {
         ConfigHolder.getInstance().setProperty(SCORING_FUNC_PROP, ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().getSelectedIndex());
         ConfigHolder.getInstance().setProperty(SUM_MEAN_MEDIAN_PROP, ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().getSelectedIndex());
 
-        // WHY THIS EQUALS TO 0 
         ConfigHolder.getInstance().setProperty(PREPROCESSING_ORDER_PROP, mainFrame.getPreprocessingOrderComboBox().getSelectedIndex() == 0);
-        // TO SEE THE EFFECT
-        System.out.println(mainFrame.getPreprocessingOrderComboBox().getSelectedIndex() == 0);
-        System.out.println(mainFrame.getPreprocessingOrderComboBox().getSelectedIndex() == 1);
 
         ConfigHolder.getInstance().setProperty(TRANSORMATION_PROP, mainFrame.getTransformationComboBox().getSelectedIndex());
         ConfigHolder.getInstance().setProperty(NOISE_FILTER_PROP, mainFrame.getNoiseFilterComboBox().getSelectedIndex());
@@ -310,8 +264,6 @@ public class SpecLibSearchModeMainController extends MainController {
         mainFrame.getMaxPrecursorChargejTextField().setText(ConfigHolder.getInstance().getString(MAX_PREC_CHARGE_PROP));
         mainFrame.getPrecursorToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(PRECURSOR_PROP)));
         mainFrame.getFragmentToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(FRAGMENT_PROP)));
-//        mainFrame.getNeighbourSlicesOnlyCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(NEIGHBOUR_SLICE_PROP));
-//        mainFrame.getFileNameSliceIndexTextField().setText(Integer.toString(ConfigHolder.getInstance().getInt(FILE_NAME_SLICE_INDEX_PROP)));
 
         ((SpecLibSearchMainFrame) mainFrame).getMinMZjTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(MIN_MZ_PROP)));
         ((SpecLibSearchMainFrame) mainFrame).getMaxMZjTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(MAX_MZ_PROP)));
