@@ -1,4 +1,4 @@
-package gui;
+package gui.scoring_pipeline;
 
 import javax.swing.SwingUtilities;
 import org.apache.log4j.WriterAppender;

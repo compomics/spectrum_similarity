@@ -1,4 +1,4 @@
-package gui;
+package gui.scoring_pipeline;
 
 import config.ConfigHolder;
 import java.awt.Dimension;

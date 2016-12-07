@@ -1,10 +1,10 @@
 package main;
 
-import gui.MainController;
-import gui_specLib.SpecLibSearchMainFrame;
-import gui_specLib.SpecLibSearchModeMainController;
-import gui_spectral_match_visualization.MainGUI;
-import gui_spectral_match_visualization.StartDialog;
+import gui.scoring_pipeline.MainController;
+import gui.searching_spectrum_library.SpecLibSearchMainFrame;
+import gui.searching_spectrum_library.SpecLibSearchModeMainController;
+import gui.visualizing_pairwise_score.MainGUI;
+import gui.visualizing_pairwise_score.StartDialog;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;

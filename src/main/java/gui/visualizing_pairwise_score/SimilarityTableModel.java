@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui_spectral_match_visualization;
+package gui.visualizing_pairwise_score;
 
 import javax.swing.table.AbstractTableModel;
 

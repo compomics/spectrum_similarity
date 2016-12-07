@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui_specLib;
+package gui.searching_spectrum_library;
 
 import config.ConfigHolder;
-import gui.LogTextAreaAppender;
-import gui.MainController;
-import gui.RunDialog;
+import gui.scoring_pipeline.LogTextAreaAppender;
+import gui.scoring_pipeline.MainController;
+import gui.scoring_pipeline.RunDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFileChooser;
