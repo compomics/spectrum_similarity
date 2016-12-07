@@ -226,7 +226,7 @@ public class MainController {
                         }
                     }
                     if (reply != JOptionPane.CANCEL_OPTION) {
-                        scorePipelineSwingWorker = new ScorePipelineSwingWorker();
+                        scorePipelineSwingWorker = new ScorePipelineSwingWorker(false);
                         scorePipelineSwingWorker.execute();
 
                         //show the run dialog
@@ -492,14 +492,27 @@ public class MainController {
 
     public class ScorePipelineSwingWorker extends SwingWorker<Void, Void> {
 
-        public ScorePipelineSwingWorker() {
+        protected boolean isSpecLibSearching; // true: to allow search for spectrum library false: to search for scoring pipeline
+
+        /**
+         * To construct a swing worker
+         *
+         * @param isSpecLibSearching is true if Spectrum library searching mode
+         * is ON, false in case to run scoring pipeline.
+         *
+         */
+        public ScorePipelineSwingWorker(boolean isSpecLibSearching) {
+            this.isSpecLibSearching = isSpecLibSearching;
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            LOGGER.info("starting spectrum similarity score pipeline");
-            ScorePipeline.run(true);
-
+            LOGGER.info("starting the program");
+            if (!isSpecLibSearching) {
+                ScorePipeline.run(1);
+            } else {
+                ScorePipeline.run(2);
+            }
             return null;
         }
 
@@ -507,13 +520,13 @@ public class MainController {
         protected void done() {
             try {
                 get();
-                LOGGER.info("finished spectrum similarity score pipeline");
-                JOptionPane.showMessageDialog(runDialog, "The score pipeline has finished.");
+                LOGGER.info("finished the program");
+                JOptionPane.showMessageDialog(runDialog, "the program has finished.");
             } catch (InterruptedException | ExecutionException ex) {
                 LOGGER.error(ex.getMessage(), ex);
                 showMessageDialog("Unexpected error", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
             } catch (CancellationException ex) {
-                LOGGER.info("the spectrum similarity score pipeline run was cancelled");
+                LOGGER.info("the program was cancelled");
             } finally {
 
             }
