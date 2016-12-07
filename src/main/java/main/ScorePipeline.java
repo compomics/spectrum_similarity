@@ -15,6 +15,7 @@ import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import config.ConfigHolder;
 import gui.MainController;
+import gui_specLib.SpecLibSearchModeMainController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,13 +69,14 @@ public class ScorePipeline {
      * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, InterruptedException, ExecutionException {
-        run(false);
+        run(0); // to run CLI for scoring pipeline
     }
 
     /**
      * Run the spectrum similarity pipeline.
      *
-     * @param isGUI true if the GUI is asked, false: a standalone version
+     * @param runOption 0:to run CLI for scoring pipeline, 1: to run GUI for
+     * scoring pipeline, 2:to run GUI for spectrum library searching mode
      *
      * @throws IOException in case of an I/O related problem
      * @throws FileNotFoundException in case of file opening related problem
@@ -88,11 +90,16 @@ public class ScorePipeline {
      * @throws InterruptedException in case of an inactive thread interruption
      * problem
      */
-    public static void run(boolean isGUI) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
+    public static void run(int runOption) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
         //send an event
         sendAnalyticsEvent();
-        if (isGUI) {
-            LOGGER = Logger.getLogger(MainController.class);
+        switch (runOption) {
+            case 1:
+                LOGGER = Logger.getLogger(MainController.class);
+                break;
+            case 2:
+                LOGGER = Logger.getLogger(SpecLibSearchModeMainController.class);
+                break;
         }
         String spectraFolder = ConfigHolder.getInstance().getString("spectra.folder"),
                 comparisonFolder = ConfigHolder.getInstance().getString("spectra.to.compare.folder"),
@@ -200,7 +207,7 @@ public class ScorePipeline {
             /// RUNNING //////////////////////////////////////////
             int[] charges = new int[maxCharge]; // restricting to only charge state based
             int i = 0;
-            for (int charge = 2; charge < maxCharge; charge++) {
+            for (int charge = 1; charge <= maxCharge; charge++) {
                 charges[i] = charge;
                 i++;
             }
