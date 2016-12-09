@@ -40,25 +40,26 @@ public class MainController {
     /**
      * The parameters properties names.
      */
-    protected static final String SPECTRA_PROP = "spectra.folder",
-            COMP_SPECTRA_PROP = "spectra.to.compare.folder",
-            OUTPUT_PROP = "output.folder",
-            CHARGE_PROP = "is.charged.based",
-            MAX_PREC_CHARGE_PROP = "max.charge",
-            PRECURSOR_PROP = "precursor.tolerance",
-            FRAGMENT_PROP = "fragment.tolerance",
-            NEIGHBOUR_SLICE_PROP = "calculate.only5",
-            FILE_NAME_SLICE_INDEX_PROP = "slice.index",
-            MIN_MZ_PROP = "min.mz",
-            MAX_MZ_PROP = "max.mz",
-            SCORING_FUNC_PROP = "scoring.function",
-            TRANSORMATION_PROP = "transformation",
-            NOISE_FILTER_PROP = "noise.filtering",
-            NUMBER_OF_PEAKS_CUTOFF_PROP = "topN",
-            PEAK_PERCENTAGE_CUTOFF = "percent",
-            PRECURSOR_PEAK_REMOVAL_PROP = "precursor.peak.removal",
-            PREPROCESSING_ORDER_PROP = "isNFTR",
-            NUMBER_OF_THREADS_PROP = "thread.numbers";
+    protected static final String SPECTRA_PROP = "spectra.folder", // a folder that contains spectra
+            COMP_SPECTRA_PROP = "spectra.to.compare.folder",  // a folder that contains spectra at the comparison data set
+            OUTPUT_PROP = "output.folder", // output folder in which scores are stored
+            CHARGE_PROP = "is.charged.based", // to control if to scores spectra with the same charge states (true) or not (false)
+            MAX_PREC_CHARGE_PROP = "max.charge", // to score the maximum precursor charge state
+            PRECURSOR_PROP = "precursor.tolerance", // precursor tolerance value
+            FRAGMENT_PROP = "fragment.tolerance", // fragment tolerance value
+            NEIGHBOUR_SLICE_PROP = "calculate.only5", // to calculate spectra from +-5 slices (very specific to Yilmaz, et al, JPR, 2016
+            FILE_NAME_SLICE_INDEX_PROP = "slice.index", // index of where you can get slice information on file title (Please refer to MS2Similarity.properties
+            MIN_MZ_PROP = "min.mz", // minimum m/z value 
+            MAX_MZ_PROP = "max.mz", // maximum m/z value
+            SCORING_FUNC_PROP = "scoring.function", // name of scoring function
+            TRANSORMATION_PROP = "transformation", // type of transformation 
+            NOISE_FILTER_PROP = "noise.filtering", // type of noise filtering 
+            NUMBER_OF_PEAKS_CUTOFF_PROP = "topN", // N value for topN noise fitlering
+            PEAK_PERCENTAGE_CUTOFF = "percent", // percentage value of peaks to keep in the spectra after fitlering
+            PRECURSOR_PEAK_REMOVAL_PROP = "precursor.peak.removal", // to remove precursor peak 
+            PREPROCESSING_ORDER_PROP = "isNFTR", // the order of noise filtering and transformation (true) or transformation and noisefiltering (false) 
+            NUMBER_OF_THREADS_PROP = "thread.numbers", // number of thread for multithreading 
+            SEARCH_MODE = "search.mode"; // search mode 
     /**
      * Model fields.
      */
@@ -328,6 +329,7 @@ public class MainController {
         }
         ConfigHolder.getInstance().setProperty(PRECURSOR_PEAK_REMOVAL_PROP, mainFrame.getRemovePrecursorIonPeaksCheckBox().isSelected());
         ConfigHolder.getInstance().setProperty(NUMBER_OF_THREADS_PROP, mainFrame.getNumberOfThreadsTextField().getText());
+        ConfigHolder.getInstance().setProperty(SEARCH_MODE, 0);
     }
 
     /**

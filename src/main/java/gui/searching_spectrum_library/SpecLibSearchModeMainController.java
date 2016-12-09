@@ -249,6 +249,7 @@ public class SpecLibSearchModeMainController extends MainController {
         }
         ConfigHolder.getInstance().setProperty(PRECURSOR_PEAK_REMOVAL_PROP, mainFrame.getRemovePrecursorIonPeaksCheckBox().isSelected());
         ConfigHolder.getInstance().setProperty(NUMBER_OF_THREADS_PROP, mainFrame.getNumberOfThreadsTextField().getText());
+        ConfigHolder.getInstance().setProperty(SEARCH_MODE, 1);
     }
 
     /**
@@ -269,7 +270,7 @@ public class SpecLibSearchModeMainController extends MainController {
         ((SpecLibSearchMainFrame) mainFrame).getMaxMZjTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(MAX_MZ_PROP)));
         ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(SCORING_FUNC_PROP));
         ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(SUM_MEAN_MEDIAN_PROP));
-
+       
         mainFrame.getTransformationComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(TRANSORMATION_PROP));
         mainFrame.getNoiseFilterComboBox().setSelectedIndex(ConfigHolder.getInstance().getInt(NOISE_FILTER_PROP));
         mainFrame.getRemovePrecursorIonPeaksCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(PRECURSOR_PEAK_REMOVAL_PROP));
