@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <NonVisualComponents>
-    <Container class="javax.swing.JMenu" name="jMenu1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jMenu1"/>
-      </Properties>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-        <Property name="useNullLayout" type="boolean" value="true"/>
-      </Layout>
-    </Container>
-  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -36,7 +25,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="mainPanel" min="-2" pref="975" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -85,7 +74,7 @@
                           <Component id="inputAndOutputPanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="57" max="32767" attributes="0"/>
+                  <EmptySpace pref="87" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -98,12 +87,12 @@
                   <Component id="pipelineParametersPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="otherParametersPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="runButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="closeButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="143" max="32767" attributes="0"/>
+                  <EmptySpace pref="150" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -234,7 +223,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="chargeCheckBox" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="maxPrecChargejLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
                                   <Component id="precursorLabelToleranceLabel" linkSize="3" alignment="0" pref="148" max="32767" attributes="0"/>
@@ -242,32 +235,34 @@
                                   <Component id="minMZjLabel" linkSize="3" alignment="0" max="32767" attributes="0"/>
                                   <Component id="maxMZjLabel" linkSize="3" alignment="0" pref="148" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="maxPrecursorChargejTextField" linkSize="1" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
-                                  <Component id="precursorToleranceTextField" linkSize="1" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
-                                  <Component id="fragmentToleranceTextField" linkSize="1" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
-                                  <Component id="minMZjTextField" linkSize="1" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
-                                  <Component id="maxMZjTextField" linkSize="1" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="minMZjTextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="fragmentToleranceTextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="precursorToleranceTextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="maxPrecursorChargejTextField" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="maxMZjTextField" min="-2" pref="80" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="chargeCheckBox" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="weightingjLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace pref="84" max="32767" attributes="0"/>
+                                      <Component id="weightingjComboBox" linkSize="9" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="scoringFunctionjLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="scoringFunctionjComboBox" linkSize="9" min="-2" pref="108" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="preprocessingParametersPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scoringFunctionjLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="weightingjLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="42" pref="43" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="weightingjComboBox" linkSize="7" min="-2" max="-2" attributes="0"/>
-                          <Component id="scoringFunctionjComboBox" linkSize="7" min="-2" pref="163" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="516" pref="516" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -324,13 +319,15 @@
           <SubComponents>
             <Component class="javax.swing.JCheckBox" name="chargeCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Compare spectra regarding to precursor charge"/>
-                <Property name="toolTipText" type="java.lang.String" value="enables the comparison of spectra with the same precursor charge"/>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="compare spectra regarding to precursor charge"/>
+                <Property name="toolTipText" type="java.lang.String" value="enables the comparison of spectra only with the same precursor charge"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="precursorLabelToleranceLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Precursor tolerance (ppm)*:"/>
+                <Property name="toolTipText" type="java.lang.String" value="provide a double value for a precursor tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="precursorToleranceTextField">
@@ -341,6 +338,7 @@
             <Component class="javax.swing.JLabel" name="fragmentToleranceLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Fragment tolerance (Da)*:"/>
+                <Property name="toolTipText" type="java.lang.String" value="provide a double value for a fragmentation tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fragmentToleranceTextField">
@@ -455,7 +453,7 @@
                 <Component class="javax.swing.JLabel" name="transformationJLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Transformation*:"/>
-                    <Property name="toolTipText" type="java.lang.String" value="select the transformation option to transform peak intensity"/>
+                    <Property name="toolTipText" type="java.lang.String" value="select a transformation option to transform peak intensity"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="noiseFilterComboBox">
@@ -502,6 +500,7 @@
                 <Component class="javax.swing.JLabel" name="preprocessingOrderLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Preprocessing order*:"/>
+                    <Property name="toolTipText" type="java.lang.String" value="select the order for preprocessing: either first noise filtering or intensity transformation "/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="preprocessingOrderComboBox">
@@ -521,7 +520,8 @@
             </Container>
             <Component class="javax.swing.JLabel" name="scoringFunctionjLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Scoring function:"/>
+                <Property name="text" type="java.lang.String" value="Scoring function:*"/>
+                <Property name="toolTipText" type="java.lang.String" value="select a scoring function of your interest"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="scoringFunctionjComboBox">
@@ -542,6 +542,7 @@
             <Component class="javax.swing.JLabel" name="minMZjLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Minimum m/z value:"/>
+                <Property name="toolTipText" type="java.lang.String" value="provide a minimum m/z value, which is required to bin spectra"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="minMZjTextField">
@@ -558,6 +559,7 @@
             <Component class="javax.swing.JLabel" name="maxMZjLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Maximum m/z value:"/>
+                <Property name="toolTipText" type="java.lang.String" value="provide a maximum m/z value, which is required to bin spectra"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="maxMZjTextField">
@@ -577,6 +579,7 @@
             <Component class="javax.swing.JLabel" name="maxPrecChargejLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Maximum precursor charge:"/>
+                <Property name="toolTipText" type="java.lang.String" value="provide an integer value for the maximum precursor chage value to score"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="maxPrecursorChargejTextField">
@@ -587,7 +590,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="weightingjLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Weight option for binned spectra:"/>
+                <Property name="text" type="java.lang.String" value="Weight option to bin spectra:*"/>
+                <Property name="toolTipText" type="java.lang.String" value="select an option to how to convert MS/MS spectrum into a binned MS/MS spectrum"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="weightingjComboBox">

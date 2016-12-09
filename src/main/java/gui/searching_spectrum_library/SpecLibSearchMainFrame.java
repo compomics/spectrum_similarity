@@ -223,7 +223,6 @@ public class SpecLibSearchMainFrame extends MainFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
         mainPanel = new javax.swing.JPanel();
         inputAndOutputPanel = new javax.swing.JPanel();
         spectraDirectoryLabel = new javax.swing.JLabel();
@@ -268,8 +267,6 @@ public class SpecLibSearchMainFrame extends MainFrame {
         numberOfThreadsTextField = new javax.swing.JTextField();
         closeButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
-
-        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -344,14 +341,17 @@ public class SpecLibSearchMainFrame extends MainFrame {
         pipelineParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Scoring parameters"));
         pipelineParametersPanel.setOpaque(false);
 
-        chargeCheckBox.setText("Compare spectra regarding to precursor charge");
-        chargeCheckBox.setToolTipText("enables the comparison of spectra with the same precursor charge");
+        chargeCheckBox.setSelected(true);
+        chargeCheckBox.setText("compare spectra regarding to precursor charge");
+        chargeCheckBox.setToolTipText("enables the comparison of spectra only with the same precursor charge");
 
         precursorLabelToleranceLabel.setText("Precursor tolerance (ppm)*:");
+        precursorLabelToleranceLabel.setToolTipText("provide a double value for a precursor tolerance");
 
         precursorToleranceTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         fragmentToleranceLabel.setText("Fragment tolerance (Da)*:");
+        fragmentToleranceLabel.setToolTipText("provide a double value for a fragmentation tolerance");
 
         fragmentToleranceTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         fragmentToleranceTextField.setToolTipText("");
@@ -365,7 +365,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
         removePrecursorIonPeaksCheckBox.setText("Remove precursor ion peaks");
 
         transformationJLabel.setText("Transformation*:");
-        transformationJLabel.setToolTipText("select the transformation option to transform peak intensity");
+        transformationJLabel.setToolTipText("select a transformation option to transform peak intensity");
 
         noiseFilterComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "none", "prideAsap-Adaptive noise filtering", "topN intense peak selection", "discard peaks with less than x% of precursor-intensity" }));
 
@@ -378,6 +378,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
         peakIntensityCutoffLabel.setToolTipText("required for discarding peaks with less than x% of precursor intensity");
 
         preprocessingOrderLabel.setText("Preprocessing order*:");
+        preprocessingOrderLabel.setToolTipText("select the order for preprocessing: either first noise filtering or intensity transformation ");
 
         preprocessingOrderComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "noise filter - transformation", "transformation - noise filter" }));
 
@@ -445,11 +446,13 @@ public class SpecLibSearchMainFrame extends MainFrame {
 
         preprocessingParametersPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {numberOfPeaksCutoffTextField, peakIntensityCutoffTextField});
 
-        scoringFunctionjLabel.setText("Scoring function:");
+        scoringFunctionjLabel.setText("Scoring function:*");
+        scoringFunctionjLabel.setToolTipText("select a scoring function of your interest");
 
         scoringFunctionjComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cum. Binom.", "Dot-product", "Pearson's", "Spearman's" }));
 
         minMZjLabel.setText("Minimum m/z value:");
+        minMZjLabel.setToolTipText("provide a minimum m/z value, which is required to bin spectra");
 
         minMZjTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minMZjTextField.setText("100");
@@ -458,6 +461,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
         minMZjTextField.setSelectionStart(1);
 
         maxMZjLabel.setText("Maximum m/z value:");
+        maxMZjLabel.setToolTipText("provide a maximum m/z value, which is required to bin spectra");
 
         maxMZjTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxMZjTextField.setText("3500");
@@ -471,11 +475,13 @@ public class SpecLibSearchMainFrame extends MainFrame {
         });
 
         maxPrecChargejLabel.setText("Maximum precursor charge:");
+        maxPrecChargejLabel.setToolTipText("provide an integer value for the maximum precursor chage value to score");
 
         maxPrecursorChargejTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         maxPrecursorChargejTextField.setText("5");
 
-        weightingjLabel.setText("Weight option for binned spectra:");
+        weightingjLabel.setText("Weight option to bin spectra:*");
+        weightingjLabel.setToolTipText("select an option to how to convert MS/MS spectrum into a binned MS/MS spectrum");
 
         weightingjComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sum", "Mean", "Median" }));
 
@@ -486,35 +492,37 @@ public class SpecLibSearchMainFrame extends MainFrame {
             .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                 .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                        .addComponent(chargeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(maxPrecChargejLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(precursorLabelToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                             .addComponent(fragmentToleranceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(minMZjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(maxMZjLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                        .addGap(100, 100, 100)
-                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(minMZjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(maxMZjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(chargeCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(minMZjTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fragmentToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(precursorToleranceTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(maxPrecursorChargejTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(maxMZjTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pipelineParametersPanelLayout.createSequentialGroup()
+                        .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                                .addComponent(weightingjLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                                .addComponent(weightingjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                                .addComponent(scoringFunctionjLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(scoringFunctionjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)))
                 .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
-            .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scoringFunctionjLabel)
-                    .addComponent(weightingjLabel))
-                .addGap(42, 43, Short.MAX_VALUE)
-                .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(weightingjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scoringFunctionjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(516, 516, 516))
         );
-
-        pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fragmentToleranceTextField, maxMZjTextField, maxPrecursorChargejTextField, minMZjTextField, precursorToleranceTextField});
 
         pipelineParametersPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fragmentToleranceLabel, maxMZjLabel, maxPrecChargejLabel, minMZjLabel, precursorLabelToleranceLabel});
 
@@ -625,7 +633,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
                         .addComponent(otherParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pipelineParametersPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(inputAndOutputPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -636,11 +644,11 @@ public class SpecLibSearchMainFrame extends MainFrame {
                 .addComponent(pipelineParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(otherParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -649,7 +657,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 975, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 25, Short.MAX_VALUE))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -680,7 +688,6 @@ public class SpecLibSearchMainFrame extends MainFrame {
     private javax.swing.JLabel fragmentToleranceLabel;
     private javax.swing.JTextField fragmentToleranceTextField;
     private javax.swing.JPanel inputAndOutputPanel;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel maxMZjLabel;
     private javax.swing.JTextField maxMZjTextField;
