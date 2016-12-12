@@ -275,6 +275,7 @@ public class MainFrame extends javax.swing.JFrame {
         pipelineParametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Pipeline parameters"));
         pipelineParametersPanel.setOpaque(false);
 
+        chargeCheckBox.setSelected(true);
         chargeCheckBox.setText("Compare spectra regarding to precursor charge");
         chargeCheckBox.setToolTipText("enables the comparison of spectra with the same precursor charge");
 

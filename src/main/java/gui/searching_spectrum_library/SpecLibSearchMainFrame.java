@@ -20,7 +20,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
      */
     public SpecLibSearchMainFrame() {
         super(false); // to make sure that super class of MainFrame will not be called 
-        initComponents();
+        this.initComponents();
     }
 
     @Override
