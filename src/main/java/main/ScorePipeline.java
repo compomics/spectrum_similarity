@@ -68,7 +68,7 @@ public class ScorePipeline {
      * @throws java.util.concurrent.ExecutionException
      * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, InterruptedException, ExecutionException {
+    public static void main(String[] args) throws Exception, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, InterruptedException, ExecutionException {
         run(0); // to run CLI for scoring pipeline
     }
 
@@ -90,7 +90,7 @@ public class ScorePipeline {
      * @throws InterruptedException in case of an inactive thread interruption
      * problem
      */
-    public static void run(int runOption) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException {
+    public static void run(int runOption) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, IllegalArgumentException, NumberFormatException, InterruptedException, Exception {
         //send an event
         sendAnalyticsEvent();
         switch (runOption) {
@@ -386,7 +386,7 @@ public class ScorePipeline {
      */
     private static ArrayList<BinMSnSpectrum> convert_all_MSnSpectra_to_BinMSnSpectra(File mgf_file, double min_mz, double max_mz, double fragment_tolerance,
             int noiseFiltering, int transformation, int topN, boolean is_precursor_peak_removal, int charge, boolean isNFTR)
-            throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException {
+            throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, Exception {
         int weighting = ConfigHolder.getInstance().getInt("sum.mean.median"),
                 percent = ConfigHolder.getInstance().getInt("percent");
         ConvertToBinMSnSpectrum convertToBinMSnSpectrumObj = new ConvertToBinMSnSpectrum(min_mz, max_mz, topN, percent, fragment_tolerance, noiseFiltering, transformation, weighting);
@@ -396,6 +396,10 @@ public class ScorePipeline {
             fct.addSpectra(mgf_file, new WaitingHandlerCLIImpl());
             for (String title : fct.getSpectrumTitles(mgf_file.getName())) {
                 MSnSpectrum ms = (MSnSpectrum) fct.getSpectrum(mgf_file.getName(), title);
+                if (ms.getPrecursor().getPossibleCharges().size() != 1) {
+                    LOGGER.info("Please make sure that every MS/MS spectrum has only one precursor charge!");
+                    throw (new Exception("Please make sure that every MS/MS spectrum has only one precursor charge!"));
+                }
                 if (charge == 0) {
                     BinMSnSpectrum binMSnSpectrum = constructBinMSnSpectrum(ms, is_precursor_peak_removal, fragment_tolerance, convertToBinMSnSpectrumObj, isNFTR);
                     if (binMSnSpectrum != null) {
@@ -614,13 +618,18 @@ public class ScorePipeline {
      * @throws ClassNotFoundException
      * @throws MzMLUnmarshallerException
      */
-    private static ArrayList<MSnSpectrum> prepareData(File mgf_file, int transformation, int noiseFiltering, int topN, double percentage, boolean is_precursor_peak_removal, int charge, double fragment_tolerance) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException {
+    private static ArrayList<MSnSpectrum> prepareData(File mgf_file, int transformation, int noiseFiltering, int topN, double percentage, boolean is_precursor_peak_removal, int charge, double fragment_tolerance) throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, Exception {
         ArrayList<MSnSpectrum> spectra = new ArrayList<>();
         if (mgf_file.getName().endsWith(".mgf")) {
             fct.clearFactory();
             fct.addSpectra(mgf_file, new WaitingHandlerCLIImpl());
             for (String title : fct.getSpectrumTitles(mgf_file.getName())) {
                 MSnSpectrum ms = (MSnSpectrum) fct.getSpectrum(mgf_file.getName(), title);
+                if (ms.getPrecursor().getPossibleCharges().size() != 1) {
+                    System.out.println("size=" + ms.getPrecursor().getPossibleCharges().size());
+                    LOGGER.info("Please make sure that every MS/MS spectrum has only one precursor charge!");
+                    throw (new Exception("Please make sure that every MS/MS spectrum has only one precursor charge!"));
+                }
                 if (charge == 0 || charge == ms.getPrecursor().getPossibleCharges().get(0).value) {
                     if (is_precursor_peak_removal) {
                         RemovePrecursorRelatedPeaks removal = new RemovePrecursorRelatedPeaks(ms, fragment_tolerance);
