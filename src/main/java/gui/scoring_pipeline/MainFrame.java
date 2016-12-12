@@ -464,7 +464,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        closeButton.setText("close");
+        closeButton.setText("exit");
+        closeButton.setToolTipText("exit the program");
         closeButton.setMaximumSize(new java.awt.Dimension(85, 27));
         closeButton.setMinimumSize(new java.awt.Dimension(85, 27));
         closeButton.setPreferredSize(new java.awt.Dimension(85, 27));

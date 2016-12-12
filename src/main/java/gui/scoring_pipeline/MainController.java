@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -226,7 +227,7 @@ public class MainController {
                                     + ce.getMessage(), JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                    if (reply != JOptionPane.CANCEL_OPTION) {
+                    if (reply != JOptionPane.CANCEL_OPTION && reply != JOptionPane.ABORT) {
                         scorePipelineSwingWorker = new ScorePipelineSwingWorker(false);
                         scorePipelineSwingWorker.execute();
 
@@ -259,12 +260,18 @@ public class MainController {
             }
         });
 
-        runDialog.getCancelButton().addActionListener(new ActionListener() {
+        runDialog.getExitButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                scorePipelineSwingWorker.cancel(true);
-//                runDialog.dispose();
                 System.exit(0);
+            }
+        });
+
+        runDialog.getCloseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runDialog.dispose();
+
             }
         });
 
@@ -528,7 +535,7 @@ public class MainController {
                 LOGGER.error(ex.getMessage(), ex);
                 showMessageDialog("Unexpected error", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
             } catch (CancellationException ex) {
-                LOGGER.info("the program was cancelled");
+                LOGGER.info("the program was exited/cancelled");
             } finally {
 
             }

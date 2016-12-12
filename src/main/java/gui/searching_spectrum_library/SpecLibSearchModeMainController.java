@@ -231,12 +231,17 @@ public class SpecLibSearchModeMainController extends MainController {
             }
         });
 
-        runDialog.getCancelButton().addActionListener(new ActionListener() {
+        runDialog.getExitButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                scorePipelineSwingWorker.cancel(true);
-//                runDialog.dispose();
                 System.exit(0);
+            }
+        });
+
+        runDialog.getCloseButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runDialog.dispose();
             }
         });
 

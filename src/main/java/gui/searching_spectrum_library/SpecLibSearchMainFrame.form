@@ -663,7 +663,8 @@
         </Container>
         <Component class="javax.swing.JButton" name="closeButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="close"/>
+            <Property name="text" type="java.lang.String" value="exit"/>
+            <Property name="toolTipText" type="java.lang.String" value="exit the program "/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[85, 27]"/>
             </Property>
