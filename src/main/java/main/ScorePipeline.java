@@ -388,7 +388,7 @@ public class ScorePipeline {
             int noiseFiltering, int transformation, int topN, boolean is_precursor_peak_removal, int charge, boolean isNFTR)
             throws IOException, FileNotFoundException, ClassNotFoundException, MzMLUnmarshallerException, Exception {
         int weighting = ConfigHolder.getInstance().getInt("sum.mean.median"),
-                percent = ConfigHolder.getInstance().getInt("percent");
+                percent = (int) ConfigHolder.getInstance().getInt("percent");
         ConvertToBinMSnSpectrum convertToBinMSnSpectrumObj = new ConvertToBinMSnSpectrum(min_mz, max_mz, topN, percent, fragment_tolerance, noiseFiltering, transformation, weighting);
         ArrayList<BinMSnSpectrum> binspectra = new ArrayList<BinMSnSpectrum>();
         if (mgf_file.getName().endsWith(".mgf")) {
