@@ -129,7 +129,7 @@
                     </excludes>   
                     <archive>
                         <manifest>                            
-                            <!--mainClass>main.ScorePipelineStarter</mainClass-->                          
+                            <mainClass>main.ScorePipelineStarter</mainClass>                          
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
