@@ -41,7 +41,14 @@ public class ReaderThread implements Runnable {
                 if (currentLine.contains("TITLE=")) {
                     ringBuff.put(currentLine);
                 }
-//                System.out.println(currentLine);
+                // to make sure to keep PEPMASS
+                if (currentLine.contains("PEPMASS=")) {
+                    ringBuff.put(currentLine.split(" ")[0]);
+                }
+                // to make sure to keep precursor charge
+                  if (currentLine.contains("CHARGE=")) {
+                    ringBuff.put(currentLine);
+                }                  
                 if (Character.isDigit(currentLine.charAt(0)) || currentLine.equals("END IONS")) {
                     //spectra=buffer1.split(" ");
 //                    if (ringBuff.size() > 8000) {
