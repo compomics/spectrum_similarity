@@ -7,6 +7,7 @@ package optimization;
 
 import optimization.spectra.Peak;
 import cal.binBased.Calculate_BinSpectrum_Similarity;
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.ScorePipeline;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import util.CalculateMS1Err;
 
 /**
  *
@@ -31,7 +33,10 @@ public class DequeNCompare implements Runnable {
             filename2 = ""; // name of the second spectrum file
     private File toPrint = null; // name of the file to write calculation output   
 
-    private double frag_tol = 0.5; // fragment tolerance
+    private double frag_tol = 0.5, // fragment tolerance (in Da)
+            prec_tol = 10; // precursor tolerance
+    private boolean isPrecTolPPM = true; // true: the unit of the given precursor tolerance is PPM, false: the unit is Da
+
     private int summary_option = 0, // 0-to sum up all intensities within a bin; 2-Take mean of all intensities or 3-Take the percentile
             shift = 0, // to shift spectra for binning in order to calculate cross-correlation 
             threads = 4;
@@ -63,6 +68,16 @@ public class DequeNCompare implements Runnable {
         this.summary_option = summary_option;
     }
 
+    public DequeNCompare(String f1, String f2, File toPrint, double frag_tol, double prec_tol, boolean isPrecTolPPM, int summary_option) {
+        this.filename1 = f1;
+        this.filename2 = f2;
+        this.toPrint = toPrint;
+        this.frag_tol = frag_tol;
+        this.prec_tol = prec_tol;
+        this.isPrecTolPPM = isPrecTolPPM;
+        this.summary_option = summary_option;
+    }
+
     @Override
     public void run() {
 
@@ -75,19 +90,31 @@ public class DequeNCompare implements Runnable {
             ReaderThread reader1 = new ReaderThread(queue1, filename1),
                     reader2 = new ReaderThread(queue2, filename2);
             pr = new PrintWriter(toPrint);
-            pr.print("Spectrum A" + "\t" + "Spectrum B" + "\t" + "Score" + "\n");
+            String title = "Spectrum A" + "\t" + "Spectrum B" + "\t" + "Precursor tolerance (inPPM)" + "\t" + "Score" + "\n";
+            if (!isPrecTolPPM) {
+                title = "Spectrum A" + "\t" + "Spectrum B" + "\t" + "Precursor tolerance (in Da)" + "\t" + "Score" + "\n";
+            }
+            pr.print(title);
 
             final ExecutorService executor = Executors.newFixedThreadPool(threads);
             executor.execute(reader1);
             executor.execute(reader2);
+            double prec_mz_A = 0,
+                    prec_mass_A = 0,
+                    prec_mz_B = 0,
+                    prec_mass_B = 0;
 
             //Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            // READING ACCORDING TO MGF!!           
             while (true) {
 
                 while (!((tmpBuffer1 = queue1.take()).equals("END IONS"))) {// && !((tempBuffer2 = queue1.take()).equals("EOF"))) {
                     if (tmpBuffer1.startsWith("TITLE=")) {
                         specAname = tmpBuffer1.split("=")[1];
+                    } else if (tmpBuffer1.startsWith("PEPMASS=")) {
+                        prec_mz_A = Double.parseDouble(tmpBuffer1.split("=")[1]);
+                    } else if (tmpBuffer1.startsWith("CHARGE=")) {
+                        int prec_charge_A = Integer.parseInt(tmpBuffer1.split("=")[1]);
+                        prec_mass_A = calculate_precursor_mass(prec_mz_A, prec_charge_A);
                     } else if (tmpBuffer1.contains("\t")) {
                         // each line has m/z and intensity information for peaks in given spectrum 
                         spectrumList1.add(new Peak(Double.parseDouble(tmpBuffer1.split("\t")[0]), Double.parseDouble(tmpBuffer1.split("\t")[1])));
@@ -97,40 +124,30 @@ public class DequeNCompare implements Runnable {
                     }
                 }
 
-//                while (!(tmpBuffer2 = queue2.d).equals("EOF")) {
-//                    if (tmpBuffer2.startsWith("TITLE=")) {
-//                        specBname = tmpBuffer2.split("=")[1];
-//                    } else if (tmpBuffer2.equals("END IONS")) {
-//                        // calculate the results    
-//                        pr.print(specAname + "\t" + specBname + "\t");
-//                        // Make sure spectra have enough peaks
-//                        if (!spectrumList1.isEmpty() && !spectrumList2.isEmpty()) {
-//                            calculateBinnedBasedSimilarity(spectrumList1, spectrumList2, pr);
-//                        } else {
-//                            pr.print("NotEnoughPeaks \n");
-//                        }
-//                        spectrumList2.clear();
-//                    } else if (tmpBuffer2.contains("\t")) {
-//                        spectrumList2.add(new Peak(Double.parseDouble(tmpBuffer2.split("\t")[0]), Double.parseDouble(tmpBuffer2.split("\t")[1])));
-//                    } else if (!tmpBuffer2.equals("END IONS") && !tmpBuffer2.equals("BEGIN IONS")) {
-//                        if (tmpBuffer2.contains(" ")) {                        // each line has m/z and intensity information for peaks in given spectrum 
-//                            spectrumList2.add(new Peak(Double.parseDouble(tmpBuffer2.split(" ")[0]), Double.parseDouble(tmpBuffer2.split(" ")[1])));
-//                        }
-//                    }
-//                }
-
-
-       while (!(tmpBuffer2 = queue2.peek()).equals("EOF")) {
+                while (!(tmpBuffer2 = queue2.take()).equals("EOF")) {
                     if (tmpBuffer2.startsWith("TITLE=")) {
                         specBname = tmpBuffer2.split("=")[1];
+                    } else if (tmpBuffer2.startsWith("PEPMASS=")) {
+                        prec_mz_B = Double.parseDouble(tmpBuffer2.split("=")[1]);
+                    } else if (tmpBuffer2.startsWith("CHARGE=")) {
+                        int prec_charge_B = Integer.parseInt(tmpBuffer2.split("=")[1]);
+                        prec_mass_B = calculate_precursor_mass(prec_mz_B, prec_charge_B);
                     } else if (tmpBuffer2.equals("END IONS")) {
                         // calculate the results    
-                        pr.print(specAname + "\t" + specBname + "\t");
+                        // calculate precursor tolerance
+                        double tmp_prec_tol = Math.abs(CalculateMS1Err.getMS1Err(isPrecTolPPM, prec_mass_A, prec_mass_B));
+
                         // Make sure spectra have enough peaks
                         if (!spectrumList1.isEmpty() && !spectrumList2.isEmpty()) {
-                            calculateBinnedBasedSimilarity(spectrumList1, spectrumList2, pr);
+//                            System.out.println(specAname + "\t" + specBname + "\t" + prec_mz_A + "\t" + prec_mz_B + "\t" + tmp_prec_tol);
+                            // precTol=0, to score against all or precTol>0 to score only selected ones
+                            if ((prec_tol == 0) || (tmp_prec_tol <= prec_tol)) {
+//                                System.out.println("TMP PREC TOL " + tmp_prec_tol);
+                                pr.print(specAname + "\t" + specBname + "\t" + tmp_prec_tol + "\t");
+                                calculateBinnedBasedSimilarity(spectrumList1, spectrumList2, pr);
+                            }
                         } else {
-                            pr.print("NotEnoughPeaks \n");
+//                            pr.print(specAname + "\t" + specBname + "\t" + "-" + "\t" + "NotEnoughPeaks \n");
                         }
                         spectrumList2.clear();
                     } else if (tmpBuffer2.contains("\t")) {
@@ -141,8 +158,6 @@ public class DequeNCompare implements Runnable {
                         }
                     }
                 }
-
-
 
                 if (queue1.peek().equals("EOF")) {
                     pr.close();
@@ -289,4 +304,16 @@ public class DequeNCompare implements Runnable {
         return score;
     }
 
+    /**
+     * Calculate precursor mass for a given precursor m/z
+     *
+     * @param mz is a precursor m/z
+     * @param charge is a precursor charge
+     * @return a double value for a precursor mass
+     */
+    public static double calculate_precursor_mass(double mz, int charge) {
+        double mass = 0;
+        mass = (mz * charge) - (charge * Atom.H.getMonoisotopicMass());
+        return mass;
+    }
 }
