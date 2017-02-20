@@ -19,7 +19,6 @@ public class CompareSpectrum {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
 
         final ExecutorService executor = Executors.newFixedThreadPool(2);
 
@@ -28,11 +27,11 @@ public class CompareSpectrum {
                 path_folderB = "C:\\Users\\Sule\\Desktop\\mgfs\\s-48";
         File folderA = new File(path_folderA),
                 folderB = new File(path_folderB),
-                toPrint = new File("C:\\Users\\Sule\\Desktop\\mgfs\\test\\result.txt");
+                toPrint = new File("C:\\Users\\Sule\\Desktop\\mgfs\\test\\result-precTol.txt");
         for (File tmpA : folderA.listFiles()) {
             if (tmpA.getName().endsWith(".mgf")) {
                 for (File tmpB : folderB.listFiles()) {
-                    DequeNCompare writer = new DequeNCompare(tmpA.getAbsolutePath(), tmpB.getAbsolutePath(), toPrint);
+                    DequeNCompare writer = new DequeNCompare(tmpA.getAbsolutePath(), tmpB.getAbsolutePath(), toPrint, 0.5, 10, true, 0);
                     executor.execute(writer);
                 }
             }
