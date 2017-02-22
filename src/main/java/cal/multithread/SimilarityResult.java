@@ -7,6 +7,7 @@ package cal.multithread;
 
 import cal.methods.SimilarityMethods;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 /**
@@ -24,6 +25,7 @@ public class SimilarityResult {
     private double spectrumPrecursorMZ,
             score;
     private EnumMap<SimilarityMethods, Double> scores = new EnumMap<SimilarityMethods, Double>(SimilarityMethods.class);
+    private ArrayList<PairwiseComparison> allPairwiseComparisons = new ArrayList<PairwiseComparison>();
 
     public SimilarityResult(String spectrumName, MSnSpectrum bestSimilarSpec, String spectrumChargeAsString, double spectrumPrecursorMZ) {
         this.spectrumName = spectrumName;
@@ -90,6 +92,15 @@ public class SimilarityResult {
         this.spectrumToCompareChargeAsString = spectrumToCompareChargeAsString;
     }
 
+    public ArrayList<PairwiseComparison> getAllPairwiseComparisons() {
+        return allPairwiseComparisons;
+    }
+
+    public void setAllPairwiseComparisons(ArrayList<PairwiseComparison> allPairwiseComparisons) {
+        this.allPairwiseComparisons = allPairwiseComparisons;
+    }
+
+    
     /**
      * This method updates a score if the same spectrum with higher similarity
      * score MSE has best scores as the lowest score
@@ -106,5 +117,6 @@ public class SimilarityResult {
             scores.put(similarityMethods, score);
             setSpectrumToCompareName(name);
         }
-    }
+    }  
+    
 }
