@@ -186,6 +186,70 @@ public class Calculate_BinSpectrum_Similarity implements Calculate_BinSpectrum_S
     }
 
     /**
+     *
+     * @param xArray - binned spectrum X
+     * @param yArray - binned spectrum Y
+     * @param method - similarity calculation method
+     * @return
+     */
+    public double calculateSimilarity(double[] xArray, double[] yArray, SimilarityMethods method) {
+
+        switch (method) {
+            case DOT_PRODUCT:
+                calculateDotProductDerived(xArray, yArray, 1, 0, false);
+                break;
+            case NORMALIZED_DOT_PRODUCT_STANDARD:
+                // Calculate standard dot product score
+                calculateDotProductDerived(xArray, yArray, 1, 0, true);
+                break;
+            case NORMALIZED_DOT_PRODUCT_HORAI:
+                // Calculate weighted dot product score based on Horai 
+                calculateDotProductDerived(xArray, yArray, 0.5, 2, true);
+                break;
+            case NORMALIZED_DOT_PRODUCT_SOKOLOW:
+                // Calculate weighted dot product score based on Skolow
+                calculateDotProductDerived(xArray, yArray, 0.5, 1, true);
+                break;
+            case NORMALIZED_DOT_PRODUCT_ZHANG:
+                // Calculate weighted dot product score based on Zhang
+                calculateDotProductDerived(xArray, yArray, 0.53, 1.5, true);
+                break;
+            case NORMALIZED_DOT_PRODUCT_USER_DEFINED:
+                // Calculate weighted dot product score and weights are defined by user
+                calculateDotProductDerived(xArray, yArray, x, y, true);
+                break;
+            case MEAN_SQUARED_ERROR:
+                // Calculate mean squared error
+                calculateMxSquareError();
+                break;
+            case MEDIAN_SQUARED_ERROR:
+                // Calculate median squared error
+                calculateMxSquareError();
+                break;
+            case ROOT_MEAN_SQUARE_ERROR:
+                // Calculate root mean square error
+                calculateMxSquareError();
+                break;
+            case ROOT_MEDIAN_SQUARE_ERROR:
+                // Calculate root median square error
+                calculateMxSquareError();
+                break;
+            case PEARSONS_CORRELATION:
+                // Calculate pearson correlation coefficient - linear relationship (Mean)
+                calculateCorrelation();
+                break;
+            case SPEARMANS_CORRELATION:
+                // Calculate Spearmans correation coefficient - monotonic relationship (Ranks)
+                calculateCorrelation();
+                break;
+            case SLIDING_DOT_PRODUCT:
+                calculateSlidingDotProduct();
+                break;
+        }
+        return score;
+    }
+
+    /**
      * This method calculates correlation coefficients between two MSnSpectrum
      * object while taking into account of intensities of the mutual peaks. A
      * perfect score is 1 (or -1). And value range is [-1:1]
@@ -354,7 +418,8 @@ public class Calculate_BinSpectrum_Similarity implements Calculate_BinSpectrum_S
     }
 
     /**
-     * This calculates sliding-dot product similar to Sequest based on given spectra
+     * This calculates sliding-dot product similar to Sequest based on given
+     * spectra
      *
      */
     private void calculateSlidingDotProduct() {
