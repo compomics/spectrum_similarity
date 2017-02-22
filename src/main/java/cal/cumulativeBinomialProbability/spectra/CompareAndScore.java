@@ -33,7 +33,7 @@ public class CompareAndScore {
             spectrumB; //experimental MS2 spectrum
     private double fragTol; // fragment tolerance, Da Level, not PPM!
     private int MSRobinOption; // 0-sqrt(Intensities), 1-Intensities
-    private int intensityOption; // 0-Summed Up 1-Multiply intensities
+    private int intensityOption; // 0-summing up 0.5*(Exp_Int/TotalInt)A+0.5*(ExpInt/TotalInt) 1-multiply (Exp_Int/TotalInt)*(ExpInt/TotalInt) 
     private boolean isCalculated = false; // This makes sure that match and scoring only calculate once
     private double msRobinScore = 0,
             massWindow = 100,
