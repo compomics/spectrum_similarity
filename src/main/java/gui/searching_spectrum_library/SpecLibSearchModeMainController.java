@@ -31,6 +31,7 @@ public class SpecLibSearchModeMainController extends MainController {
 
     private static final Logger LOGGER = Logger.getLogger(SpecLibSearchModeMainController.class);
     protected static final String SUM_MEAN_MEDIAN_PROP = "sum.mean.median";
+    protected static final String ALL_PAIRWISE_COMPARISONS = "keep.all.pairwise.comparisons";
 
     /**
      * Constructor.
@@ -187,7 +188,7 @@ public class SpecLibSearchModeMainController extends MainController {
 
                         //show the run dialog
                         centerRunDialog();
-                        runDialog.setVisible(true);                      
+                        runDialog.setVisible(true);
                     }
                 }
             }
@@ -256,14 +257,16 @@ public class SpecLibSearchModeMainController extends MainController {
     @Override
 
     protected void copyParameterValues() {
-        ConfigHolder.getInstance().setProperty(SPECTRA_PROP,  ((SpecLibSearchMainFrame)mainFrame).getSpectraDirectoryTextField().getText());
-        ConfigHolder.getInstance().setProperty(COMP_SPECTRA_PROP,  ((SpecLibSearchMainFrame)mainFrame).getComparisonSpectraDirectoryTextField().getText());
-        ConfigHolder.getInstance().setProperty(OUTPUT_PROP,  ((SpecLibSearchMainFrame)mainFrame).getOutputDirectoryTextField().getText());
-        ConfigHolder.getInstance().setProperty(CHARGE_PROP, ((SpecLibSearchMainFrame)mainFrame).getChargeCheckBox().isSelected());
+        ConfigHolder.getInstance().setProperty(SPECTRA_PROP, ((SpecLibSearchMainFrame) mainFrame).getSpectraDirectoryTextField().getText());
+        ConfigHolder.getInstance().setProperty(COMP_SPECTRA_PROP, ((SpecLibSearchMainFrame) mainFrame).getComparisonSpectraDirectoryTextField().getText());
+        ConfigHolder.getInstance().setProperty(OUTPUT_PROP, ((SpecLibSearchMainFrame) mainFrame).getOutputDirectoryTextField().getText());
+        ConfigHolder.getInstance().setProperty(CHARGE_PROP, ((SpecLibSearchMainFrame) mainFrame).getChargeCheckBox().isSelected());
+        ConfigHolder.getInstance().setProperty(ALL_PAIRWISE_COMPARISONS, ((SpecLibSearchMainFrame) mainFrame).getKeepAllPairwiseComparisonjCheckBox().isSelected());
+
         ConfigHolder.getInstance().setProperty(MAX_PREC_CHARGE_PROP, ((SpecLibSearchMainFrame) mainFrame).getMaxPrecursorChargejTextField().getText());
 
-        ConfigHolder.getInstance().setProperty(PRECURSOR_PROP,  ((SpecLibSearchMainFrame)mainFrame).getPrecursorToleranceTextField().getText());
-        ConfigHolder.getInstance().setProperty(FRAGMENT_PROP,  ((SpecLibSearchMainFrame)mainFrame).getFragmentToleranceTextField().getText());
+        ConfigHolder.getInstance().setProperty(PRECURSOR_PROP, ((SpecLibSearchMainFrame) mainFrame).getPrecursorToleranceTextField().getText());
+        ConfigHolder.getInstance().setProperty(FRAGMENT_PROP, ((SpecLibSearchMainFrame) mainFrame).getFragmentToleranceTextField().getText());
 
         // NO NEED FOR NEIGHBOUR SLICE PROPERTIES
         // NO NEED FOR FILE NAME SLICE INDEX PROPERTIES
@@ -272,17 +275,17 @@ public class SpecLibSearchModeMainController extends MainController {
         ConfigHolder.getInstance().setProperty(SCORING_FUNC_PROP, ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().getSelectedIndex());
         ConfigHolder.getInstance().setProperty(SUM_MEAN_MEDIAN_PROP, ((SpecLibSearchMainFrame) mainFrame).getScoringFunctionjComboBox().getSelectedIndex());
 
-        ConfigHolder.getInstance().setProperty(PREPROCESSING_ORDER_PROP,  ((SpecLibSearchMainFrame)mainFrame).getPreprocessingOrderComboBox().getSelectedIndex() == 0);
+        ConfigHolder.getInstance().setProperty(PREPROCESSING_ORDER_PROP, ((SpecLibSearchMainFrame) mainFrame).getPreprocessingOrderComboBox().getSelectedIndex() == 0);
 
-        ConfigHolder.getInstance().setProperty(TRANSORMATION_PROP,  ((SpecLibSearchMainFrame)mainFrame).getTransformationComboBox().getSelectedIndex());
-        ConfigHolder.getInstance().setProperty(NOISE_FILTER_PROP,  ((SpecLibSearchMainFrame)mainFrame).getNoiseFilterComboBox().getSelectedIndex());
+        ConfigHolder.getInstance().setProperty(TRANSORMATION_PROP, ((SpecLibSearchMainFrame) mainFrame).getTransformationComboBox().getSelectedIndex());
+        ConfigHolder.getInstance().setProperty(NOISE_FILTER_PROP, ((SpecLibSearchMainFrame) mainFrame).getNoiseFilterComboBox().getSelectedIndex());
         if (mainFrame.getNoiseFilterComboBox().getSelectedIndex() == 2) {
-            ConfigHolder.getInstance().setProperty(NUMBER_OF_PEAKS_CUTOFF_PROP,  ((SpecLibSearchMainFrame)mainFrame).getNumberOfPeaksCutoffTextField().getText());
+            ConfigHolder.getInstance().setProperty(NUMBER_OF_PEAKS_CUTOFF_PROP, ((SpecLibSearchMainFrame) mainFrame).getNumberOfPeaksCutoffTextField().getText());
         } else if (mainFrame.getNoiseFilterComboBox().getSelectedIndex() == 3) {
-            ConfigHolder.getInstance().setProperty(PEAK_PERCENTAGE_CUTOFF,  ((SpecLibSearchMainFrame)mainFrame).getPeakIntensityCutoffTextField().getText());
+            ConfigHolder.getInstance().setProperty(PEAK_PERCENTAGE_CUTOFF, ((SpecLibSearchMainFrame) mainFrame).getPeakIntensityCutoffTextField().getText());
         }
-        ConfigHolder.getInstance().setProperty(PRECURSOR_PEAK_REMOVAL_PROP,  ((SpecLibSearchMainFrame)mainFrame).getRemovePrecursorIonPeaksCheckBox().isSelected());
-        ConfigHolder.getInstance().setProperty(NUMBER_OF_THREADS_PROP,  ((SpecLibSearchMainFrame)mainFrame).getNumberOfThreadsTextField().getText());
+        ConfigHolder.getInstance().setProperty(PRECURSOR_PEAK_REMOVAL_PROP, ((SpecLibSearchMainFrame) mainFrame).getRemovePrecursorIonPeaksCheckBox().isSelected());
+        ConfigHolder.getInstance().setProperty(NUMBER_OF_THREADS_PROP, ((SpecLibSearchMainFrame) mainFrame).getNumberOfThreadsTextField().getText());
         ConfigHolder.getInstance().setProperty(SEARCH_MODE, 1);
     }
 
@@ -295,7 +298,9 @@ public class SpecLibSearchModeMainController extends MainController {
         mainFrame.getSpectraDirectoryTextField().setText(ConfigHolder.getInstance().getString(SPECTRA_PROP));
         mainFrame.getComparisonSpectraDirectoryTextField().setText(ConfigHolder.getInstance().getString(COMP_SPECTRA_PROP));
         mainFrame.getOutputDirectoryTextField().setText(ConfigHolder.getInstance().getString(OUTPUT_PROP));
-        ((SpecLibSearchMainFrame)mainFrame).getChargeCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(CHARGE_PROP));
+        ((SpecLibSearchMainFrame) mainFrame).getChargeCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(CHARGE_PROP));
+        ((SpecLibSearchMainFrame) mainFrame).getKeepAllPairwiseComparisonjCheckBox().setSelected(ConfigHolder.getInstance().getBoolean(ALL_PAIRWISE_COMPARISONS));
+
         mainFrame.getMaxPrecursorChargejTextField().setText(ConfigHolder.getInstance().getString(MAX_PREC_CHARGE_PROP));
         mainFrame.getPrecursorToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(PRECURSOR_PROP)));
         mainFrame.getFragmentToleranceTextField().setText(Double.toString(ConfigHolder.getInstance().getDouble(FRAGMENT_PROP)));

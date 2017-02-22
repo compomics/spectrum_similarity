@@ -214,6 +214,16 @@ public class SpecLibSearchMainFrame extends MainFrame {
         this.minMZjTextField = minMZjTextField;
     }
 
+    public JCheckBox getKeepAllPairwiseComparisonjCheckBox() {
+        return keepAllPairwiseComparisonjCheckBox;
+    }
+
+    public void setKeepAllPairwiseComparisonjCheckBox(JCheckBox keepAllPairwiseComparisonjCheckBox) {
+        this.keepAllPairwiseComparisonjCheckBox = keepAllPairwiseComparisonjCheckBox;
+    }
+    
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -262,6 +272,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
         maxPrecursorChargejTextField = new javax.swing.JTextField();
         weightingjLabel = new javax.swing.JLabel();
         weightingjComboBox = new javax.swing.JComboBox<>();
+        keepAllPairwiseComparisonjCheckBox = new javax.swing.JCheckBox();
         otherParametersPanel = new javax.swing.JPanel();
         numberOfThreadsLabel = new javax.swing.JLabel();
         numberOfThreadsTextField = new javax.swing.JTextField();
@@ -457,8 +468,6 @@ public class SpecLibSearchMainFrame extends MainFrame {
         minMZjTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         minMZjTextField.setText("100");
         minMZjTextField.setPreferredSize(new java.awt.Dimension(6, 20));
-        minMZjTextField.setSelectionEnd(1);
-        minMZjTextField.setSelectionStart(1);
 
         maxMZjLabel.setText("Maximum m/z value:");
         maxMZjLabel.setToolTipText("provide a maximum m/z value, which is required to bin spectra");
@@ -484,6 +493,8 @@ public class SpecLibSearchMainFrame extends MainFrame {
         weightingjLabel.setToolTipText("select an option to how to convert MS/MS spectrum into a binned MS/MS spectrum");
 
         weightingjComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sum", "Mean", "Median" }));
+
+        keepAllPairwiseComparisonjCheckBox.setText("Keep all pairwise comparisons");
 
         javax.swing.GroupLayout pipelineParametersPanelLayout = new javax.swing.GroupLayout(pipelineParametersPanel);
         pipelineParametersPanel.setLayout(pipelineParametersPanelLayout);
@@ -519,7 +530,10 @@ public class SpecLibSearchMainFrame extends MainFrame {
                                 .addComponent(scoringFunctionjLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(scoringFunctionjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)))
+                        .addGap(18, 18, 18))
+                    .addGroup(pipelineParametersPanelLayout.createSequentialGroup()
+                        .addComponent(keepAllPairwiseComparisonjCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(preprocessingParametersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -542,6 +556,8 @@ public class SpecLibSearchMainFrame extends MainFrame {
                             .addComponent(weightingjComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(weightingjLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(keepAllPairwiseComparisonjCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(chargeCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pipelineParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -589,8 +605,8 @@ public class SpecLibSearchMainFrame extends MainFrame {
             otherParametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(otherParametersPanelLayout.createSequentialGroup()
                 .addComponent(numberOfThreadsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
-                .addComponent(numberOfThreadsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(92, 92, 92)
+                .addComponent(numberOfThreadsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         otherParametersPanelLayout.setVerticalGroup(
@@ -649,7 +665,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(runButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -689,6 +705,7 @@ public class SpecLibSearchMainFrame extends MainFrame {
     private javax.swing.JLabel fragmentToleranceLabel;
     private javax.swing.JTextField fragmentToleranceTextField;
     private javax.swing.JPanel inputAndOutputPanel;
+    private javax.swing.JCheckBox keepAllPairwiseComparisonjCheckBox;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel maxMZjLabel;
     private javax.swing.JTextField maxMZjTextField;
