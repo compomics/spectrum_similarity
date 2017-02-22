@@ -31,47 +31,82 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
     private MSnSpectrum givenMSnSpectrum; // a spectrum object to be calculated against all given MSnSpectra
     private ArrayList<MSnSpectrum> allMSnSpectraComparedTogivenMSnSpectrum; // a list of MSnSpectra which each of them is calculated against to a given MSnSpectrum
     private int msRobinOption = 0, // 0-BinBased scoring, 1-MSRobin calculation
-            calculationOptionIntensityMSRobin = 1, // 0 for summing up 0.5*(Exp_Int/TotalInt)A+0.5*(ExpInt/TotalInt) 1- multiply (Exp_Int/TotalInt)*(ExpInt/TotalInt) 
-            msRobinIntensityOption = 0;
+            calculationOptionIntensityMSRobin = 1, // 0-summing up 0.5*(Exp_Int/TotalInt)A+0.5*(ExpInt/TotalInt) 1-multiply (Exp_Int/TotalInt)*(ExpInt/TotalInt) 
+            msRobinIntensityOption = 0; // 0-sqrt(Intensities), 1-Intensities
     private double fragTol = 0.5, // fragment tolerance, precursor tolerance
             precTol = 3;// default is precursor mz window of 3-Th
+    private SimilarityMethods similarityMethod;
+    private boolean doesComputeAllBinnedBasedScore = false; // true: allows calculating dot product/normalized dot product/pearson/spearman/MSE
 
     /**
-     * TO CALCULATE BIN-BASED SCORES!
+     *
+     * This constructor enables to calculate scores based on bin-based spectra
      *
      * Note that PrecursorTolerance is always PPM!
      *
-     * @param givenBinMSnSpectrum
-     * @param allBinMSnSpectraComparedTogivenBinMSnSpectrum
-     * @param fragTol
-     * @param precTol
+     * @param givenBinMSnSpectrum temporary binned MSnSpectrum
+     * @param allBinMSnSpectraComparedTogivenBinMSnSpectrum all binned
+     * MSnSpectra
+     * @param fragTol fragment tolerance
+     * @param precTol precursor tolerance
+     * @param similarityMethod name of scoring function
      */
-    public Calculate_Similarity(BinMSnSpectrum givenBinMSnSpectrum, ArrayList<BinMSnSpectrum> allBinMSnSpectraComparedTogivenBinMSnSpectrum, double fragTol, double precTol) {
+    public Calculate_Similarity(BinMSnSpectrum givenBinMSnSpectrum, ArrayList<BinMSnSpectrum> allBinMSnSpectraComparedTogivenBinMSnSpectrum,
+            double fragTol, double precTol, SimilarityMethods similarityMethod) {
         this.allBinMSnSpectraComparedTogivenBinMSnSpectrum = allBinMSnSpectraComparedTogivenBinMSnSpectrum;
         this.givenBinMSnSpectrum = givenBinMSnSpectrum;
         this.precTol = precTol;
         this.fragTol = fragTol;
+        this.similarityMethod = similarityMethod;
     }
 
     /**
-     * TO CALCULATE MSROBIN!!
+     *
+     * This constructor enables to calculate all scores based on bin-based
+     * spectra
      *
      * Note that PrecursorTolerance is always PPM!
      *
-     * @param givenMSnSpectrum
-     * @param allMSnSpectraComparedTogivenMSnSpectrum
-     * @param fragTol
-     * @param precTol
-     * @param calculationOptionIntensityMSRobin
-     * @param msRobinIntensityOption
+     * @param givenBinMSnSpectrum temporary binned MSnSpectrum
+     * @param allBinMSnSpectraComparedTogivenBinMSnSpectrum all binned
+     * MSnSpectra
+     * @param fragTol fragment tolerance
+     * @param precTol precursor tolerance
+     */
+    public Calculate_Similarity(BinMSnSpectrum givenBinMSnSpectrum, ArrayList<BinMSnSpectrum> allBinMSnSpectraComparedTogivenBinMSnSpectrum,
+            double fragTol, double precTol) {
+        this.allBinMSnSpectraComparedTogivenBinMSnSpectrum = allBinMSnSpectraComparedTogivenBinMSnSpectrum;
+        this.givenBinMSnSpectrum = givenBinMSnSpectrum;
+        this.precTol = precTol;
+        this.fragTol = fragTol;
+        doesComputeAllBinnedBasedScore = true;
+    }
+
+    /**
+     * This constructor enables to calculate scores based on cumulative binomial
+     * derived scoring function
+     *
+     * Note that PrecursorTolerance is always PPM!
+     *
+     *
+     * @param givenMSnSpectrum temporary MSnSpectrum
+     * @param allMSnSpectraComparedTogivenMSnSpectrum all MSnSpectra
+     * @param fragTol fragment tolerance
+     * @param precTol precursor tolerance
+     * @param calculationOptionIntensityMSRobin 0-sqrt(Intensities), 1-Raw
+     * intensities
+     * @param msRobinIntensityOption 0-Weighted summed two intensity fractions
+     * 1-Multiply two intensity fractions
+     * @param similarityMethod name of scoring function
      */
     public Calculate_Similarity(MSnSpectrum givenMSnSpectrum, ArrayList<MSnSpectrum> allMSnSpectraComparedTogivenMSnSpectrum, double fragTol, double precTol,
-            int calculationOptionIntensityMSRobin, int msRobinIntensityOption) {
+            int calculationOptionIntensityMSRobin, int msRobinIntensityOption, SimilarityMethods similarityMethod) {
         this.allMSnSpectraComparedTogivenMSnSpectrum = allMSnSpectraComparedTogivenMSnSpectrum;
         this.givenMSnSpectrum = givenMSnSpectrum;
         this.fragTol = fragTol;
         this.precTol = precTol;
-        msRobinOption = 1;
+        msRobinOption = 1; //
+        this.similarityMethod = SimilarityMethods.MSRobin;
         this.calculationOptionIntensityMSRobin = calculationOptionIntensityMSRobin;
         this.msRobinIntensityOption = msRobinIntensityOption;
     }
@@ -111,12 +146,16 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
                     if (precTol > 0) {
                         double precursor_mz = tmpBinMSnSpectrum.getSpectrum().getPrecursor().getMz(),
                                 diff = Math.abs(precursorMZOfGivenSpec - precursor_mz);
-                        if (diff <= precTol) {
+                        if (diff <= precTol && !doesComputeAllBinnedBasedScore) {
                             calculateBinBasedScores(givenBinMSnSpectrum, tmpBinMSnSpectrum, similarityResult);
+                        } else if (diff <= precTol && doesComputeAllBinnedBasedScore) {
+                            calculateBinBasedAllScores(givenBinMSnSpectrum, tmpBinMSnSpectrum, similarityResult);
                         }
                         // Precursor tolerance equals to 0, so no precursor diff 
-                    } else {
+                    } else if (!doesComputeAllBinnedBasedScore) {
                         calculateBinBasedScores(givenBinMSnSpectrum, tmpBinMSnSpectrum, similarityResult);
+                    } else if (doesComputeAllBinnedBasedScore) {
+                        calculateBinBasedAllScores(givenBinMSnSpectrum, tmpBinMSnSpectrum, similarityResult);
                     }
                 }
             }
@@ -134,11 +173,15 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
                                 diff = Math.abs(precursorMZOfGivenSpec - precursor_mz);
                         if (diff <= precTol) {
                             double ms_robin = obj.getMSRobinScore();
+                            PairwiseComparison o = new PairwiseComparison(titleOfGivenSpec, tmpMSnSpectrum.getSpectrumTitle(), ms_robin, SimilarityMethods.MSRobin);
+                            similarityResult.getAllPairwiseComparisons().add(o);
                             similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin, tmpMSnSpectrum.getSpectrumTitle());
                         }
                     } else {
                         CompareAndScore obj = new CompareAndScore(givenMSnSpectrum, tmpMSnSpectrum, fragTol, msRobinIntensityOption, calculationOptionIntensityMSRobin);
                         double ms_robin = obj.getMSRobinScore();
+                        PairwiseComparison o = new PairwiseComparison(titleOfGivenSpec, tmpMSnSpectrum.getSpectrumTitle(), ms_robin, SimilarityMethods.MSRobin);
+                        similarityResult.getAllPairwiseComparisons().add(o);
                         similarityResult.updateScore(SimilarityMethods.MSRobin, ms_robin, tmpMSnSpectrum.getSpectrumTitle());
                     }
                 }
@@ -148,6 +191,57 @@ public class Calculate_Similarity implements Callable<SimilarityResult> {
     }
 
     private void calculateBinBasedScores(BinMSnSpectrum binMSnSpectrum, BinMSnSpectrum tmpBinMSnSpectrum, SimilarityResult similarityResult) {
+        String specA = binMSnSpectrum.getSpectrum().getSpectrumTitle(),
+                specB = tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle();
+        // this default object has DOT_PRODUCT as the default of similarity method
+        Calculate_BinSpectrum_Similarity calculate = new Calculate_BinSpectrum_Similarity(binMSnSpectrum, tmpBinMSnSpectrum);
+        PairwiseComparison o = null;
+
+        switch (similarityMethod) {
+            case DOT_PRODUCT:
+                double dot_score = calculate.getScore();
+                o = new PairwiseComparison(specA, specB, dot_score, SimilarityMethods.DOT_PRODUCT);
+                similarityResult.getAllPairwiseComparisons().add(o);
+                similarityResult.updateScore(SimilarityMethods.DOT_PRODUCT, dot_score, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+                break;
+
+            case NORMALIZED_DOT_PRODUCT_STANDARD:
+                calculate.setMethod(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD);
+                double normalized_dot_score = calculate.getScore();
+                o = new PairwiseComparison(specA, specB, normalized_dot_score, SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD);
+                similarityResult.getAllPairwiseComparisons().add(o);
+                similarityResult.updateScore(SimilarityMethods.NORMALIZED_DOT_PRODUCT_STANDARD, normalized_dot_score, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+                break;
+
+            case PEARSONS_CORRELATION:
+                calculate.setMethod(SimilarityMethods.PEARSONS_CORRELATION);
+                double pearson = calculate.getScore();
+                o = new PairwiseComparison(specA, specB, pearson, SimilarityMethods.PEARSONS_CORRELATION);
+                similarityResult.getAllPairwiseComparisons().add(o);
+                similarityResult.updateScore(SimilarityMethods.PEARSONS_CORRELATION, pearson, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+                break;
+
+            case SPEARMANS_CORRELATION:
+                calculate.setMethod(SimilarityMethods.SPEARMANS_CORRELATION);
+                double spearman = calculate.getScore();
+                o = new PairwiseComparison(specA, specB, spearman, SimilarityMethods.SPEARMANS_CORRELATION);
+                similarityResult.getAllPairwiseComparisons().add(o);
+                similarityResult.updateScore(SimilarityMethods.SPEARMANS_CORRELATION, spearman, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+                break;
+
+            case MEAN_SQUARED_ERROR:
+                calculate.setMethod(SimilarityMethods.MEAN_SQUARED_ERROR);
+                double mean_squared_error = calculate.getScore();
+                o = new PairwiseComparison(specA, specB, mean_squared_error, SimilarityMethods.MEAN_SQUARED_ERROR);
+                similarityResult.getAllPairwiseComparisons().add(o);
+                similarityResult.updateScore(SimilarityMethods.MEAN_SQUARED_ERROR, mean_squared_error, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
+                break;
+        }
+
+        similarityResult.setBestSimilarSpec(tmpBinMSnSpectrum.getSpectrum());
+    }
+
+    private void calculateBinBasedAllScores(BinMSnSpectrum binMSnSpectrum, BinMSnSpectrum tmpBinMSnSpectrum, SimilarityResult similarityResult) {
         Calculate_BinSpectrum_Similarity calculate = new Calculate_BinSpectrum_Similarity(binMSnSpectrum, tmpBinMSnSpectrum);
         double dot_score = calculate.getScore();
         similarityResult.updateScore(SimilarityMethods.DOT_PRODUCT, dot_score, tmpBinMSnSpectrum.getSpectrum().getSpectrumTitle());
